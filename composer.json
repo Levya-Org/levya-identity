@@ -1,0 +1,57 @@
+{
+    "name": "Levya-Org/levya-identity",
+    "description": "Levya Identity Platform",
+    "keywords": ["levya", "identity", "php"],
+    "homepage": "https://levya.org/",
+    "type": "project",
+    "license": "GPL-2.0+",
+    "support": {
+        "issues": "https://github.com/Levya-Org/levya-identity/issues?state=open",
+        "forum": "https://forum.levya.org/",
+        "wiki": "https://wiki.levya.org/",
+        "source": "https://github.com/Levya-Org/levya-identity"
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4.0",
+        "yiisoft/yii2": "*",
+        "yiisoft/yii2-bootstrap": "*",
+        "yiisoft/yii2-swiftmailer": "*",
+        "yiisoft/yii2-jui": "*",
+        "zendframework/zend-ldap": "2.3.*@dev",
+        "kartik-v/yii2-password": "dev-master",
+        "kartik-v/yii2-helpers": "dev-master"
+    },
+    "require-dev": {
+        "yiisoft/yii2-codeception": "*",
+        "yiisoft/yii2-debug": "*",
+        "yiisoft/yii2-gii": "*",
+        "yiisoft/yii2-faker": "*"
+    },
+    "config": {
+        "process-timeout": 1800
+    },
+    "scripts": {
+        "post-create-project-cmd": [
+            "yii\\composer\\Installer::postCreateProject"
+        ]
+    },
+    "extra": {
+        "yii\\composer\\Installer::postCreateProject": {
+            "setPermission": [
+                {
+                    "runtime": "0777",
+                    "web/assets": "0777",
+                    "yii": "0755"
+                }
+            ],
+            "generateCookieValidationKey": [
+                "config/web.php"
+            ]
+        },
+        "asset-installer-paths": {
+            "npm-asset-library": "vendor/npm",
+            "bower-asset-library": "vendor/bower"
+        }
+    }
+}
