@@ -36,7 +36,7 @@ class Belong extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['BELONG_FROM', 'USER_USER_ID', 'GROUP_GROUP_ID'], 'required'],
+            [['USER_USER_ID', 'GROUP_GROUP_ID'], 'required'],
             [['BELONG_FROM', 'BELONG_TO'], 'safe'],
             [['USER_USER_ID', 'GROUP_GROUP_ID'], 'integer']
         ];
@@ -64,7 +64,7 @@ class Belong extends \yii\db\ActiveRecord
             [
                 'class' => TimestampBehavior::className(),
                 'createdAtAttribute' => 'BELONG_FROM',
-                'updatedAtAttribute' => 'BELONG_FROM',
+                'updatedAtAttribute' => false,
                 'value' =>  new Expression('NOW()')
             ],
         ];
@@ -92,8 +92,11 @@ class Belong extends \yii\db\ActiveRecord
      * @return boolean
      * @throws \ErrorException
      */
-    public static function createBelong($userId)
-    {        
+    public function create($userId)
+    {
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing belong');
+        }
         try {
             
             if(!isset($userId)){

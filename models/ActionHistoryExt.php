@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace app\models;
+
 use Yii;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
@@ -58,7 +60,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      */
     public static function ahUserCreation($userId){
         $ac = new ActionHistory();
-        $ac->create(ActionHistory::AH_USER_CREATION, $userId);
+        $ac->create(ActionHistoryExt::AH_USER_CREATION, $userId);
     }
     
     /**
@@ -67,7 +69,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      */
     public static function ahUserResend($userId){
         $ac = new ActionHistory();
-        $ac->create(ActionHistory::AH_USER_RESEND, $userId);
+        $ac->create(ActionHistoryExt::AH_USER_RESEND, $userId);
     }
     
     /**
@@ -76,7 +78,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      */
     public static function ahUserRegistration($userId){
         $ac = new ActionHistory();
-        $ac->create(ActionHistory::AH_USER_REGISTRATION, $userId);
+        $ac->create(ActionHistoryExt::AH_USER_REGISTRATION, $userId);
     }
     
     /**
@@ -85,7 +87,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      */
     public static function ahUserReset($userId){
         $ac = new ActionHistory();
-        $ac->create(ActionHistory::AH_USER_RESET, $userId);
+        $ac->create(ActionHistoryExt::AH_USER_RESET, $userId);
     } 
     
     /**
@@ -169,6 +171,6 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      */
     public static function ahUserUpdate($userId){
         $ac = new ActionHistory();
-        $ac->create(ActionHistory::AH_USER_UPDATE, $userId);
+        $ac->create(ActionHistoryExt::AH_USER_UPDATE, $userId);
     }
 }

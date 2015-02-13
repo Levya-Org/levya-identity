@@ -5,6 +5,8 @@ namespace app\models;
 use yii\base\Model;
 use yii\log\Logger;
 use app\models\User;
+use app\models\ActionHistoryExt;
+use app\models\TokenExt;
 
 use app\helpers\LDAPHelper;
 
@@ -76,8 +78,8 @@ class RegisterForm_Register extends Model
                 'TMP_PASSWORD' => $this->USER_PASSWORD
             ]);
             if($model->create()){
-                $ah = \ActionHistoryExt::ahUserCreation($model->USER_ID);
-                $token = Token::createToken($model->USER_ID, Token::TYPE_CONFIRMATION);
+                $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
+                $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
             }            
             
             //TODO gestion erreur 

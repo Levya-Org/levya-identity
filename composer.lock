@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "978bf187429d2a1bbdd3a84323ec2bed",
+    "hash": "bde65d3b7fed2f228d409dbf6920a12f",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -127,16 +127,16 @@
         },
         {
             "name": "bower-asset/jquery.inputmask",
-            "version": "3.1.57",
+            "version": "3.1.61",
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobinHerbots/jquery.inputmask.git",
-                "reference": "d180082aa1ba98c85f85b2c4eebbfa195fd25613"
+                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/d180082aa1ba98c85f85b2c4eebbfa195fd25613",
-                "reference": "d180082aa1ba98c85f85b2c4eebbfa195fd25613",
+                "url": "https://api.github.com/repos/RobinHerbots/jquery.inputmask/zipball/f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
+                "reference": "f2c086411d2557fc485c47afb3cecfa6c1de9ee2",
                 "shasum": ""
             },
             "require": {
@@ -172,7 +172,7 @@
                 "form",
                 "input",
                 "inputmask",
-                "jQuery",
+                "jquery",
                 "mask",
                 "plugins"
             ]
@@ -388,12 +388,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-helpers.git",
-                "reference": "5d073ba8d25c356dccd8f71ef2e663e277aca626"
+                "reference": "379b5f20d511fe13b1c579a33adffe6dd2b6f560"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/5d073ba8d25c356dccd8f71ef2e663e277aca626",
-                "reference": "5d073ba8d25c356dccd8f71ef2e663e277aca626",
+                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/379b5f20d511fe13b1c579a33adffe6dd2b6f560",
+                "reference": "379b5f20d511fe13b1c579a33adffe6dd2b6f560",
                 "shasum": ""
             },
             "require": {
@@ -426,20 +426,20 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2015-01-23 13:35:52"
+            "time": "2015-01-27 18:55:13"
         },
         {
             "name": "kartik-v/yii2-krajee-base",
-            "version": "v1.7.2",
+            "version": "v1.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-krajee-base.git",
-                "reference": "c6eb0ccafa100c7e14a8635c653f9875faa1c61c"
+                "reference": "a6bd683be7a50720e4a3c8efd74b80bf5331dd69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/c6eb0ccafa100c7e14a8635c653f9875faa1c61c",
-                "reference": "c6eb0ccafa100c7e14a8635c653f9875faa1c61c",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/a6bd683be7a50720e4a3c8efd74b80bf5331dd69",
+                "reference": "a6bd683be7a50720e4a3c8efd74b80bf5331dd69",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +472,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2015-01-21 18:03:16"
+            "time": "2015-01-25 16:21:06"
         },
         {
             "name": "kartik-v/yii2-password",
@@ -480,12 +480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-password.git",
-                "reference": "f04cb2e1866e120b7e7680a6ba1b39806ebd91eb"
+                "reference": "90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-password/zipball/f04cb2e1866e120b7e7680a6ba1b39806ebd91eb",
-                "reference": "f04cb2e1866e120b7e7680a6ba1b39806ebd91eb",
+                "url": "https://api.github.com/repos/kartik-v/yii2-password/zipball/90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a",
+                "reference": "90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a",
                 "shasum": ""
             },
             "require": {
@@ -523,7 +523,7 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2015-01-12 10:19:25"
+            "time": "2015-02-06 14:56:29"
         },
         {
             "name": "swiftmailer/swiftmailer",

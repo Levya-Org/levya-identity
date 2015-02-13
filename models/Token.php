@@ -106,18 +106,29 @@ class Token extends \yii\db\ActiveRecord
     public function getIsExpired()
     {
         switch ($this->TOKEN_TYPE) {
-            case self::TYPE_CONFIRMATION:
-            case self::TYPE_CONFIRM_NEW_EMAIL:
+            case TokenExt::TYPE_CONFIRMATION:
+            case TokenExt::TYPE_CONFIRM_NEW_EMAIL:
                 $expirationTime = \Yii::$app->params['token:confirmWithin'];
                 break;
-            case self::TOKEN_TYPE:
+            case TokenExt::TYPE_RECOVERY:
                 $expirationTime = \Yii::$app->params['token:recoverWithin'];
                 break;
             default:
                 throw new \RuntimeException;
         }
+        
+        $date = null;
+        $timestamp = null;
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $timestamp = strtotime($this->TOKEN_CREATEDATE);
+        } else {
+            $date = strptime($this->TOKEN_CREATEDATE, '%Y-%m-%d %T');
+            $timestamp = mktime($date['tm_hour'], $date['tm_min'], $date['tm_sec'],
+                $date['tm_mon'], $date['tm_mday'], $date['tm_year']+1900);
+        }
 
-        return ($this->TOKEN_CREATEDATE + $expirationTime) < time();
+        return ($timestamp + $expirationTime) < time();
     }
     
     /**

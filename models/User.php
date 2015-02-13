@@ -315,7 +315,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     
     public function isConfirmed(){
         \Yii::getLogger()->log('isConfirmed', Logger::LEVEL_TRACE);
-        return $this->USER_CREATIONDATE != null;
+        return $this->USER_REGISTRATIONDATE != null;
     }
 
     // </editor-fold>
@@ -339,13 +339,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
                 \Yii::$app->session->setFlash('user.confirmation_sent');
                 
-                //BELONG Base group
-//                {
-//                    $belong = new Belong();
-//                    if(!$belong->createUser($this->primaryKey)){
-//                        throw new Exception;
-//                    }
-//                }
+                {
+                    $belong = new Belong();
+                    if(!$belong->create($this->primaryKey)){
+                        throw new Exception;
+                    }
+                }
                 
                 $transaction->commit();
                 return true;
@@ -358,6 +357,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
         }
         return false;
+    }
+    
+    public function confirm($token){
+        $token = Token::findOne(['TOKEN_CODE' => $token]);
+            
+        if($token != null && !$token->getIsExpired()){
+            $this->setScenario('user_register');
+            if($this->save()){
+                $token->delete();
+            }
+            return true;
+        }
+        return false;        
     }
 
 }

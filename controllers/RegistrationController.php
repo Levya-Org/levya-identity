@@ -8,7 +8,7 @@ use app\models\RegisterForm_Resend;
 use app\models\RegisterForm_Register;
 use app\models\RegisterForm_RegisterAsMember;
 
-class RegistrationController extends \yii\web\Controller
+class RegistrationController extends Controller
 {
     
     /**
@@ -21,7 +21,7 @@ class RegistrationController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register', 'register-member', 'connect'],
+                        'actions' => ['register', 'register-member'],
                         'roles' => ['?']
                     ],
                     [
@@ -34,14 +34,21 @@ class RegistrationController extends \yii\web\Controller
         ];
     }
 
-    public function actionConfirm()
+    public function actionConfirm($id, $token)
     {
-        return $this->render('confirm');
-    }
-
-    public function actionConnect()
-    {
-        return $this->render('connect');
+        $user = \app\models\User::findIdentity($id);
+        if ($user === null || \Yii::$app->params['registration:enableConfirmation'] == false) {
+            throw new NotFoundHttpException;
+        }
+        
+        if ($user->confirm($token)) {
+            \Yii::$app->session->setFlash('user.confirmation_finished');
+        }
+        else {
+            \Yii::$app->session->setFlash('user.invalid_token');
+        }
+        
+        return $this->render('finish');
     }
 
     public function actionRegister()
@@ -49,7 +56,7 @@ class RegistrationController extends \yii\web\Controller
         $model = new RegisterForm_Register();
 
         if ($model->load(\Yii::$app->request->post()) && $model->register()) {
-            return $this->render('confirm');
+            return $this->render('finish');
         }
 
         return $this->render('register', [
@@ -62,7 +69,7 @@ class RegistrationController extends \yii\web\Controller
         $model = new RegisterForm_RegisterAsMember();
 
         if ($model->load(\Yii::$app->request->post()) && $model->registerAsMember()) {
-            return $this->render('confirm');
+            return $this->render('finish');
         }
 
         return $this->render('registerAsMember', [
@@ -75,7 +82,7 @@ class RegistrationController extends \yii\web\Controller
         $model = new RegisterForm_Resend();
         
         if ($model->load(\Yii::$app->request->post()) && $model->resend()) {
-            return $this->render('confirm');
+            return $this->render('finish');
         }
         
         return $this->render('resend', [

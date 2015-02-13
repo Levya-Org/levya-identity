@@ -93,8 +93,6 @@ class RegisterForm_RegisterAsMember extends Model
                 'USER_FORNAME' => $this->USER_FORNAME,
                 'USER_ADDRESS' => $this->USER_ADDRESS,
                 'COUNTRIE_CountryId' => $this->USER_COUNTRYID,
-                'REGION_RegionID' => $this->USER_REGIONID,
-                'CITIE_CityId' => $this->USER_CITYID,
                 'USER_PHONE' => $this->USER_PHONE,
                 'USER_MAIL' => $this->USER_MAIL,
                 'USER_NICKNAME' => $this->USER_NICKNAME,

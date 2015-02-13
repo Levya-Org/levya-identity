@@ -6,6 +6,7 @@ use yii\base\Model;
 use yii\log\Logger;
 use app\models\User;
 use app\models\Token;
+use app\models\ActionHistoryExt;
 /**
  * ResendForm gets user USER_MAIL address and validates if user has already confirmed his account. If so, it shows error
  * message, otherwise it generates and sends new confirmation token to user.
@@ -74,8 +75,8 @@ class RegisterForm_Resend extends Model
     {
         \Yii::getLogger()->log('User Resend Confirmation', Logger::LEVEL_TRACE);
         if ($this->validate()) {
-            $ah = ActionHistory::ahUserResend($this->user->USER_ID);
-            $token = Token::createToken($this->user->USER_ID, Token::TYPE_CONFIRMATION);
+            $ah = ActionHistoryExt::ahUserResend($this->user->USER_ID);
+            $token = Token::createToken($this->user->USER_ID, TokenExt::TYPE_CONFIRMATION);
             //TODO gestion erreur 
             //TODO mail
             
