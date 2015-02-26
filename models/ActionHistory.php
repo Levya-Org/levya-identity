@@ -118,7 +118,7 @@ class ActionHistory extends \yii\db\ActiveRecord
                 Yii::getLogger()->log('ActionHistory without User ID', Logger::LEVEL_ERROR);
                 throw  new \ErrorException('ActionHistory without User ID');
             }
-            $this->ACTION_HISTORY_ID = $ahId;
+            $this->ACTION_HISTORY_ACTION = $ahId;
             $this->USER_USER_ID = $userId;
 
             if ($this->save()) {

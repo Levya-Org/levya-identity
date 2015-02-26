@@ -21,22 +21,22 @@ class RegistrationController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['register', 'register-member'],
+                        'actions' => ['register','confirm', 'resend'],
                         'roles' => ['?']
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['confirm', 'resend'],
-                        'roles' => ['?', '@']
+                        'actions' => ['register-member'],
+                        'roles' => ['@']
                     ],
                 ]
             ],
         ];
     }
 
-    public function actionConfirm($id, $token)
+    public function actionConfirm($mail, $token)
     {
-        $user = \app\models\User::findIdentity($id);
+        $user = \app\models\User::findByMail($mail);
         if ($user === null || \Yii::$app->params['registration:enableConfirmation'] == false) {
             throw new NotFoundHttpException;
         }

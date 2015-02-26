@@ -95,7 +95,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      * @param type $userId
      * @param SystemHelper $system
      */
-    public static function ahUserConnection($userId, SystemHelper $system){
+    public static function ahUserConnection($userId, $system){
         $ac = new ActionHistory();
         switch ($system){
             case 'IDENTITY':
@@ -133,7 +133,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
      * @param type $userId
      * @param SystemHelper $system
      */
-    public static function ahUserTriedConnection($userId, SystemHelper $system){
+    public static function ahUserTriedConnection($userId, $system){
         $ac = new ActionHistory();
         switch ($system){
             case 'IDENTITY':

@@ -31,7 +31,7 @@ class RegisterForm_Resend extends Model
     public function getUser()
     {
         if ($this->_user == null) {
-            $this->_user = User::getUserByMail($this->USER_MAIL);
+            $this->_user = User::findByMail($this->USER_MAIL);
         }
 
         return $this->_user;

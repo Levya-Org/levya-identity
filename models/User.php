@@ -306,8 +306,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @param type $userMail
      * @return type
      */
-    public static function getUserByMail($userMail){
-        \Yii::getLogger()->log('getUserByMail', Logger::LEVEL_TRACE);
+    public static function findByMail($userMail){
+        \Yii::getLogger()->log('findByMail', Logger::LEVEL_TRACE);
         return User::findOne([
             'USER_MAIL' => strtolower($userMail)
         ]);
@@ -316,6 +316,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function isConfirmed(){
         \Yii::getLogger()->log('isConfirmed', Logger::LEVEL_TRACE);
         return $this->USER_REGISTRATIONDATE != null;
+    }
+    
+    
+    /**
+     * Get if User is blocked / banned or not
+     * Todo
+     * @return boolean
+     */
+    public function isBlocked(){
+        \Yii::getLogger()->log('isBlocked', Logger::LEVEL_TRACE);
+        return false;
     }
 
     // </editor-fold>
@@ -339,11 +350,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
                 \Yii::$app->session->setFlash('user.confirmation_sent');
                 
+                //LEVYA SYSTEM
                 {
                     $belong = new Belong();
                     if(!$belong->create($this->primaryKey)){
                         throw new Exception;
                     }
+                }
+                //RBAC
+                {
+                    $userRole = \Yii::$app->authManager->getRole('user');
+                    \Yii::$app->authManager->assign($userRole, $this->primaryKey);
                 }
                 
                 $transaction->commit();
@@ -362,7 +379,9 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function confirm($token){
         $token = Token::findOne(['TOKEN_CODE' => $token]);
             
-        if($token != null && !$token->getIsExpired()){
+        if($token != null 
+                && !$token->getIsExpired() 
+                && $token->USER_USER_ID == $this->USER_ID){
             $this->setScenario('user_register');
             if($this->save()){
                 $token->delete();

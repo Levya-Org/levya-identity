@@ -80,6 +80,15 @@ class RegisterForm_Register extends Model
             if($model->create()){
                 $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
                 $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
+                
+                Yii::$app->mailer->compose('EN_us-registration', [
+                    'user' => $model,
+                    'token' => $token
+                    ])
+                ->setFrom(['test@test.org' => 'Levya.Org Indentity'])
+                ->setTo($model->USER_MAIL)
+                ->setSubject('This is a test mail')
+                ->send();
             }            
             
             //TODO gestion erreur 
