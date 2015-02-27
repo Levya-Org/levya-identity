@@ -102,16 +102,16 @@
         },
         {
             "name": "bower-asset/jquery-ui",
-            "version": "1.11.2",
+            "version": "1.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jqueryui.git",
-                "reference": "396781474d936959061271505f506b78398fe6a2"
+                "reference": "7e2d6bec1c729925d9ad7c0c9ab4b561174efa99"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jqueryui/zipball/396781474d936959061271505f506b78398fe6a2",
-                "reference": "396781474d936959061271505f506b78398fe6a2",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/7e2d6bec1c729925d9ad7c0c9ab4b561174efa99",
+                "reference": "7e2d6bec1c729925d9ad7c0c9ab4b561174efa99",
                 "shasum": ""
             },
             "require": {
@@ -342,16 +342,16 @@
         },
         {
             "name": "kartik-v/strength-meter",
-            "version": "v1.1.0",
+            "version": "v1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/strength-meter.git",
-                "reference": "7c9dfd58ce2a067cc118040cf739fd8c4b481b12"
+                "reference": "e2c94d4bdd033171a9650afa69973e48146d5cf6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/strength-meter/zipball/7c9dfd58ce2a067cc118040cf739fd8c4b481b12",
-                "reference": "7c9dfd58ce2a067cc118040cf739fd8c4b481b12",
+                "url": "https://api.github.com/repos/kartik-v/strength-meter/zipball/e2c94d4bdd033171a9650afa69973e48146d5cf6",
+                "reference": "e2c94d4bdd033171a9650afa69973e48146d5cf6",
                 "shasum": ""
             },
             "type": "library",
@@ -380,7 +380,7 @@
                 "password",
                 "strength"
             ],
-            "time": "2014-11-08 15:24:39"
+            "time": "2015-02-15 04:52:51"
         },
         {
             "name": "kartik-v/yii2-helpers",
@@ -388,12 +388,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-helpers.git",
-                "reference": "379b5f20d511fe13b1c579a33adffe6dd2b6f560"
+                "reference": "23342502c13da11edf56ce8f8881a9bde58c9d59"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/379b5f20d511fe13b1c579a33adffe6dd2b6f560",
-                "reference": "379b5f20d511fe13b1c579a33adffe6dd2b6f560",
+                "url": "https://api.github.com/repos/kartik-v/yii2-helpers/zipball/23342502c13da11edf56ce8f8881a9bde58c9d59",
+                "reference": "23342502c13da11edf56ce8f8881a9bde58c9d59",
                 "shasum": ""
             },
             "require": {
@@ -426,20 +426,20 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2015-01-27 18:55:13"
+            "time": "2015-02-26 14:24:40"
         },
         {
             "name": "kartik-v/yii2-krajee-base",
-            "version": "v1.7.3",
+            "version": "v1.7.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-krajee-base.git",
-                "reference": "a6bd683be7a50720e4a3c8efd74b80bf5331dd69"
+                "reference": "01e9fa8c19970070d0aba5b16a7bfd8c241bc7f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/a6bd683be7a50720e4a3c8efd74b80bf5331dd69",
-                "reference": "a6bd683be7a50720e4a3c8efd74b80bf5331dd69",
+                "url": "https://api.github.com/repos/kartik-v/yii2-krajee-base/zipball/01e9fa8c19970070d0aba5b16a7bfd8c241bc7f9",
+                "reference": "01e9fa8c19970070d0aba5b16a7bfd8c241bc7f9",
                 "shasum": ""
             },
             "require": {
@@ -472,7 +472,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2015-01-25 16:21:06"
+            "time": "2015-02-13 03:36:35"
         },
         {
             "name": "kartik-v/yii2-password",
@@ -480,12 +480,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kartik-v/yii2-password.git",
-                "reference": "90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a"
+                "reference": "f22fdd347ada6ac68dee9d483f80e0ba2fb4888d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kartik-v/yii2-password/zipball/90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a",
-                "reference": "90b8b7ce5ebfe0b1addff89dc792c6afd71fd80a",
+                "url": "https://api.github.com/repos/kartik-v/yii2-password/zipball/f22fdd347ada6ac68dee9d483f80e0ba2fb4888d",
+                "reference": "f22fdd347ada6ac68dee9d483f80e0ba2fb4888d",
                 "shasum": ""
             },
             "require": {
@@ -523,7 +523,7 @@
                 "yii",
                 "yii2"
             ],
-            "time": "2015-02-06 14:56:29"
+            "time": "2015-02-26 15:16:48"
         },
         {
             "name": "swiftmailer/swiftmailer",

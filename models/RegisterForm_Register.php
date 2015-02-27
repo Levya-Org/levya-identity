@@ -9,6 +9,7 @@ use app\models\ActionHistoryExt;
 use app\models\TokenExt;
 
 use app\helpers\LDAPHelper;
+use app\helpers\MailHelper;
 
 use kartik\password\StrengthValidator;
 
@@ -81,14 +82,7 @@ class RegisterForm_Register extends Model
                 $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
                 $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
                 
-                Yii::$app->mailer->compose('EN_us-registration', [
-                    'user' => $model,
-                    'token' => $token
-                    ])
-                ->setFrom(['test@test.org' => 'Levya.Org Indentity'])
-                ->setTo($model->USER_MAIL)
-                ->setSubject('This is a test mail')
-                ->send();
+                MailHelper::registrationMail($model, $token);
             }            
             
             //TODO gestion erreur 

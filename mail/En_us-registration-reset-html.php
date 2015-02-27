@@ -17,18 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $user app\models\User */
-/* @var $token app\models\Token */ 
-$activeLink = Yii::$app->urlManager->createAbsoluteUrl(['registration/confirm', 'mail' => $user->USER_MAIL ,'token' => $token->TOKEN_CODE]);
-?>
-<div class="password-reset">
-    <p>Hello <?= Html::encode($user->USER_FORNAME) ?>,</p>
-    
-    <p> Welcome to Levya Community ! <p>
+/* @var $token app\models\Token */
 
-    <p> You registered with your mail : <?= Html::encode($user->USER_MAIL) ?></p>
-    
-    <p> Please active your account by clicking this link : <?= Html::a(Html::encode($activeLink), $activeLink) ?></p>
-</div>
+use yii\helpers\Html;
+use yii\helpers\BaseUrl;
+
+$activeLink = Yii::$app->urlManager->createAbsoluteUrl(['registration/reset', 'mail' => $user->USER_MAIL ,'token' => $token->TOKEN_CODE]);
+?>
+Hello <?= Html::encode($user->USER_NICKNAME) ?>
+
+You are receiving this notification because you have (or someone pretending to be you has) requested a new password be sent for your account.
+If you did not request this notification then please ignore it, if you keep receiving it please contact the board administrator.
+
+To set the new password you need to click the link provided below.
+<?= Html::a(Html::encode($activeLink), $activeLink) ?>
+
+--
+Thanks, The Levya Org. team
