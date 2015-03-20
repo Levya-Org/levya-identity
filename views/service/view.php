@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Service */
@@ -28,12 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'SERVICE_ID',
+            [
+                'attribute'=> 'SERVICE_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'SERVICE_LDAPNAME',
             'SERVICE_NAME',
             'SERVICE_DESCRIPTION:ntext',
-            'SERVICE_ISENABLE',
-            'SERVICE_STATE',
+            'SERVICE_ISENABLE:boolean',
+            'SERVICE_STATE:boolean',
         ],
     ]) ?>
 

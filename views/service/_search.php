@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\ServiceSearch */
@@ -15,7 +16,9 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'SERVICE_ID') ?>
+    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_DEVELOPER)): ?>
+        <?= $form->field($model, 'SERVICE_ID') ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'SERVICE_LDAPNAME') ?>
 
@@ -23,9 +26,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'SERVICE_DESCRIPTION') ?>
 
-    <?= $form->field($model, 'SERVICE_ISENABLE') ?>
+    <?= $form->field($model, 'SERVICE_ISENABLE')->checkbox() ?>
 
-    <?php // echo $form->field($model, 'SERVICE_STATE') ?>
+    <?= $form->field($model, 'SERVICE_STATE')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app/service', 'Search'), ['class' => 'btn btn-primary']) ?>

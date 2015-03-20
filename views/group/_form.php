@@ -14,9 +14,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'GROUP_NAME')->textInput(['maxlength' => 225]) ?>
 
-    <?= $form->field($model, 'GROUP_ISENABLE')->textInput() ?>
+    <?= $form->field($model, 'GROUP_ISENABLE')->checkbox() ?>
 
-    <?= $form->field($model, 'GROUP_ISDEFAULT')->textInput() ?>
+    <?= $form->field($model, 'GROUP_ISDEFAULT')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/group', 'Create') : Yii::t('app/group', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

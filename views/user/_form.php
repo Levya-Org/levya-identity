@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
@@ -12,7 +13,9 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'USER_ID')->textInput(['maxlength' => 10]) ?>
+    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_DEVELOPER)): ?>
+        <?= $form->field($model, 'USER_ID')->textInput(['maxlength' => 10]) ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'USER_LASTNAME')->textInput(['maxlength' => 80]) ?>
 

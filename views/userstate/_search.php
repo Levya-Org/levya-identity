@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\UserStateSearch */
@@ -15,8 +16,10 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'USERSTATE_ID') ?>
-
+    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_DEVELOPER)): ?>
+        <?= $form->field($model, 'USERSTATE_ID') ?>
+    <?php endif; ?>
+    
     <?= $form->field($model, 'USERSTATE_NAME') ?>
 
     <?= $form->field($model, 'USERSTATE_DESCRIPTION') ?>

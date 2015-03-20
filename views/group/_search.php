@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\GroupSearch */
@@ -15,13 +16,15 @@ use yii\widgets\ActiveForm;
         'method' => 'get',
     ]); ?>
 
-    <?= $form->field($model, 'GROUP_ID') ?>
+    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_DEVELOPER)): ?>
+        <?= $form->field($model, 'GROUP_ID') ?>
+    <?php endif; ?>
 
     <?= $form->field($model, 'GROUP_NAME') ?>
 
-    <?= $form->field($model, 'GROUP_ISENABLE') ?>
+    <?= $form->field($model, 'GROUP_ISENABLE')->checkbox() ?>
 
-    <?= $form->field($model, 'GROUP_ISDEFAULT') ?>
+    <?= $form->field($model, 'GROUP_ISDEFAULT')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app/group', 'Search'), ['class' => 'btn btn-primary']) ?>

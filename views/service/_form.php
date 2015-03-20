@@ -18,9 +18,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'SERVICE_DESCRIPTION')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'SERVICE_ISENABLE')->textInput() ?>
+    <?= $form->field($model, 'SERVICE_ISENABLE')->textInput()->checkbox() ?>
 
-    <?= $form->field($model, 'SERVICE_STATE')->textInput() ?>
+    <?= $form->field($model, 'SERVICE_STATE')->textInput()->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/service', 'Create') : Yii::t('app/service', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

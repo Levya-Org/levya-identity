@@ -7,7 +7,7 @@ use app\helpers\RoleHelper;
 /* @var $this yii\web\View */
 /* @var $model app\models\Param */
 
-$this->title = $model->PARAM_ID;
+$this->title = $model->PARAM_NAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/param', 'Params'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

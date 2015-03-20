@@ -2,11 +2,12 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Group */
 
-$this->title = $model->GROUP_ID;
+$this->title = $model->GROUP_NAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/group', 'Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,10 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'GROUP_ID',
+            [
+                'attribute'=> 'GROUP_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'GROUP_NAME',
-            'GROUP_ISENABLE',
-            'GROUP_ISDEFAULT',
+            'GROUP_ISENABLE:boolean',
+            'GROUP_ISDEFAULT:boolean',
         ],
     ]) ?>
 

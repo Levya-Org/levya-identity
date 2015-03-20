@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ServiceSearch */
@@ -26,13 +27,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'SERVICE_ID',
+            
+            [
+                'attribute'=> 'SERVICE_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'SERVICE_LDAPNAME',
             'SERVICE_NAME',
             'SERVICE_DESCRIPTION:ntext',
-            'SERVICE_ISENABLE',
-            // 'SERVICE_STATE',
+            'SERVICE_ISENABLE:boolean',
+            'SERVICE_STATE:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

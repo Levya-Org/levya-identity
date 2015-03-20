@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\GroupSearch */
@@ -26,11 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'GROUP_ID',
+            [
+                'attribute'=> 'GROUP_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'GROUP_NAME',
-            'GROUP_ISENABLE',
-            'GROUP_ISDEFAULT',
+            'GROUP_ISENABLE:boolean',
+            'GROUP_ISDEFAULT:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
