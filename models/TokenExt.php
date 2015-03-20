@@ -29,4 +29,5 @@ class TokenExt extends Token{
     const TYPE_CONNECTION        = 1;
     const TYPE_RECOVERY          = 2;
     const TYPE_CONFIRM_NEW_EMAIL = 3;
+    const TYPE_CNIL_ACCESS       = 4;
 }

@@ -36,6 +36,7 @@ class ActionHistoryExt extends \app\models\ActionHistory{
     const AH_USER_REGISTRATION = 2;
     const AH_USER_UPDATE = 3;   
     const AH_USER_RESET = 4;
+    const AH_USER_CNIL_ACCESS = 5;
 
     const AH_USER_CONNECTION_IDENTITY = 100;
     const AH_USER_TRYCONNECTION_IDENTITY = 101;
@@ -88,7 +89,25 @@ class ActionHistoryExt extends \app\models\ActionHistory{
     public static function ahUserReset($userId){
         $ac = new ActionHistory();
         $ac->create(ActionHistoryExt::AH_USER_RESET, $userId);
-    } 
+    }
+    
+    /**
+     * Create an ActionHistory for a User update
+     * @param type $userId
+     */
+    public static function ahUserUpdate($userId){
+        $ac = new ActionHistory();
+        $ac->create(ActionHistoryExt::AH_USER_UPDATE, $userId);
+    }
+    
+    /**
+     * Create an ActionHosptry when User view raw data
+     * @param type $userId
+     */
+    public static function ahUserCNILAccess($userId){
+        $ac = new ActionHistory();
+        $ac->create(ActionHistoryExt::AH_USER_CNIL_ACCESS, $userId);
+    }
     
     /**
      * Create an ActionHistory for a Loging.
@@ -165,12 +184,82 @@ class ActionHistoryExt extends \app\models\ActionHistory{
                 break;
         }
     }
+    
     /**
-     * Create an ActionHistory for a User update
-     * @param type $userId
+     * Get the translation of ActionHistory
+     * @param type $actionId
+     * @return type
      */
-    public static function ahUserUpdate($userId){
-        $ac = new ActionHistory();
-        $ac->create(ActionHistoryExt::AH_USER_UPDATE, $userId);
+    public static function actionIdtoStr($actionId){
+        switch ($actionId) {
+            case ActionHistoryExt::AH_USER_CREATION:
+                return \Yii::t('app/actionhistory', 'AH_USER_CREATION');
+                break;
+            case ActionHistoryExt::AH_USER_RESEND:
+                return \Yii::t('app/actionhistory', 'AH_USER_RESEND');
+                break;
+            case ActionHistoryExt::AH_USER_REGISTRATION:
+                return \Yii::t('app/actionhistory', 'AH_USER_REGISTRATION');
+                break;
+            case ActionHistoryExt::AH_USER_UPDATE:
+                return \Yii::t('app/actionhistory', 'AH_USER_UPDATE');
+                break;
+            case ActionHistoryExt::AH_USER_RESET:
+                return \Yii::t('app/actionhistory', 'AH_USER_RESET');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_IDENTITY:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_IDENTITY');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_IDENTITY:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_IDENTITY');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_WIKI:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_WIKI');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_WIKI:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_WIKI');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_REDMINE:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_REDMINE');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_REDMINE:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_REDMINE');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_CLOUD:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_CLOUD');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_CLOUD:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_CLOUD');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_GITLAB:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_GITLAB');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_GITLAB:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_GITLAB');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_STATUS:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_STATUS');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_STATUS:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_STATUS');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_FORUM:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_FORUM');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_FORUM:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_FORUM');
+                break;
+            case ActionHistoryExt::AH_USER_CONNECTION_WEB:
+                return \Yii::t('app/actionhistory', 'AH_USER_CONNECTION_WEB');
+                break;
+            case ActionHistoryExt::AH_USER_TRYCONNECTION_WEB:
+                return \Yii::t('app/actionhistory', 'AH_USER_TRYCONNECTION_WEB');
+                break;
+            default:
+                Yii::getLogger()->log('ActionHistoryExt no or unknow ActionHistoryID specified : '.VarDumper::dumpAsString($actionId), Logger::LEVEL_WARNING);
+                break;
+        }        
     }
+    
+    
 }

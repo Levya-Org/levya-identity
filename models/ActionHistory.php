@@ -87,7 +87,7 @@ class ActionHistory extends \yii\db\ActiveRecord
         }
         return false;
     }
-
+    
     /**
      * @return \yii\db\ActiveQuery
      */

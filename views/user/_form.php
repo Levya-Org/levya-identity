@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'USER_NICKNAME')->textInput(['maxlength' => 80]) ?>
 
-    <?= $form->field($model, 'USER_PASSWORD')->textInput(['maxlength' => 255]) ?>
+    <?= $form->field($model, 'TMP_PASSWORD')->passwordInput(['maxlength' => 255]) ?>
 
     <?= $form->field($model, 'USER_ADDRESS')->textarea(['rows' => 6]) ?>
 
@@ -30,25 +30,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'USER_SECRETKEY')->textInput(['maxlength' => 80]) ?>
 
-    <?= $form->field($model, 'USER_CREATIONDATE')->textInput() ?>
-
-    <?= $form->field($model, 'USER_REGISTRATIONDATE')->textInput() ?>
-
-    <?= $form->field($model, 'USER_REGISTRATIONIP')->textInput(['maxlength' => 16]) ?>
-
-    <?= $form->field($model, 'USER_UPDATEDATE')->textInput() ?>
-
-    <?= $form->field($model, 'USER_AUTHKEY')->textInput(['maxlength' => 32]) ?>
-
     <?= $form->field($model, 'USERSTATE_USERSTATE_ID')->textInput(['maxlength' => 10]) ?>
 
-    <?= $form->field($model, 'USER_LDAPUID')->textInput(['maxlength' => 100]) ?>
-
-    <?= $form->field($model, 'COUNTRIE_CountryId')->textInput() ?>
-
-    <?= $form->field($model, 'REGION_RegionID')->textInput() ?>
-
-    <?= $form->field($model, 'CITIE_CityId')->textInput() ?>
+    <?= $form->field($model, 'cOUNTRY')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/user', 'Create') : Yii::t('app/user', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

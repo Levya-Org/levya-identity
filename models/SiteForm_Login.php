@@ -85,7 +85,8 @@ class SiteForm_Login extends Model
             ActionHistoryExt::ahUserConnection($this->getUser()->USER_ID, SystemHelper::IDENTITY);
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*7 : 0);
         } else {
-            ActionHistoryExt::ahUserTriedConnection($this->getUser()->USER_ID, SystemHelper::IDENTITY);
+            if($this->getUser() != null)
+                ActionHistoryExt::ahUserTriedConnection($this->getUser()->USER_ID, SystemHelper::IDENTITY);
             return false;
         }
     }

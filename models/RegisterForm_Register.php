@@ -70,31 +70,32 @@ class RegisterForm_Register extends Model
      */
     public function register()
     {
-        \Yii::getLogger()->log('User Resend Confirmation', Logger::LEVEL_TRACE);
+        \Yii::getLogger()->log('User Registration', Logger::LEVEL_TRACE);
         if ($this->validate()) {
             $model = new User([
                 'scenario' => 'user_register',
                 'USER_MAIL' => $this->USER_MAIL,
                 'USER_NICKNAME' => $this->USER_NICKNAME,
-                'TMP_PASSWORD' => $this->USER_PASSWORD
+                'TMP_PASSWORD' => $this->USER_PASSWORD,
+                'USER_PASSWORD' => $this->USER_PASSWORD
             ]);
             if($model->create()){
                 $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
                 $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
                 
                 MailHelper::registrationMail($model, $token);
-            }            
+                \Yii::$app->session->setFlash('user.confirmation_sent');
+                return true;
+            }
+            else {
+                
+            }
             
             //TODO gestion erreur 
-            //TODO mail
             
 //            $ldap = new LDAPHelper();
 //            $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_SECRETKEY);
-            
-            \Yii::$app->session->setFlash('user.confirmation_sent');
-            return true;
         }
-
         return false;
     }
 }

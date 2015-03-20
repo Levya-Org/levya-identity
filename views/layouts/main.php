@@ -5,6 +5,8 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
+use app\helpers\RoleHelper;
+
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -26,7 +28,7 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'Levya Org.',
+                'brandLabel' => 'Levya Org. Indentity',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
@@ -36,8 +38,20 @@ AppAsset::register($this);
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => [
                     ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'Profile', 'visible' => !Yii::$app->user->isGuest, 'items' => [
+                        ['label' => 'Action History', 'url' => ['/profile/action-history']],
+                        ['label' => 'View Infos.', 'url' => ['/profile/view']],
+                        ['label' => 'View Raw Infos. (CNIL)', 'url' => ['/profile/view-raw']],
+                        ['label' => 'Update', 'url' => ['/profile/update']],
+                    ]],
+                    ['label' => 'Admin. Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
+                        ['label' => 'Params', 'url' => ['/param/index']],
+                        ['label' => 'Users', 'url' => ['/user/index']],
+                        ['label' => 'UserState', 'url' => ['/userstate/index']],
+                        ['label' => 'Group', 'url' => ['/group/index']],
+                        ['label' => 'Service', 'url' => ['/service/index']],
+                    ]],                    
                     ['label' => 'About', 'url' => ['/site/about']],
-                    ['label' => 'Contact', 'url' => ['/site/contact']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
                         ['label' => 'Logout (' . Yii::$app->user->identity->USER_NICKNAME . ')',
@@ -58,7 +72,7 @@ AppAsset::register($this);
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+            <p class="pull-left">&copy; Levya Org. Indentity<?= date('Y') ?></p>
             <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>

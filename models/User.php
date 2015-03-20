@@ -42,7 +42,7 @@ use app\helpers\PasswordHelper;
  * @property SOCIALACCOUNT[] $SOCIALACCOUNTS
  * @property TOKEN[] $TOKENS
  * @property City $CITIECITY
- * @property Country $COUNTRIECOUNTRY
+ * @property Country $COUNTRY
  * @property REGION $REGIONREGION
  * @property USERSTATE $USERSTATEUSERSTATE
  * @property WORK[] $WORKS
@@ -140,7 +140,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'USER_AUTHKEY' => Yii::t('app/user', 'User  Authkey'),
             'USERSTATE_USERSTATE_ID' => Yii::t('app/user', 'Userstate  Userstate  ID'),
             'USER_LDAPUID' => Yii::t('app/user', 'User  Ldapuid'),
-            'COUNTRY_CountryId' => Yii::t('app/user', 'Countrie  Country ID'),
+            'cOUNTRY' => Yii::t('app/user', 'Country'),
             'USER_LONGITUDE' => Yii::t('app/user', 'User Longitude'), 
             'USER_LATITUDE' => Yii::t('app/user', 'User Latitude')
         ];
@@ -152,12 +152,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function scenarios()
     {
         return [
-            'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'password','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
+            'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'TMP_PASSWORD','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
             'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
             'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
             'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
-            'user_settings' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
-            'user_AsMember_settings' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD']
         ];
     }
     
@@ -182,6 +180,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 $this->USER_LASTNAME = strtoupper($this->USER_LASTNAME);
                 $this->USER_MAIL = strtolower($this->USER_MAIL);
                 $this->USER_CREATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
+                $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);
             }
             else {
                 //TODO ActionHistory
@@ -255,7 +254,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCOUNTRIECountry()
+    public function getCOUNTRY()
     {
         return $this->hasOne(Country::className(), ['CountryId' => 'COUNTRY_CountryId']);
     }
@@ -291,6 +290,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return $this->getAuthKey() == $authKey;
     }
 
+    /**
+     * 
+     * @param type $id
+     * @return User
+     */
     public static function findIdentity($id) {
         return static::findOne($id);
     }
@@ -331,6 +335,12 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 
     // </editor-fold>
 
+    /**
+     * Create a new User.
+     * @return boolean
+     * @throws \RuntimeException
+     * @throws Exception
+     */
     public function create(){
         if ($this->getIsNewRecord() == false) {
             throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
@@ -339,7 +349,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         $transaction = $this->getDb()->beginTransaction();
         
         try {
-            $this->setAttribute('USER_PASSWORD', PasswordHelper::hash($this->TMP_PASSWORD));
             $this->USER_SECRETKEY = PasswordHelper::generate(80);
             $this->USERSTATE_USERSTATE_ID = UserState::findOne(['USERSTATE_DEFAULT' => 1])->USERSTATE_ID;
 //            //TODO 
@@ -376,6 +385,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return false;
     }
     
+    /**
+     * Confirm a user registration
+     * @param type $token
+     * @return boolean
+     */
     public function confirm($token){
         $token = Token::findOne(['TOKEN_CODE' => $token]);
             
@@ -390,5 +404,35 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         return false;        
     }
-
+    
+    /**
+     * Update the password of an User
+     * @param type $newPassword
+     * @return boolean
+     */
+    public function updatePassword(){
+        $transaction = $this->getDb()->beginTransaction();
+        \Yii::getLogger()->log('USER_PASSWORD : '.$this->USER_PASSWORD.' TMP_PASSWORD : '.$this->TMP_PASSWORD, Logger::LEVEL_ERROR);
+        try {
+            $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);  
+            
+            if ($this->update(FALSE) !== false) {
+                \Yii::getLogger()->log('User password has been updated', Logger::LEVEL_INFO);
+                \Yii::$app->session->setFlash('user.update_ok');
+                
+                //TODO LDAP
+                
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('User password hasn\'t been updated'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                \Yii::$app->session->setFlash('user.update_ko');
+            }
+        } catch (Exception $exc) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while updating user password account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+        }
+        return false;
+    }
 }

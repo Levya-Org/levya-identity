@@ -47,11 +47,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'USER_LDAPUID') ?>
 
-    <?php // echo $form->field($model, 'COUNTRIE_CountryId') ?>
-
-    <?php // echo $form->field($model, 'REGION_RegionID') ?>
-
-    <?php // echo $form->field($model, 'CITIE_CityId') ?>
+    <?php // echo $form->field($model, 'cOUNTRY') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app/user', 'Search'), ['class' => 'btn btn-primary']) ?>
