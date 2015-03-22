@@ -5,10 +5,13 @@ namespace app\controllers;
 use Yii;
 use app\models\Group;
 use app\models\GroupSearch;
+use app\models\GroupAccessService;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ConflictHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\log\Logger;
 
 /**
  * GroupController implements the CRUD actions for Group model.
@@ -26,11 +29,11 @@ class GroupController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'only' => ['index', 'view', 'create', 'update', 'delete', 'AjaxUpdate'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'AjaxUpdate'],
                         'roles' => ['administrator', 'developer'],
                     ],
                 ],
@@ -113,6 +116,68 @@ class GroupController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    /**
+     * Function used only with/for ajax call.
+     * @throws ConflictHttpException
+     * @throws NotFoundHttpException
+     */
+    public function actionAjaxUpdate(){
+        if(\Yii::$app->request->isAjax){
+            \Yii::getLogger()->log('actionAjaxUpdate', Logger::LEVEL_TRACE);
+            //Action
+            $action = \Yii::$app->request->post('action');
+            //From DropdownList
+            $selectedService = \Yii::$app->request->post('service');
+            //From Grid
+            $selectedServices = \Yii::$app->request->post('selection');
+            $groupId = \Yii::$app->request->post('group_id');
+            
+            if(!isset($action)){
+                \Yii::getLogger()->log('actionAjaxUpdate called without action param', Logger::LEVEL_ERROR);
+                throw new ConflictHttpException();
+            }
+                
+            if(!isset($groupId)){
+               \Yii::getLogger()->log('actionAjaxUpdate called without GroupID param', Logger::LEVEL_ERROR);
+               throw new ConflictHttpException();
+            }                
+            
+            if($action == "doAdd"){
+                $model = new GroupAccessService([
+                    'GROUP_GROUP_ID' => $groupId,
+                    'SERVICE_SERVICE_ID' => $selectedService
+                ]);
+                $model->save();
+            }
+                        
+            if (count($selectedServices) > 0) {
+                foreach ($selectedServices as $service) {                    
+                    switch ($action) {
+                        case "doAdd" : {
+                                break;
+                            }
+                        case "doRemove" : {
+                                $model = GroupAccessService::findOne(
+                                    [
+                                        'GROUP_GROUP_ID' => $groupId,
+                                        'SERVICE_SERVICE_ID' => $service
+                                    ]);
+                                if($model != null)
+                                    $model->delete ();
+                                break;
+                            }
+                        default : {
+                                \Yii::getLogger()->log('actionAjaxUpdate called with an inexistent action', Logger::LEVEL_WARNING);
+                                throw new NotFoundHttpException('The requested page does not exist.');
+                            }
+                    }
+                }
+            }
+        }
+        else 
+            \Yii::getLogger()->log('actionAjaxUpdate called directly', Logger::LEVEL_WARNING);
     }
 
     /**

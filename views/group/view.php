@@ -38,5 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'GROUP_ISDEFAULT:boolean',
         ],
     ]) ?>
+    
+    <?= $this->render('view_gas', ['model' => $model]) ?>
 
 </div>

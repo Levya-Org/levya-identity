@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use \yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "SERVICE".
@@ -56,6 +57,15 @@ class Service extends \yii\db\ActiveRecord
             'SERVICE_ISENABLE' => Yii::t('app/service', 'Service  Isenable'),
             'SERVICE_STATE' => Yii::t('app/service', 'Service  State'),
         ];
+    }
+    
+    /**
+     * Return an array of all services
+     * @return array[SERVICE_ID,SERVICE_NAME]
+     */
+    public static function getServicesList()
+    {
+        return ArrayHelper::map(Service::find()->all(), 'SERVICE_ID', 'SERVICE_NAME');
     }
 
     /**
