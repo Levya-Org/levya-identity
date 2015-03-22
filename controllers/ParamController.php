@@ -126,7 +126,7 @@ class ParamController extends Controller
             foreach (\Yii::$app->params as $key => $value) {
                 $model = new Param([
                     'PARAM_NAME' => $key,
-                    'PARAM_VALUE' => $value
+                    'PARAM_VALUE' => print_r($value, true)
                 ]);
                 if($model->validate()){
                     $model->save ();

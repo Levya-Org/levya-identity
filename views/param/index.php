@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
@@ -38,7 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
+    <?php Pjax::begin(); ?>
     <?= GridView::widget([
+        'id' => 'param-cgridview',
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
@@ -55,5 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
+    <?php Pjax::end(); ?>
 
 </div>

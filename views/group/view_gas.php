@@ -23,7 +23,7 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_gas.js', [
 
     <?php Pjax::begin() ?>
     <?= GridView::widget([
-        'id' => 'service-crgidview',
+        'id' => 'service-cgridview',
         'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getSERVICES()]),
         'columns' => [
             

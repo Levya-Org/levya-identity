@@ -39,5 +39,6 @@ $("#ajax_param_import").click(function(event){
         },
     })).then(function(data,textStatus, XMLHttpRequest){
         $btn.button('reset');
+        $.pjax.reload({container:'#param-cgridview'});
     });
 });

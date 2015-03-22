@@ -27,7 +27,7 @@ $("#ajax_submit_add").click(function(event){
        'url': $form.attr('action'),
        'data': $data,
        'success' : function(data, textStatus, XMLHttpRequest){
-           $.pjax.reload({container:'#service-crgidview'});
+           $.pjax.reload({container:'#service-cgridview'});
        }
    });
 });
@@ -43,7 +43,7 @@ $("#ajax_submit_remove").click(function(event){
        'url': $form.attr('action'),
        'data': $data,
        'success' : function(data, textStatus, XMLHttpRequest){
-           $.pjax.reload({container:'#service-crgidview'});
+           $.pjax.reload({container:'#service-cgridview'});
        }
    });
 });
