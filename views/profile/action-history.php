@@ -6,7 +6,6 @@ use app\helpers\IPHelper;
 use app\models\ActionHistoryExt;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ActionHistorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $data app\models\ActionHistory */
 
@@ -16,7 +15,6 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="action-history-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -38,8 +36,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return IPHelper::BinToStr($data->ACTION_HISTORY_IP);
                 },
             ],
-
-//            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

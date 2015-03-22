@@ -41,7 +41,6 @@ class ProfileController extends \yii\web\Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('action-history', [
-            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }

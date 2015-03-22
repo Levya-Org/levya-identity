@@ -8,6 +8,11 @@ use app\helpers\RoleHelper;
 /* @var $searchModel app\models\ParamSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+$this->registerJsFile(Yii::$app->request->baseUrl.'/js/index_param.js', [
+    'depends' => [\yii\web\JqueryAsset::className()],
+    'position' => \yii\web\View::POS_END]
+);
+
 $this->title = Yii::t('app/param', 'Params');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -18,8 +23,19 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a(Yii::t('app/param', 'Create {modelClass}', [
-    'modelClass' => 'Param',
-]), ['create'], ['class' => 'btn btn-success']) ?>
+            'modelClass' => 'Param',
+            ]),
+                ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Import', ['param/import'], [
+            'id' => 'ajax_param_import',
+            'class' => 'btn btn-info',
+            'tabindex' => '2',
+            'role' => 'button',
+            'data-toggle' => 'popover',
+            'data-trigger' => 'focus',
+            'data-placement' => 'right',
+            'data-loading-text' => 'Importing...',
+        ]) ?>
     </p>
 
     <?= GridView::widget([

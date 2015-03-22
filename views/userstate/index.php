@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserStateSearch */
@@ -27,9 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'USERSTATE_ID',
+            [
+                'attribute'=> 'USERSTATE_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'USERSTATE_NAME',
             'USERSTATE_DESCRIPTION:ntext',
+            'USERSTATE_DEFAULT:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

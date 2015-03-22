@@ -9,6 +9,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\log\Logger;
 
 /**
  * ParamController implements the CRUD actions for Param model.
@@ -113,6 +114,27 @@ class ParamController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+    
+    /**
+     * Import Param from params.php
+     */
+    public function actionImport(){
+        if(\Yii::$app->request->isAjax){
+            \Yii::getLogger()->log('actionImport', Logger::LEVEL_TRACE);   
+            $counter = 0;
+            foreach (\Yii::$app->params as $key => $value) {
+                $model = new Param([
+                    'PARAM_NAME' => $key,
+                    'PARAM_VALUE' => $value
+                ]);
+                if($model->validate()){
+                    $model->save ();
+                    $counter++;
+                }                    
+            }
+            echo $counter.\Yii::t('app/user', ' Parameter(s) imported');
+        }
     }
 
     /**

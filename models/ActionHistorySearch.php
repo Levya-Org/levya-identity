@@ -63,6 +63,8 @@ class ActionHistorySearch extends ActionHistory
         ]);
 
         $query->andFilterWhere(['like', 'ACTION_HISTORY_IP', $this->ACTION_HISTORY_IP]);
+        
+        $query->orderBy(['ACTION_HISTORY_DATE' => SORT_DESC]);
 
         return $dataProvider;
     }

@@ -29,7 +29,7 @@ class Param extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['PARAM_NAME', 'PARAM_VALUE', 'PARAM_TYPE'], 'required'],
+            [['PARAM_NAME', 'PARAM_VALUE'], 'required'],
             [['PARAM_NAME'], 'string', 'max' => 255],
             [['PARAM_VALUE'], 'string', 'max' => 45],
             [['PARAM_TYPE'], 'string', 'max' => 20],
@@ -57,6 +57,7 @@ class Param extends \yii\db\ActiveRecord
      */
     public static function getParam($paramName){
         \Yii::getLogger()->log('getParam', Logger::LEVEL_TRACE);
+        
         return Param::findOne([
             'PARAM_NAME' => $paramName,
         ]);
@@ -64,15 +65,23 @@ class Param extends \yii\db\ActiveRecord
     
     /**
      * Return a Param value from his name
+     * If not found in DB, searched in param.php
      * @param string $paramName
-     * @return app\model\Param
+     * @return paral value
      */
     public static function  getParamValue($paramName){
         \Yii::getLogger()->log('getParamValue', Logger::LEVEL_TRACE);
         $model = Param::getParam($paramName);
-        if(isset($model))
+        if(isset($model)) {
             return $model->PARAM_VALUE;
-        else
-            \Yii::getLogger()->log('Searching a non existing Param : '.$paramName, Logger::LEVEL_ERROR);     
+        }            
+        else if(array_key_exists($paramName,\Yii::$app->params)) {
+            \Yii::getLogger()->log('Accessing a non existing Param in DB : '.$paramName, Logger::LEVEL_WARNING);   
+            return \Yii::$app->params[$paramName];
+        }
+        else {
+            \Yii::getLogger()->log('Searching a non existing Param : '.$paramName, Logger::LEVEL_ERROR);
+            return false;
+        }
     }
 }

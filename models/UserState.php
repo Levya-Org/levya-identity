@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "USERSTATE".
@@ -48,6 +49,15 @@ class UserState extends \yii\db\ActiveRecord
             'USERSTATE_DESCRIPTION' => Yii::t('app/user', 'Userstate  Description'),
             'USERSTATE_DEFAULT' => Yii::t('app/user', 'Userstate  Default'),
         ];
+    }
+    
+    /**
+     * Return an array of all UserState
+     * @return array[USERSTATE_ID,USERSTATE_NAME]
+     */
+    public static function getUserStatesList()
+    {
+        return ArrayHelper::map(UserState::find()->all(), 'USERSTATE_ID', 'USERSTATE_NAME');
     }
 
     /**

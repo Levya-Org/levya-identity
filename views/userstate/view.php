@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use app\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\UserState */
@@ -28,9 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'USERSTATE_ID',
+            [
+                'attribute'=> 'USERSTATE_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'USERSTATE_NAME',
             'USERSTATE_DESCRIPTION:ntext',
+            'USERSTATE_DEFAULT:boolean'
         ],
     ]) ?>
 

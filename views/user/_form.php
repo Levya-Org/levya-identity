@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use app\helpers\RoleHelper;
+use app\models\UserState;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
@@ -33,7 +34,7 @@ use app\helpers\RoleHelper;
 
     <?= $form->field($model, 'USER_SECRETKEY')->textInput(['maxlength' => 80]) ?>
 
-    <?= $form->field($model, 'USERSTATE_USERSTATE_ID')->textInput(['maxlength' => 10]) ?>
+    <?= $form->field($model, 'USERSTATE_USERSTATE_ID')->dropDownList(UserState::getUserStatesList()) ?>
 
     <?= $form->field($model, 'cOUNTRY')->textInput() ?>
 
