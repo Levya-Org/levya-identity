@@ -7,6 +7,7 @@ use yii\web\NotFoundHttpException;
 use app\models\RegisterForm_Resend;
 use app\models\RegisterForm_Register;
 use app\models\RegisterForm_RegisterAsMember;
+use \app\helpers\LDAPHelper;
 
 class RegistrationController extends Controller
 {
@@ -42,6 +43,10 @@ class RegistrationController extends Controller
         }
         
         if ($user->confirm($token)) {
+            $ldap = new LDAPHelper();
+            $userDn = $ldap->getDNfromUser($user->USER_LDAPUID);
+            $ldap->addUserToGroup($userDn, $user->getLDAPGroup());
+            $ldap->addUserToAccess($userDn, $user->getLDAPAccess());
             \Yii::$app->session->setFlash('user.confirmation_finished');
         }
         else {

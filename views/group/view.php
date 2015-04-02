@@ -34,6 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
             ],
             'GROUP_NAME',
+            'GROUP_LDAPNAME',
             'GROUP_ISENABLE:boolean',
             'GROUP_ISDEFAULT:boolean',
         ],

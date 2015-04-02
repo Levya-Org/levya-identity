@@ -10,6 +10,7 @@ use yii\helpers\VarDumper;
 
 use app\helpers\IPHelper;
 use app\helpers\PasswordHelper;
+use \app\helpers\LDAPHelper;
 
 
 /**
@@ -351,27 +352,11 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         try {
             $this->USER_SECRETKEY = PasswordHelper::generate(80);
             $this->USERSTATE_USERSTATE_ID = UserState::findOne(['USERSTATE_DEFAULT' => 1])->USERSTATE_ID;
-//            //TODO 
-//            $this->USER_LDAPUID = LDAPHelper::generateUserUID($this);
-            $this->USER_LDAPUID = $this->USER_NICKNAME;           
+            $this->USER_LDAPUID = \Yii::$app->security->generateRandomString(80);
             
             if ($this->save()) {
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
                 \Yii::$app->session->setFlash('user.confirmation_sent');
-                
-                //LEVYA SYSTEM
-                {
-                    $belong = new Belong();
-                    if(!$belong->create($this->primaryKey)){
-                        throw new Exception;
-                    }
-                }
-                //RBAC
-                {
-                    $userRole = \Yii::$app->authManager->getRole('user');
-                    \Yii::$app->authManager->assign($userRole, $this->primaryKey);
-                }
-                
                 $transaction->commit();
                 return true;
             }
@@ -412,7 +397,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function updatePassword(){
         $transaction = $this->getDb()->beginTransaction();
-        \Yii::getLogger()->log('USER_PASSWORD : '.$this->USER_PASSWORD.' TMP_PASSWORD : '.$this->TMP_PASSWORD, Logger::LEVEL_ERROR);
         try {
             $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);  
             
@@ -420,7 +404,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 \Yii::getLogger()->log('User password has been updated', Logger::LEVEL_INFO);
                 \Yii::$app->session->setFlash('user.update_ok');
                 
-                //TODO LDAP
+                $ldap = new LDAPHelper();
+                $ldap->updateUser($this->USER_LDAPUID, [
+                    'userPassword' => $this->TMP_PASSWORD,
+                ]);
                 
                 $transaction->commit();
                 return true;
@@ -434,5 +421,42 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             \Yii::getLogger()->log('An error occurred while updating user password account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
         }
         return false;
+    }
+    
+    /**
+     * Return array of LDAP Group Name
+     * @return type
+     */
+    public function getLDAPGroup(){
+        $belong = Belong::findOne([
+            'USER_USER_ID' => $this->USER_ID,
+            'BELONG_TO' => null
+        ]);
+        
+        $toReturn = array();
+        $toReturn[] = $belong->gROUPGROUP->GROUP_LDAPNAME;
+        
+        return $toReturn;
+    }
+    
+    /**
+     * Return array of LDAP Access Name
+     * @return array
+     */
+    //TODO: add project access
+    public function getLDAPAccess(){
+        $belong = Belong::findOne([
+            'USER_USER_ID' => $this->USER_ID,
+            'BELONG_TO' => null
+        ]);
+        $services = $belong->gROUPGROUP->sERVICES;
+        
+        $toReturn = array();
+        
+        foreach ($services as $service) {
+            $toReturn[] = $service->SERVICE_LDAPNAME;
+        }
+        
+        return $toReturn;
     }
 }

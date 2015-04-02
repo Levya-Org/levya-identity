@@ -21,6 +21,8 @@ use app\helpers\RoleHelper;
     <?php endif; ?>
 
     <?= $form->field($model, 'GROUP_NAME') ?>
+    
+    <?= $form->field($model, 'GROUP_LDAPNAME') ?>
 
     <?= $form->field($model, 'GROUP_ISENABLE')->checkbox() ?>
 

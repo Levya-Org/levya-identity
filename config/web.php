@@ -1,6 +1,8 @@
 <?php
-
-$params = require(__DIR__ . '/params.php');
+if(defined('YII_ENV'))
+    $params = require(__DIR__ . '/params.dev.php');
+else
+    $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'levya-identity-web',

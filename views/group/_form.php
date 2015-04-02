@@ -13,6 +13,8 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?= $form->field($model, 'GROUP_NAME')->textInput(['maxlength' => 225]) ?>
+    
+    <?= $form->field($model, 'GROUP_LDAPNAME')->textInput(['maxlength' => 45]) ?>
 
     <?= $form->field($model, 'GROUP_ISENABLE')->checkbox() ?>
 

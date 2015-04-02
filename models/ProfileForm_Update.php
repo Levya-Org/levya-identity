@@ -23,6 +23,7 @@ use yii\base\Model;
 use yii\log\Logger;
 use app\models\User;
 use app\models\ActionHistoryExt;
+use app\helpers\LDAPHelper;
 
 use app\helpers\PasswordHelper;
 use kartik\password\StrengthValidator;
@@ -71,9 +72,20 @@ class ProfileForm_Update extends User
                     ActionHistoryExt::ahUserUpdate($this->USER_ID);
                     return true;
                 }
-            }                
+            }
+            
+            if($this->update()){
+                $ldap = new LDAPHelper();
+                $ldap->updateUser($this->USER_LDAPUID, [
+                    'mail' => $this->USER_MAIL,
+                    'sn' => $this->USER_NICKNAME,
+                    'displayName' => $this->USER_NICKNAME
+                ]);
+            }
+            else
+                return false;
         }
-        return false;
+        return true;
     }
     
     /**

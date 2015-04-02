@@ -79,22 +79,40 @@ class RegisterForm_Register extends Model
                 'TMP_PASSWORD' => $this->USER_PASSWORD,
                 'USER_PASSWORD' => $this->USER_PASSWORD
             ]);
+            
+//            $transaction = $this->getDb()->beginTransaction();
+            
             if($model->create()){
-                $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
-                $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
-                
-                MailHelper::registrationMail($model, $token);
-                \Yii::$app->session->setFlash('user.confirmation_sent');
+                try {
+                    //LEVYA SYSTEM
+                    {
+                        $belong = new Belong();
+                        if(!$belong->create($model->primaryKey)){
+                            throw new Exception;
+                        }
+                    }
+                    //RBAC
+                    {
+                        $userRole = \Yii::$app->authManager->getRole('user');
+                        \Yii::$app->authManager->assign($userRole, $model->primaryKey);
+                    }
+                    //LDAP
+                    {
+                        $ldap = new LDAPHelper();
+                        $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_LDAPUID);
+                    }
+                    $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
+                    $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
+
+                    MailHelper::registrationMail($model, $token);
+//                    $transaction->commit();
+                    \Yii::$app->session->setFlash('user.confirmation_sent');
+                } catch (Exception $exc) {
+//                    $transaction->rollBack();
+                    \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+                }
                 return true;
             }
-            else {
-                
-            }
-            
-            //TODO gestion erreur 
-            
-//            $ldap = new LDAPHelper();
-//            $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_SECRETKEY);
         }
         return false;
     }
