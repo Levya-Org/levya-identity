@@ -23,7 +23,7 @@ use app\models\Country;
        
     <?= $form->field($model, 'USER_ADDRESS')->textarea() ?>
     
-    <?= $form->field($model, 'USER_COUNTRYID')->dropDownList(Country::getCountriesList(),[
+    <?= $form->field($model, 'COUNTRY_CountryId')->dropDownList(Country::getCountriesList(),[
         'prompt' => '- Choose a Country -',
         'onchange' => '$.get( "'.Url::toRoute('region/get-regions-list').'", { countryId: $(this).val() } )
             .done(function(data){
@@ -36,9 +36,7 @@ use app\models\Country;
 
     <?= $form->field($model, 'USER_MAIL') ?>
 
-    <?= $form->field($model, 'USER_PASSWORD')->passwordInput() ?>
-    
-    
+    <?= $form->field($model, 'USER_PASSWORD_VERIFY')->passwordInput() ?>    
     
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app/user', 'Submit'), ['class' => 'btn btn-primary']) ?>

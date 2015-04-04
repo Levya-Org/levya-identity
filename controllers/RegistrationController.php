@@ -71,7 +71,8 @@ class RegistrationController extends Controller
     
     public function actionRegisterMember()
     {       
-        $model = new RegisterForm_RegisterAsMember();
+        $model = RegisterForm_RegisterAsMember::findIdentity(\Yii::$app->user->id);
+        $model->setScenario('user_AsMember_register');
 
         if ($model->load(\Yii::$app->request->post()) && $model->registerAsMember()) {
             return $this->render('finish');

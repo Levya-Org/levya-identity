@@ -2,73 +2,29 @@
 
 namespace app\models;
 
-use yii\base\Model;
 use yii\log\Logger;
 
-use kartik\password\StrengthValidator;
-
 use app\models\User;
-use app\models\ActionHistory;
+use app\models\ActionHistoryExt;
 
-class RegisterForm_RegisterAsMember extends Model
+class RegisterForm_RegisterAsMember extends User
 {
-    /** @var string */
-    public $USER_NICKNAME;
-
-    /** @var string */
-    public $USER_MAIL;
-
-    /** @var string */
-    public $USER_PASSWORD;
+    public $USER_PASSWORD_VERIFY;
     
-    public $USER_LASTNAME;
-    public $USER_FORNAME;
-    public $USER_ADDRESS;
-    public $USER_COUNTRYID;
-    public $USER_REGIONID;
-    public $USER_CITYID;
-    public $USER_PHONE;
-
     /** @inheritdoc */
     public function rules()
     {
-        return [
-            //USER_NICKNAME
-            [['USER_NICKNAME'], 'required'],
-            [['USER_NICKNAME'], 'match', 'pattern' => '/^[\w]{3,15}$/'],
-            [['USER_NICKNAME'], 'string', 'min' => 3, 'max' => 20],
-            [['USER_NICKNAME'], 'unique', 'targetClass' => 'app\models\User',
-                'message' => \Yii::t('app/user', 'This username has already been taken')],
-            
-            //USER_EMAIL
-            [['USER_MAIL'], 'required'],
-            [['USER_MAIL'], 'string', 'max' => 254],
-            [['USER_MAIL'], 'email'],
-            [['USER_MAIL'], 'unique', 'targetClass' => 'app\models\User',
-                'message' => \Yii::t('app/user', 'This email address has already been taken')],
-            
-            [['USER_PASSWORD'], 'required'],
-            [['USER_PASSWORD'], StrengthValidator::className(), 'preset'=>'fair', 'userAttribute'=>'USER_NICKNAME'],
-            
-            [['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_SECRETKEY'], 'string', 'max' => 80],
-            [['USERSTATE_USERSTATE_ID', 'COUNTRIE_CountryId'], 'integer'],
-            [['USER_ADDRESS'], 'string'],
-            [['USER_PHONE'], 'string', 'max' => 20],
-        ];
+        return array_merge(User::rules(), [
+            [['USER_PASSWORD_VERIFY'], 'required'],
+            [['USER_PASSWORD_VERIFY'], 'validatePassword'],
+        ]);
     }
 
     /** @inheritdoc */
     public function attributeLabels()
     {
         return [
-            'USER_LASTNAME' => \Yii::t('app/user', 'User  Lastname'),
-            'USER_FORNAME' => \Yii::t('app/user', 'User  Forname'),
-            'USER_ADDRESS' => \Yii::t('app/user', 'User  Address'),
-            'USER_PHONE' => \Yii::t('app/user', 'User  Phone'),
-            'USER_MAIL' => \Yii::t('app/user', 'User  Mail'),
-            'USER_NICKNAME' => \Yii::t('app/user', 'User  Nickname'),
-            'USER_PASSWORD' => \Yii::t('app/user', 'User  Password'),
-            'REGION_RegionID' => \Yii::t('app/user', 'Region  Region ID'),
+            'USER_PASSWORD_VERIFY' => \Yii::t('app/user', 'User  Password Verify'),
         ];
     }
 
@@ -85,29 +41,37 @@ class RegisterForm_RegisterAsMember extends Model
      */
     public function registerAsMember()
     {
-        \Yii::getLogger()->log('User Resend Confirmation', Logger::LEVEL_TRACE);
+        \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
         if ($this->validate()) {
-            $model = new User([
-                'scenario' => 'user_register',
-                'USER_LASTNAME' => $this->USER_LASTNAME,
-                'USER_FORNAME' => $this->USER_FORNAME,
-                'USER_ADDRESS' => $this->USER_ADDRESS,
-                'COUNTRIE_CountryId' => $this->USER_COUNTRYID,
-                'USER_PHONE' => $this->USER_PHONE,
-                'USER_MAIL' => $this->USER_MAIL,
-                'USER_NICKNAME' => $this->USER_NICKNAME,
-                'TMP_PASSWORD' => $this->USER_PASSWORD
-            ]);
-            $model->create();
-            $ah = ActionHistory::ahUserCreation($model->USER_ID);
-            $token = Token::createToken($model->USER_ID, Token::TYPE_CONFIRMATION);
-            //TODO gestion erreur 
+            $model->update();
+            $ah = ActionHistoryExt::ahUserMemberRegistration($model->USER_ID);
+            $token = Token::createToken($model->USER_ID, Token::TYPE_MEMBER_CONFIRMATION);
             //TODO mail
-            
+            //TODO donation
             \Yii::$app->session->setFlash('user.confirmation_sent');
             return true;
         }
 
         return false;
+    }
+    
+    /**
+     * Validates the password.
+     * This method serves as the inline validation for password.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validatePassword($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if (!PasswordHelper::validate($this->USER_PASSWORD_VERIFY, $this->USER_PASSWORD)) {
+                $this->addError($attribute, 'Incorrect password.');
+            }
+        }
+    }
+    
+    public static function findIdentity($id) {
+        return parent::findIdentity($id);
     }
 }

@@ -178,7 +178,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         if (parent::beforeSave($insert)) {
             if ($this->isNewRecord) {
                 $this->USER_AUTHKEY = Yii::$app->getSecurity()->generateRandomString();
-                $this->USER_LASTNAME = strtoupper($this->USER_LASTNAME);
                 $this->USER_MAIL = strtolower($this->USER_MAIL);
                 $this->USER_CREATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
                 $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);
@@ -356,7 +355,27 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             
             if ($this->save()) {
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
-                \Yii::$app->session->setFlash('user.confirmation_sent');
+                
+                //LEVYA SYSTEM
+                {
+                    $belong = new Belong();
+                    if(!$belong->create($model->primaryKey)){
+                        throw new Exception;
+                    }
+                }
+                //RBAC
+                {
+                    $userRole = \Yii::$app->authManager->getRole('user');
+                    \Yii::$app->authManager->assign($userRole, $model->primaryKey);
+                }
+                //LDAP
+                {
+                    $ldap = new LDAPHelper();
+                    $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_LDAPUID);
+                }
+                
+                $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
+                
                 $transaction->commit();
                 return true;
             }

@@ -34,9 +34,10 @@ class ActionHistoryExt extends \app\models\ActionHistory{
     const AH_USER_CREATION = 0;
     const AH_USER_RESEND = 1;
     const AH_USER_REGISTRATION = 2;
-    const AH_USER_UPDATE = 3;   
-    const AH_USER_RESET = 4;
-    const AH_USER_CNIL_ACCESS = 5;
+    const AH_USER_MEMBER_REGISTRATION = 3;
+    const AH_USER_UPDATE = 4;   
+    const AH_USER_RESET = 5;
+    const AH_USER_CNIL_ACCESS = 6;
 
     const AH_USER_CONNECTION_IDENTITY = 100;
     const AH_USER_TRYCONNECTION_IDENTITY = 101;
@@ -80,6 +81,15 @@ class ActionHistoryExt extends \app\models\ActionHistory{
     public static function ahUserRegistration($userId){
         $ac = new ActionHistory();
         $ac->create(ActionHistoryExt::AH_USER_REGISTRATION, $userId);
+    }
+    
+    /**
+     * Create an ActionHistory for a User who update as member
+     * @param type $userId
+     */
+    public static function ahUserMemberRegistration($userId){
+        $ac = new ActionHistory();
+        $ac->create(ActionHistoryExt::AH_USER_MEMBER_REGISTRATION, $userId);
     }
     
     /**
