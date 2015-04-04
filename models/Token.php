@@ -160,10 +160,12 @@ class Token extends \yii\db\ActiveRecord
             }
             else {
                 \Yii::getLogger()->log('Token error at creation, reason : '.VarDumper::dumpAsString($token->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Token error at creation, see Model error.');
             }
             
         } catch (Exception $ex) {
             Yii::getLogger()->log('An error occurred while creating Token '.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw  $ex;
         }
     }
 }

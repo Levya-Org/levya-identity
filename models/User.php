@@ -356,12 +356,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             if ($this->save()) {
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
                 
-                //LEVYA SYSTEM
+                //BELONG <> GROUP
                 {
                     $belong = new Belong();
-                    if(!$belong->create($model->primaryKey)){
-                        throw new Exception;
-                    }
+                    $belong->create($model->primaryKey);
                 }
                 //RBAC
                 {
@@ -374,17 +372,19 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                     $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_LDAPUID);
                 }
                 
-                $ah = ActionHistoryExt::ahUserCreation($model->USER_ID);
+                ActionHistoryExt::ahUserCreation($model->USER_ID);
                 
                 $transaction->commit();
                 return true;
             }
             else {
                 \Yii::getLogger()->log('User hasn\'t been created'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('User error at creation, see Model error.');
             }
-        } catch (Exception $exc) {
+        } catch (Exception $ex) {
             $transaction->rollBack();
-            \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
         }
         return false;
     }

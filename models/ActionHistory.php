@@ -126,9 +126,11 @@ class ActionHistory extends \yii\db\ActiveRecord
             }
             else {
                 Yii::getLogger()->log('ActionHistory hasn\'t been created : '.VarDumper::dumpAsString($this->getErrors()), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('ActionHistory error at creation, see Model error.');
             }
         } catch (Exception $ex) {
             Yii::getLogger()->log('An error occurred while creating action history '.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw  $ex;
         }
     }
 }

@@ -72,7 +72,7 @@ class RegisterForm_Register extends Model
     {
         \Yii::getLogger()->log('User Registration', Logger::LEVEL_TRACE);
         if ($this->validate()) {
-            $model = new User([
+            $user = new User([
                 'scenario' => 'user_register',
                 'USER_MAIL' => $this->USER_MAIL,
                 'USER_NICKNAME' => $this->USER_NICKNAME,
@@ -80,14 +80,14 @@ class RegisterForm_Register extends Model
                 'USER_PASSWORD' => $this->USER_PASSWORD
             ]);
             
-            if($model->create()){
+            if($user->create()){
                 try {
-                    $token = Token::createToken($model->USER_ID, TokenExt::TYPE_CONFIRMATION);
-                    MailHelper::registrationMail($model, $token);
+                    $token = Token::createToken($user->USER_ID, TokenExt::TYPE_CONFIRMATION);
+                    MailHelper::registrationMail($user, $token);
 
                     \Yii::$app->session->setFlash('user.confirmation_sent');
-                } catch (Exception $exc) {
-                    \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+                } catch (Exception $ex) {
+                    \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
                 }
                 return true;
             }

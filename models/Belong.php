@@ -113,9 +113,11 @@ class Belong extends \yii\db\ActiveRecord
             }
             else {
                 \Yii::getLogger()->log('Belong hasn\'t been created'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Belong error at creation, see Model error.');
             }
         } catch (Exception $ex) {
             \Yii::getLogger()->log('An error occurred while creating belong inter-table'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw  $ex;
         }
         return false;
     }

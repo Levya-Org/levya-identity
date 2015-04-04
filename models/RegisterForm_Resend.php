@@ -77,7 +77,7 @@ class RegisterForm_Resend extends Model
     {
         \Yii::getLogger()->log('User Resend Confirmation', Logger::LEVEL_TRACE);
         if ($this->validate()) {
-            $ah = ActionHistoryExt::ahUserResend($this->user->USER_ID);
+            ActionHistoryExt::ahUserResend($this->user->USER_ID);
             $token = Token::createToken($this->user->USER_ID, TokenExt::TYPE_CONFIRMATION);
             MailHelper::registrationResendMail($this->getUser(), $token);
             //TODO gestion erreur             
