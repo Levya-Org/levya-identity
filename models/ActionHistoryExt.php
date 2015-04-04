@@ -211,6 +211,9 @@ class ActionHistoryExt extends \app\models\ActionHistory{
             case ActionHistoryExt::AH_USER_REGISTRATION:
                 return \Yii::t('app/actionhistory', 'AH_USER_REGISTRATION');
                 break;
+            case ActionHistoryExt::AH_USER_MEMBER_REGISTRATION:
+                return \Yii::t('app/actionhistory', 'AH_USER_MEMBER_REGISTRATION');
+                break;
             case ActionHistoryExt::AH_USER_UPDATE:
                 return \Yii::t('app/actionhistory', 'AH_USER_UPDATE');
                 break;

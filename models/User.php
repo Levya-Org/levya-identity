@@ -359,20 +359,20 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 //BELONG <> GROUP
                 {
                     $belong = new Belong();
-                    $belong->create($model->primaryKey);
+                    $belong->create($this->primaryKey);
                 }
                 //RBAC
                 {
                     $userRole = \Yii::$app->authManager->getRole('user');
-                    \Yii::$app->authManager->assign($userRole, $model->primaryKey);
+                    \Yii::$app->authManager->assign($userRole, $this->primaryKey);
                 }
                 //LDAP
                 {
                     $ldap = new LDAPHelper();
-                    $ldap->addUser($model->USER_NICKNAME, $model->USER_MAIL, $model->TMP_PASSWORD, $model->USER_LDAPUID);
+                    $ldap->addUser($this->USER_NICKNAME, $this->USER_MAIL, $this->TMP_PASSWORD, $this->USER_LDAPUID);
                 }
                 
-                ActionHistoryExt::ahUserCreation($model->USER_ID);
+                ActionHistoryExt::ahUserCreation($this->primaryKey);
                 
                 $transaction->commit();
                 return true;
