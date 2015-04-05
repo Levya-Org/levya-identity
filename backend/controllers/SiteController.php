@@ -4,7 +4,7 @@ namespace backend\controllers;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
-use common\models\LoginForm;
+use common\models\SiteForm_Login;
 use yii\filters\VerbFilter;
 
 /**
@@ -64,7 +64,7 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new SiteForm_Login();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {

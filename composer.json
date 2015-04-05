@@ -20,7 +20,11 @@
 		"yiisoft/yii2-jui": "*",
         "zendframework/zend-ldap": "2.3.*@dev",
         "kartik-v/yii2-password": "dev-master",
-        "kartik-v/yii2-helpers": "dev-master"
+        "kartik-v/yii2-helpers": "dev-master",
+        "kartik-v/yii2-widget-datepicker": "*",
+        "kartik-v/bootstrap-tabs-x": "dev-master",
+        "michelf/php-smartypants": "dev-lib",
+        "kartik-v/yii2-markdown": "dev-master"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

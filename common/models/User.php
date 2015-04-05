@@ -1,47 +1,64 @@
 <?php
+
 namespace common\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
+use yii\db\Expression;
+use yii\log\Logger;
+use yii\helpers\VarDumper;
+
+use common\helpers\IPHelper;
+use common\helpers\PasswordHelper;
+use \common\helpers\LDAPHelper;
+
 
 /**
- * User model
+ * This is the model class for table "USER".
  *
- * @property integer $id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $auth_key
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property string $password write-only password
+ * @property string $USER_ID
+ * @property string $USER_LASTNAME
+ * @property string $USER_FORNAME
+ * @property string $USER_MAIL
+ * @property string $USER_NICKNAME
+ * @property string $USER_PASSWORD
+ * @property string $USER_ADDRESS
+ * @property string $USER_PHONE
+ * @property string $USER_SECRETKEY
+ * @property string $USER_CREATIONDATE
+ * @property string $USER_CREATIONIP
+ * @property string $USER_REGISTRATIONDATE
+ * @property string $USER_REGISTRATIONIP
+ * @property string $USER_UPDATEDATE
+ * @property string $USER_AUTHKEY
+ * @property string $USERSTATE_USERSTATE_ID
+ * @property string $USER_LDAPUID
+ * @property integer $COUNTRY_CountryId
+ * @property double $USER_LONGITUDE
+ * @property double $USER_LATITUDE
+ *
+ * @property ACTIONHISTORY[] $ACTIONHISTORIES
+ * @property BELONG[] $BELONGS
+ * @property DONATION[] $DONATIONS
+ * @property SOCIALACCOUNT[] $SOCIALACCOUNTS
+ * @property TOKEN[] $TOKENS
+ * @property City $CITIECITY
+ * @property Country $COUNTRY
+ * @property REGION $REGIONREGION
+ * @property USERSTATE $USERSTATEUSERSTATE
+ * @property WORK[] $WORKS
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
-
+    /** @var string Plain password. Used for model validation. */
+    public $TMP_PASSWORD;
+    
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%user}}';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            TimestampBehavior::className(),
-        ];
+        return 'USER';
     }
 
     /**
@@ -50,139 +67,415 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            //Required
+            [['USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID'], 'required', 'on' => 'user_register'],
+            [['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], 'required', 'on' => 'user_AsMember_register'],
+            
+            //USER_NICKNAME
+            [['USER_NICKNAME'], 'unique'],
+            [['USER_NICKNAME'], 'match', 'pattern' => '/^[\w]{3,15}$/'],
+            
+            //USER_EMAIL
+            [['USER_MAIL'], 'string', 'max' => 254],
+            [['USER_MAIL'], 'email'],
+            [['USER_MAIL'], 'unique'],
+            
+            //USER DATE
+            [['USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_UPDATEDATE'], 'date'],
+            
+            //
+            [['USER_LDAPUID'], 'string', 'max' => 100],
+            [['USER_LDAPUID'], 'unique'],
+            
+            //
+            [['USER_AUTHKEY'], 'string', 'max' => 32],
+            [['USER_AUTHKEY'], 'unique'],
+            
+            //
+            [['USER_SECRETKEY'], 'unique'],
+            
+            //
+            [['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_SECRETKEY'], 'string', 'max' => 80],
+            [['USERSTATE_USERSTATE_ID', 'COUNTRY_CountryId'], 'integer'],
+            [['USER_ADDRESS'], 'string'],
+            [['USER_PASSWORD'], 'string', 'max' => 255],
+            [['USER_PHONE'], 'string', 'max' => 20],
+            [['USER_REGISTRATIONIP'], 'string', 'max' => 16],
+            
+            //SAFE
+            [['USER_MAIL', 'USER_NICKNAME','USER_LASTNAME','USER_FORNAME','USER_ADDRESS', 'USER_PHONE','COUNTRY_CountryId' ], 'safe']
         ];
     }
+    
+    /**
+     * @inheritdoc
+     */
+    public function fields() {
+        $fields = parent::fields();
+
+        // remove fields that contain sensitive information
+        unset($fields['USER_AUTHKEY'], $fields['USER_SECRETKEY'], $fields['USER_PASSWORD']);
+
+        return $fields;
+    }
 
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
+    public function attributeLabels()
     {
-        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+        return [
+            'USER_ID' => Yii::t('app/user', 'User  ID'),
+            'USER_LASTNAME' => Yii::t('app/user', 'User  Lastname'),
+            'USER_FORNAME' => Yii::t('app/user', 'User  Forname'),
+            'USER_MAIL' => Yii::t('app/user', 'User  Mail'),
+            'USER_NICKNAME' => Yii::t('app/user', 'User  Nickname'),
+            'USER_PASSWORD' => Yii::t('app/user', 'User  Password'),
+            'USER_ADDRESS' => Yii::t('app/user', 'User  Address'),
+            'USER_PHONE' => Yii::t('app/user', 'User  Phone'),
+            'USER_SECRETKEY' => Yii::t('app/user', 'User  Secretkey'),
+            'USER_CREATIONDATE' => Yii::t('app/user', 'User  Creationdate'),
+            'USER_REGISTRATIONDATE' => Yii::t('app/user', 'User  Registrationdate'),
+            'USER_REGISTRATIONIP' => Yii::t('app/user', 'User  Registrationip'),
+            'USER_UPDATEDATE' => Yii::t('app/user', 'User  Updatedate'),
+            'USER_AUTHKEY' => Yii::t('app/user', 'User  Authkey'),
+            'USERSTATE_USERSTATE_ID' => Yii::t('app/user', 'Userstate  Userstate  ID'),
+            'USER_LDAPUID' => Yii::t('app/user', 'User  Ldapuid'),
+            'cOUNTRY' => Yii::t('app/user', 'Country'),
+            'USER_LONGITUDE' => Yii::t('app/user', 'User Longitude'), 
+            'USER_LATITUDE' => Yii::t('app/user', 'User Latitude')
+        ];
     }
-
+    
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function scenarios()
     {
-        throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+        return [
+            'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'TMP_PASSWORD','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
+            'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
+            'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
+            'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
+        ];
     }
-
+    
     /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
+     * @inheritdoc
      */
-    public static function findByUsername($username)
-    {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'USER_CREATIONDATE',
+                'updatedAtAttribute' => 'USER_UPDATEDATE',
+                'value' =>  new Expression('NOW()')
+            ],
+        ];
     }
-
-    /**
-     * Finds user by password reset token
-     *
-     * @param string $token password reset token
-     * @return static|null
-     */
-    public static function findByPasswordResetToken($token)
-    {
-        if (!static::isPasswordResetTokenValid($token)) {
-            return null;
+    
+    public function beforeSave($insert) {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->USER_AUTHKEY = Yii::$app->getSecurity()->generateRandomString();
+                $this->USER_MAIL = strtolower($this->USER_MAIL);
+                $this->USER_CREATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
+                $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);
+            }
+            else {
+                //TODO ActionHistory
+                if (isset($this->scenario)) {
+                    switch ($this->scenario) {
+                        case 'user_register':
+                        case 'user_AsMember_register':
+                            $this->USER_REGISTRATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
+                            $this->USER_REGISTRATIONDATE = new Expression('NOW()');
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            return true;
         }
+        return false;
+    }
 
-        return static::findOne([
-            'password_reset_token' => $token,
-            'status' => self::STATUS_ACTIVE,
+    public function afterFind() {
+        if(parent::afterFind()){
+            $this->USER_CREATIONIP = IPHelper::BinToStr($this->USER_CREATIONIP);
+            $this->USER_REGISTRATIONIP = IPHelper::BinToStr($this->USER_REGISTRATIONIP);
+            return true;
+        }
+    }
+
+    // <editor-fold defaultstate="collapsed" desc="RELATIONS">
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getACTIONHISTORIES()
+    {
+        return $this->hasMany(ActionHistory::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBELONGS()
+    {
+        return $this->hasMany(Belong::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDONATIONS()
+    {
+        return $this->hasMany(Donation::className(), ['USER_ID' => 'USER_ID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getSOCIALACCOUNTS()
+    {
+        return $this->hasMany(SOCIALACCOUNT::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getTOKENS()
+    {
+        return $this->hasMany(Token::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCOUNTRY()
+    {
+        return $this->hasOne(Country::className(), ['CountryId' => 'COUNTRY_CountryId']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUSERSTATEUSERSTATE()
+    {
+        return $this->hasOne(USERSTATE::className(), ['USERSTATE_ID' => 'USERSTATE_USERSTATE_ID']);
+    }
+    
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWORKS() {
+        return $this->hasMany(WORK::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+
+
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="AUTH">
+    public function getAuthKey() {
+        return $this->USER_AUTHKEY;
+    }
+
+    public function getId() {
+        return $this->USER_ID;
+    }
+
+    public function validateAuthKey($authKey) {
+        return $this->getAuthKey() == $authKey;
+    }
+
+    /**
+     * 
+     * @param type $id
+     * @return User
+     */
+    public static function findIdentity($id) {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null) {
+        
+    }   
+    // </editor-fold>
+    
+    // <editor-fold defaultstate="collapsed" desc="GETTER">
+    /**
+     * Find a User by Email
+     * @param type $userMail
+     * @return type
+     */
+    public static function findByMail($userMail){
+        \Yii::getLogger()->log('findByMail', Logger::LEVEL_TRACE);
+        return User::findOne([
+            'USER_MAIL' => strtolower($userMail)
         ]);
     }
-
+    
+    public function isConfirmed(){
+        \Yii::getLogger()->log('isConfirmed', Logger::LEVEL_TRACE);
+        return $this->USER_REGISTRATIONDATE != null;
+    }
+    
+    
     /**
-     * Finds out if password reset token is valid
-     *
-     * @param string $token password reset token
+     * Get if User is blocked / banned or not
+     * Todo
      * @return boolean
      */
-    public static function isPasswordResetTokenValid($token)
-    {
-        if (empty($token)) {
-            return false;
+    public function isBlocked(){
+        \Yii::getLogger()->log('isBlocked', Logger::LEVEL_TRACE);
+        return false;
+    }
+
+    // </editor-fold>
+
+    /**
+     * Create a new User.
+     * @return boolean
+     * @throws \RuntimeException
+     * @throws Exception
+     */
+    public function create(){
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
         }
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
-        $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
-        return $timestamp + $expire >= time();
+        
+        $transaction = $this->getDb()->beginTransaction();
+        
+        try {
+            $this->USER_SECRETKEY = PasswordHelper::generate(80);
+            $this->USERSTATE_USERSTATE_ID = UserState::findOne(['USERSTATE_DEFAULT' => 1])->USERSTATE_ID;
+            $this->USER_LDAPUID = \Yii::$app->security->generateRandomString(80);
+            
+            if ($this->save()) {
+                \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
+                
+                //BELONG <> GROUP
+                {
+                    $belong = new Belong();
+                    $belong->create($this->primaryKey);
+                }
+                //RBAC
+                {
+                    $userRole = \Yii::$app->authManager->getRole('user');
+                    \Yii::$app->authManager->assign($userRole, $this->primaryKey);
+                }
+                //LDAP
+                {
+                    $ldap = new LDAPHelper();
+                    $ldap->addUser($this->USER_NICKNAME, $this->USER_MAIL, $this->TMP_PASSWORD, $this->USER_LDAPUID);
+                }
+                
+                ActionHistoryExt::ahUserCreation($this->primaryKey);
+                
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('User hasn\'t been created'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('User error at creation, see Model error.');
+            }
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
+        }
+        return false;
     }
-
+    
     /**
-     * @inheritdoc
+     * Confirm a user registration
+     * @param type $token
+     * @return boolean
      */
-    public function getId()
-    {
-        return $this->getPrimaryKey();
+    public function confirm($token){
+        $token = Token::findOne(['TOKEN_CODE' => $token]);
+            
+        if($token != null 
+                && !$token->getIsExpired() 
+                && $token->USER_USER_ID == $this->USER_ID){
+            $this->setScenario('user_register');
+            if($this->save()){
+                $token->delete();
+            }
+            return true;
+        }
+        return false;        
     }
-
+    
     /**
-     * @inheritdoc
+     * Update the password of an User
+     * @param type $newPassword
+     * @return boolean
      */
-    public function getAuthKey()
-    {
-        return $this->auth_key;
+    public function updatePassword(){
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);  
+            
+            if ($this->update(FALSE) !== false) {
+                \Yii::getLogger()->log('User password has been updated', Logger::LEVEL_INFO);
+                \Yii::$app->session->setFlash('user.update_ok');
+                
+                $ldap = new LDAPHelper();
+                $ldap->updateUser($this->USER_LDAPUID, [
+                    'userPassword' => $this->TMP_PASSWORD,
+                ]);
+                
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('User password hasn\'t been updated'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                \Yii::$app->session->setFlash('user.update_ko');
+            }
+        } catch (Exception $exc) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while updating user password account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+        }
+        return false;
     }
-
+    
     /**
-     * @inheritdoc
+     * Return array of LDAP Group Name
+     * @return type
      */
-    public function validateAuthKey($authKey)
-    {
-        return $this->getAuthKey() === $authKey;
+    public function getLDAPGroup(){
+        $belong = Belong::findOne([
+            'USER_USER_ID' => $this->USER_ID,
+            'BELONG_TO' => null
+        ]);
+        
+        $toReturn = array();
+        $toReturn[] = $belong->gROUPGROUP->GROUP_LDAPNAME;
+        
+        return $toReturn;
     }
-
+    
     /**
-     * Validates password
-     *
-     * @param string $password password to validate
-     * @return boolean if password provided is valid for current user
+     * Return array of LDAP Access Name
+     * @return array
      */
-    public function validatePassword($password)
-    {
-        return Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
-
-    /**
-     * Generates password hash from password and sets it to the model
-     *
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
-    }
-
-    /**
-     * Generates "remember me" authentication key
-     */
-    public function generateAuthKey()
-    {
-        $this->auth_key = Yii::$app->security->generateRandomString();
-    }
-
-    /**
-     * Generates new password reset token
-     */
-    public function generatePasswordResetToken()
-    {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * Removes password reset token
-     */
-    public function removePasswordResetToken()
-    {
-        $this->password_reset_token = null;
+    //TODO: add project access
+    public function getLDAPAccess(){
+        $belong = Belong::findOne([
+            'USER_USER_ID' => $this->USER_ID,
+            'BELONG_TO' => null
+        ]);
+        $services = $belong->gROUPGROUP->sERVICES;
+        
+        $toReturn = array();
+        
+        foreach ($services as $service) {
+            $toReturn[] = $service->SERVICE_LDAPNAME;
+        }
+        
+        return $toReturn;
     }
 }

@@ -5,6 +5,8 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 
+use common\helpers\RoleHelper;
+
 /* @var $this \yii\web\View */
 /* @var $content string */
 
@@ -25,27 +27,38 @@ AppAsset::register($this);
     <div class="wrap">
         <?php
             NavBar::begin([
-                'brandLabel' => 'My Company',
+                'brandLabel' => 'Levya Org. Indentity Admin',
                 'brandUrl' => Yii::$app->homeUrl,
                 'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
-            $menuItems = [
-                ['label' => 'Home', 'url' => ['/site/index']],
-            ];
-            if (Yii::$app->user->isGuest) {
-                $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-            } else {
-                $menuItems[] = [
-                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
-                ];
-            }
+            
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
-                'items' => $menuItems,
+                'items' => [
+                    ['label' => 'Home', 'url' => ['/site/index']],
+                    ['label' => 'User Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
+                        ['label' => 'Users', 'url' => ['/user/index']],
+                        ['label' => 'UserStates', 'url' => ['/userstate/index']],
+                    ]],
+                    ['label' => 'Project Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
+                        ['label' => 'Projects', 'url' => ['/project/index']],
+                        ['label' => 'Positions', 'url' => ['/position/index']],
+                    ]],
+                    ['label' => 'Platform Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
+                        ['label' => 'LDAP', 'url' => ['/ldap/index']],                    
+                        ['label' => 'Group', 'url' => ['/group/index']],
+                        ['label' => 'Service', 'url' => ['/service/index']],
+                        ['label' => 'Params', 'url' => ['/param/index']],
+                    ]],                     
+                    ['label' => 'About', 'url' => ['/site/about']],
+                    Yii::$app->user->isGuest ?
+                        ['label' => 'Login', 'url' => ['/site/login']] :
+                        ['label' => 'Logout (' . Yii::$app->user->identity->USER_NICKNAME . ')',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']],
+                ],
             ]);
             NavBar::end();
         ?>
