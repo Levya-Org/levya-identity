@@ -1,13 +1,17 @@
 <?php
 
-namespace app\controllers;
+namespace backend\controllers;
 
 use Yii;
-use app\models\Project;
-use app\models\ProjectSearch;
+use common\models\Project;
+use common\models\ProjectSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+
+use yii\log\Logger;
+use yii\helpers\VarDumper;
 
 /**
  * ProjectController implements the CRUD actions for Project model.
@@ -21,6 +25,17 @@ class ProjectController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                ],
+            ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'roles' => ['administrator', 'developer'],
+                    ],
                 ],
             ],
         ];
@@ -80,10 +95,12 @@ class ProjectController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->setScenario('update');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->PROJECT_ID]);
         } else {
+             \Yii::getLogger()->log('Project not updated '.VarDumper::dumpAsString($model->errors), Logger::LEVEL_WARNING);
             return $this->render('update', [
                 'model' => $model,
             ]);

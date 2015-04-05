@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace app\models;
+namespace common\models;
 
 /**
  * Description of TokenExt

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use app\helpers\RoleHelper;
+use common\helpers\RoleHelper;
 use kartik\password\PasswordInput;
 
 /* @var $this yii\web\View */

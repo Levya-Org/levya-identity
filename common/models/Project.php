@@ -1,8 +1,13 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
+use yii\log\Logger;
+use yii\helpers\VarDumper;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "PROJECT".
@@ -39,14 +44,24 @@ class Project extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_CREATIONDATE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'], 'required'],
+            [['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'], 'required'],
+            [['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_CREATIONDATE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'], 'safe'],
+            
+            //NAME
+            [['PROJECT_NAME'], 'unique'],
+            [['PROJECT_NAME'], 'string', 'max' => 100],            
+    
             [['PROJECT_DESCRIPTION'], 'string'],
-            [['PROJECT_CREATIONDATE', 'PROJECT_UPDATEDATE'], 'safe'],
-            [['PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN', 'PROJECT_PRIORITY'], 'integer'],
-            [['PROJECT_NAME'], 'string', 'max' => 100],
+            
             [['PROJECT_WEBSITE'], 'string', 'max' => 200],
-            [['PROJECT_LOGO'], 'string', 'max' => 50],
-            [['PROJECT_NAME'], 'unique']
+            [['PROJECT_WEBSITE'], 'url'],
+            
+            [['PROJECT_PRIORITY'], 'integer', 'min' => 0, 'max' => 128],
+            
+            [['PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'], 'boolean'],
+            [['PROJECT_ISDELETED'], 'default', 'value' => false],
+            
+            [['PROJECT_LOGO'], 'string', 'max' => 50],            
         ];
     }
 
@@ -67,6 +82,30 @@ class Project extends \yii\db\ActiveRecord
             'PROJECT_ISDELETED' => Yii::t('app/project', 'Project  Isdeleted'),
             'PROJECT_ISOPEN' => Yii::t('app/project', 'Project  Isopen'),
             'PROJECT_PRIORITY' => Yii::t('app/project', 'Project  Priority'),
+        ];
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        return [
+            'update' => ['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_CREATIONDATE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'],
+        ];
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'PROJECT_CREATIONDATE',
+                'updatedAtAttribute' => 'PROJECT_UPDATEDATE',
+                'value' =>  new Expression('NOW()')
+            ],
         ];
     }
 
@@ -92,5 +131,14 @@ class Project extends \yii\db\ActiveRecord
     public function getWORKs()
     {
         return $this->hasMany(WORK::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
+    }
+    
+    /**
+     * Return an array of all projects
+     * @return array[PROJECT_ID,PROJECT_NAME]
+     */
+    public static function getProjectsList()
+    {
+        return ArrayHelper::map(Project::findAll(['PROJECT_ISDELETED' => 0]), 'PROJECT_ID', 'PROJECT_NAME');
     }
 }

@@ -3,10 +3,13 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-/* @var $this yii\web\View */
-/* @var $model app\models\Project */
+use common\helpers\RoleHelper;
+use kartik\markdown\Markdown;
 
-$this->title = $model->PROJECT_ID;
+/* @var $this yii\web\View */
+/* @var $model common\models\Project */
+
+$this->title = $model->PROJECT_NAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/project', 'Projects'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -28,17 +31,24 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'PROJECT_ID',
+            [
+                'attribute'=> 'PROJECT_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'PROJECT_NAME',
-            'PROJECT_DESCRIPTION:ntext',
-            'PROJECT_WEBSITE',
+            [
+                'attribute'=> 'PROJECT_DESCRIPTION',
+                'format' => 'raw',
+                'value' => Markdown::convert($model->PROJECT_DESCRIPTION),
+            ],
+            'PROJECT_WEBSITE:url',
             'PROJECT_LOGO',
-            'PROJECT_CREATIONDATE',
-            'PROJECT_UPDATEDATE',
-            'PROJECT_ISACTIVE',
-            'PROJECT_ISDELETED',
-            'PROJECT_ISOPEN',
-            'PROJECT_PRIORITY',
+            'PROJECT_CREATIONDATE:datetime',
+            'PROJECT_UPDATEDATE:datetime',
+            'PROJECT_ISACTIVE:boolean',
+            'PROJECT_ISDELETED:boolean',
+            'PROJECT_ISOPEN:boolean',
+            'PROJECT_PRIORITY:boolean',
         ],
     ]) ?>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\log\Logger;
@@ -135,7 +135,7 @@ class Token extends \yii\db\ActiveRecord
      * Create a Token for a User
      * @param type $userId
      * @param type $tokenType
-     * @return \app\models\Token
+     * @return \common\models\Token
      */
     public static function createToken($userId, $tokenType){
         

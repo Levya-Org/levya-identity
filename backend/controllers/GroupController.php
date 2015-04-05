@@ -1,11 +1,11 @@
 <?php
 
-namespace app\controllers;
+namespace backend\controllers;
 
 use Yii;
-use app\models\Group;
-use app\models\GroupSearch;
-use app\models\GroupAccessService;
+use common\models\Group;
+use common\models\GroupSearch;
+use common\models\GroupAccessService;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\ConflictHttpException;
@@ -159,13 +159,10 @@ class GroupController extends Controller
                                 break;
                             }
                         case "doRemove" : {
-                                $model = GroupAccessService::findOne(
-                                    [
-                                        'GROUP_GROUP_ID' => $groupId,
-                                        'SERVICE_SERVICE_ID' => $service
-                                    ]);
-                                if($model != null)
-                                    $model->delete ();
+                                GroupAccessService::deleteAll([
+                                    'GROUP_GROUP_ID' => $groupId,
+                                    'SERVICE_SERVICE_ID' => $service
+                                ]);
                                 break;
                             }
                         default : {

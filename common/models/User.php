@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\behaviors\TimestampBehavior;
@@ -8,9 +8,9 @@ use yii\db\Expression;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
 
-use app\helpers\IPHelper;
-use app\helpers\PasswordHelper;
-use \app\helpers\LDAPHelper;
+use common\helpers\IPHelper;
+use common\helpers\PasswordHelper;
+use \common\helpers\LDAPHelper;
 
 
 /**

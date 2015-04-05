@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
 
-use app\helpers\SystemHelper;
+use common\helpers\SystemHelper;
 
 /**
  * ActionHistoryExt is used as a Helper for AtionHistory
  *
  * @author Hervé
  */
-class ActionHistoryExt extends \app\models\ActionHistory{
+class ActionHistoryExt extends ActionHistory {
     const AH_USER_CREATION = 0;
     const AH_USER_RESEND = 1;
     const AH_USER_REGISTRATION = 2;

@@ -1,16 +1,16 @@
 <?php
 
-namespace app\controllers;
+namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use app\models\ActionHistorySearch;
+use common\models\ActionHistorySearch;
 
-use app\models\User;
-use app\models\ProfileForm_Update;
-use app\helpers\RoleHelper;
+use common\models\User;
+use common\helpers\RoleHelper;
+use frontend\models\ProfileForm_Update;
 
 class ProfileController extends \yii\web\Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\db\Expression;
@@ -8,7 +8,7 @@ use yii\log\Logger;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\VarDumper;
 
-use app\helpers\IPHelper;
+use common\helpers\IPHelper;
 
 /**
  * This is the model class for table "ACTION_HISTORY".

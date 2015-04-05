@@ -1,14 +1,13 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\ActionHistory;
 
 /**
- * ActionHistorySearch represents the model behind the search form about `app\models\ActionHistory`.
+ * ActionHistorySearch represents the model behind the search form about `common\models\ActionHistory`.
  */
 class ActionHistorySearch extends ActionHistory
 {

@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
-use app\models\ActionHistoryExt;
-use app\helpers\PasswordHelper;
-use app\helpers\SystemHelper;
+use common\models\ActionHistoryExt;
+use common\helpers\PasswordHelper;
+use common\helpers\SystemHelper;
 
 class SiteForm_Login extends Model
 {

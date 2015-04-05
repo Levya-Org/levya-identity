@@ -1,14 +1,13 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Service;
 
 /**
- * ServiceSearch represents the model behind the search form about `app\models\Service`.
+ * ServiceSearch represents the model behind the search form about `common\models\Service`.
  */
 class ServiceSearch extends Service
 {

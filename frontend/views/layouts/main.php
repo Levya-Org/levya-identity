@@ -3,9 +3,8 @@ use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
-use app\assets\AppAsset;
-
-use app\helpers\RoleHelper;
+use frontend\assets\AppAsset;
+use frontend\widgets\Alert;
 
 /* @var $this \yii\web\View */
 /* @var $content string */
@@ -16,15 +15,14 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
-    <meta charset="<?= Yii::$app->charset ?>"/>
+    <meta charset="<?= Yii::$app->charset ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
 <body>
-
-<?php $this->beginBody() ?>
+    <?php $this->beginBody() ?>
     <div class="wrap">
         <?php
             NavBar::begin([
@@ -43,14 +41,7 @@ AppAsset::register($this);
                         ['label' => 'View Infos.', 'url' => ['/profile/view']],
                         ['label' => 'View Raw Infos. (CNIL)', 'url' => ['/profile/view-raw']],
                         ['label' => 'Update', 'url' => ['/profile/update']],
-                    ]],
-                    ['label' => 'Admin. Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
-                        ['label' => 'Params', 'url' => ['/param/index']],
-                        ['label' => 'Users', 'url' => ['/user/index']],
-                        ['label' => 'UserState', 'url' => ['/userstate/index']],
-                        ['label' => 'Group', 'url' => ['/group/index']],
-                        ['label' => 'Service', 'url' => ['/service/index']],
-                    ]],                    
+                    ]],                  
                     ['label' => 'About', 'url' => ['/site/about']],
                     Yii::$app->user->isGuest ?
                         ['label' => 'Login', 'url' => ['/site/login']] :
@@ -63,21 +54,22 @@ AppAsset::register($this);
         ?>
 
         <div class="container">
-            <?= Breadcrumbs::widget([
-                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-            ]) ?>
-            <?= $content ?>
+        <?= Breadcrumbs::widget([
+            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+        ]) ?>
+        <?= Alert::widget() ?>
+        <?= $content ?>
         </div>
     </div>
 
     <footer class="footer">
         <div class="container">
-            <p class="pull-left">&copy; Levya Org. Indentity<?= date('Y') ?></p>
-            <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-right"><?= Yii::powered() ?></p>
         </div>
     </footer>
 
-<?php $this->endBody() ?>
+    <?php $this->endBody() ?>
 </body>
 </html>
 <?php $this->endPage() ?>

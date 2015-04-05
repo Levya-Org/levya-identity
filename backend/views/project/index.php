@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 
+use common\helpers\RoleHelper;
+
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,17 +28,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'PROJECT_ID',
+            [
+                'attribute'=> 'PROJECT_ID',
+                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+            ],
             'PROJECT_NAME',
-            'PROJECT_DESCRIPTION:ntext',
-            'PROJECT_WEBSITE',
-            'PROJECT_LOGO',
-            // 'PROJECT_CREATIONDATE',
-            // 'PROJECT_UPDATEDATE',
-            // 'PROJECT_ISACTIVE',
-            // 'PROJECT_ISDELETED',
-            // 'PROJECT_ISOPEN',
-            // 'PROJECT_PRIORITY',
+            'PROJECT_CREATIONDATE:date',
+            'PROJECT_UPDATEDATE:date',
+            'PROJECT_ISACTIVE:boolean',
+            'PROJECT_ISDELETED:boolean',
+            'PROJECT_ISOPEN:boolean',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\helpers\RoleHelper;
+use common\helpers\RoleHelper;
 use yii\widgets\Pjax;
 
 $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_gas.js', [
@@ -13,9 +13,9 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_gas.js', [
 /* @var $this yii\web\View */
 /* @var $model app\models\Group */
 ?>
-<div class="group-view">
+<div class="group-gas-view">
 
-    <h1><?= Html::encode('Belong') ?></h1>
+    <h3><?= Html::encode('Belong') ?></h3>
 
     <?= Html::beginForm(['group/ajax-update'],'post',[
         'id' => 'service-form',
@@ -39,7 +39,7 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_gas.js', [
         ],
     ]); ?>
     <?php Pjax::end() ?>
-    <?= Html::dropDownList('service', 'selection', \app\models\Service::getServicesList()) ?>
+    <?= Html::dropDownList('service', 'selection', common\models\Service::getServicesList()) ?>
     
     <?= Html::hiddenInput('group_id', $model->GROUP_ID) ?>
     

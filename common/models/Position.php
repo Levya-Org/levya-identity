@@ -1,8 +1,10 @@
 <?php
 
-namespace app\models;
+namespace common\models;
 
 use Yii;
+use yii\log\Logger;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "POSITION".
@@ -16,9 +18,9 @@ use Yii;
  * @property integer $POSITION_NEEDSUBSCRIPTION
  * @property integer $PROJECT_PROJECT_ID
  *
- * @property PROJECT $pROJECTPROJECT
- * @property POSITIONACCESSSERVICE[] $pOSITIONACCESSSERVICEs
- * @property WORK[] $wORKs
+ * @property PROJECT $r_Projects
+ * @property WORK[] $r_Works
+ * @property SERVICE[] $r_Services
  */
 class Position extends \yii\db\ActiveRecord
 {
@@ -38,7 +40,8 @@ class Position extends \yii\db\ActiveRecord
         return [
             [['POSITION_NAME', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'], 'required'],
             [['POSITION_DESCRIPTION'], 'string'],
-            [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'], 'integer'],
+            [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION'], 'boolean'],
+            [['PROJECT_PROJECT_ID'], 'integer'],
             [['POSITION_NAME'], 'string', 'max' => 45]
         ];
     }
@@ -71,16 +74,14 @@ class Position extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPOSITIONACCESSSERVICEs()
-    {
-        return $this->hasMany(POSITIONACCESSSERVICE::className(), ['POSITION_POSITION_ID' => 'POSITION_ID']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getWORKs()
     {
         return $this->hasMany(WORK::className(), ['POSITION_POSITION_ID' => 'POSITION_ID']);
+    }
+    
+    public function getr_Services()
+    {
+        return $this->hasMany(Service::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID'])
+                ->viaTable(PositionAccessService::tableName(), ['POSITION_POSITION_ID' => 'POSITION_ID']);
     }
 }

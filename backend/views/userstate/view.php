@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
-use app\helpers\RoleHelper;
+use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\UserState */

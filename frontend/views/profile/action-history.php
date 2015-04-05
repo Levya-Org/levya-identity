@@ -2,8 +2,8 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use app\helpers\IPHelper;
-use app\models\ActionHistoryExt;
+use common\helpers\IPHelper;
+use common\models\ActionHistoryExt;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */

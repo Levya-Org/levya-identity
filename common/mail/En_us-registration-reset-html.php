@@ -18,8 +18,8 @@
  */
 
 /* @var $this yii\web\View */
-/* @var $user app\models\User */
-/* @var $token app\models\Token */
+/* @var $user common\models\User */
+/* @var $token common\models\Token */
 
 use yii\helpers\Html;
 use yii\helpers\BaseUrl;

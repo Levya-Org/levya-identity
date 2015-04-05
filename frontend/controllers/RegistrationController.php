@@ -1,13 +1,13 @@
 <?php
-namespace app\controllers;
+namespace frontend\controllers;
 
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\web\NotFoundHttpException;
-use app\models\RegisterForm_Resend;
-use app\models\RegisterForm_Register;
-use app\models\RegisterForm_RegisterAsMember;
-use \app\helpers\LDAPHelper;
+use frontend\models\RegisterForm_Resend;
+use frontend\models\RegisterForm_Register;
+use frontend\models\RegisterForm_RegisterAsMember;
+use common\helpers\LDAPHelper;
 
 class RegistrationController extends Controller
 {
@@ -37,7 +37,7 @@ class RegistrationController extends Controller
 
     public function actionConfirm($mail, $token)
     {
-        $user = \app\models\User::findByMail($mail);
+        $user = \common\models\User::findByMail($mail);
         if ($user === null || \Yii::$app->params['registration:enableConfirmation'] == false) {
             throw new NotFoundHttpException;
         }

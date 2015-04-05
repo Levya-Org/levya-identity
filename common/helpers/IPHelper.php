@@ -1,6 +1,6 @@
 <?php
 
-namespace app\helpers;
+namespace common\helpers;
 
 //http://www.highonphp.com/5-tips-for-working-with-ipv6-in-php
 class IPHelper {
