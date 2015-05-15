@@ -1,12 +1,12 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
 use yii\base\Model;
 use yii\log\Logger;
-use app\models\User;
-use app\models\ActionHistoryExt;
-use app\models\TokenExt;
+use common\models\User;
+use common\models\ActionHistoryExt;
+use common\models\TokenExt;
 
 use common\helpers\LDAPHelper;
 use common\helpers\MailHelper;

@@ -1,11 +1,11 @@
 <?php
 
-namespace app\models;
+namespace frontend\models;
 
 use yii\log\Logger;
 
-use app\models\User;
-use app\models\ActionHistoryExt;
+use common\models\User;
+use common\models\ActionHistoryExt;
 
 class RegisterForm_RegisterAsMember extends User
 {

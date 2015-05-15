@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace app\models;
+namespace frontend\models;
 
 use yii\base\Model;
 use yii\log\Logger;
-use app\models\User;
-use app\models\ActionHistoryExt;
+use common\models\User;
+use common\models\ActionHistoryExt;
 use common\helpers\LDAPHelper;
 
 use common\helpers\PasswordHelper;
