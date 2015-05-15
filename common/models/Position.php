@@ -46,7 +46,9 @@ class Position extends \yii\db\ActiveRecord
             [['POSITION_DESCRIPTION'], 'string'],
             [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION'], 'boolean'],
             [['PROJECT_PROJECT_ID', 'POSITION_LEVEL'], 'integer'],
-            [['POSITION_NAME'], 'string', 'max' => 45]
+            [['POSITION_NAME'], 'string', 'max' => 45],
+            
+            [['POSITION_NAME', 'POSITION_LEVEL'], 'validePosition']
         ];
     }
 
@@ -66,6 +68,34 @@ class Position extends \yii\db\ActiveRecord
             'POSITION_NEEDSUBSCRIPTION' => Yii::t('app/position', 'Position  Needsubscription'),
             'PROJECT_PROJECT_ID' => Yii::t('app/position', 'Project  Project  ID'),
         ];
+    }
+    
+    public function validePosition($attribute,$params){
+        switch ($attribute){
+            case 'POSITION_NAME':{
+                $position = Position::findOne([
+                    'POSITION_ISDELETED' => 0,
+                    'POSITION_NAME' => $this->POSITION_NAME,
+                    'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID
+                ]);
+                if($position)
+                    $this->addError ($attribute, 'Name must be unique');
+                break;
+            }
+            case 'POSITION_LEVEL':{
+                $position = Position::findOne([
+                    'POSITION_ISDELETED' => 0,
+                    'POSITION_LEVEL' => $this->POSITION_LEVEL,
+                    'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID
+                ]);
+                if($position)
+                    $this->addError ($attribute, 'An another Position has same level');
+                break;
+            }
+            default:{
+                \Yii::getLogger()->log('Validating an unknown attribute : '.$attribute, Logger::LEVEL_WARNING); 
+            }
+        }
     }
 
     /**
