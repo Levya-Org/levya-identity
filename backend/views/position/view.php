@@ -41,6 +41,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'raw',
                 'value' => Markdown::convert($model->POSITION_DESCRIPTION),
             ],
+            'POSITION_LEVEL',
             'POSITION_ISOBLIGATORY:boolean',
             'POSITION_ISDELETED:boolean',
             'POSITION_NEEDDONATION:boolean',
@@ -48,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute'=> 'PROJECT_PROJECT_ID',
                 'format' => 'raw',
-                'value' => $model->pROJECTPROJECT->PROJECT_NAME,
+                'value' => $model->r_Project->PROJECT_NAME,
             ],
         ],
     ]) ?>

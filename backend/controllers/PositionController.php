@@ -11,6 +11,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
+use yii\web\ConflictHttpException;
 
 use common\models\PositionAccessService;
 
@@ -74,9 +75,12 @@ class PositionController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($PROJECT_PROJECT_ID=null)
     {
         $model = new Position();
+        
+        if(isset($PROJECT_PROJECT_ID))
+            $model->PROJECT_PROJECT_ID = $PROJECT_PROJECT_ID;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->POSITION_ID]);
@@ -114,7 +118,10 @@ class PositionController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        //TODO verify if any member is linked
+        $model = $this->findModel($id);
+        $model->POSITION_ISDELETED = 1;
+        $model->save();        
 
         return $this->redirect(['index']);
     }

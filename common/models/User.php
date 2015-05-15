@@ -20,6 +20,7 @@ use \common\helpers\LDAPHelper;
  * @property string $USER_LASTNAME
  * @property string $USER_FORNAME
  * @property string $USER_MAIL
+ * @property string $USER_MAIL_PROJECT 
  * @property string $USER_NICKNAME
  * @property string $USER_PASSWORD
  * @property string $USER_ADDRESS
@@ -42,9 +43,7 @@ use \common\helpers\LDAPHelper;
  * @property DONATION[] $DONATIONS
  * @property SOCIALACCOUNT[] $SOCIALACCOUNTS
  * @property TOKEN[] $TOKENS
- * @property City $CITIECITY
  * @property Country $COUNTRY
- * @property REGION $REGIONREGION
  * @property USERSTATE $USERSTATEUSERSTATE
  * @property WORK[] $WORKS
  */
@@ -69,16 +68,16 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             //Required
             [['USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID'], 'required', 'on' => 'user_register'],
-            [['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], 'required', 'on' => 'user_AsMember_register'],
+            [['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], 'required', 'on' => 'user_AsMember_register'],
             
             //USER_NICKNAME
             [['USER_NICKNAME'], 'unique'],
             [['USER_NICKNAME'], 'match', 'pattern' => '/^[\w]{3,15}$/'],
             
             //USER_EMAIL
-            [['USER_MAIL'], 'string', 'max' => 254],
-            [['USER_MAIL'], 'email'],
-            [['USER_MAIL'], 'unique'],
+            [['USER_MAIL', 'USER_MAIL_PROJECT'], 'string', 'max' => 254],
+            [['USER_MAIL', 'USER_MAIL_PROJECT'], 'email'],
+            [['USER_MAIL', 'USER_MAIL_PROJECT'], 'unique'],
             
             //USER DATE
             [['USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_UPDATEDATE'], 'date'],
@@ -103,7 +102,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['USER_REGISTRATIONIP'], 'string', 'max' => 16],
             
             //SAFE
-            [['USER_MAIL', 'USER_NICKNAME','USER_LASTNAME','USER_FORNAME','USER_ADDRESS', 'USER_PHONE','COUNTRY_CountryId' ], 'safe']
+            [['USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME','USER_LASTNAME','USER_FORNAME','USER_ADDRESS', 'USER_PHONE','COUNTRY_CountryId' ], 'safe']
         ];
     }
     
@@ -129,6 +128,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'USER_LASTNAME' => Yii::t('app/user', 'User  Lastname'),
             'USER_FORNAME' => Yii::t('app/user', 'User  Forname'),
             'USER_MAIL' => Yii::t('app/user', 'User  Mail'),
+            'USER_MAIL_PROJECT' => Yii::t('app/user', 'User Project Mail'),
             'USER_NICKNAME' => Yii::t('app/user', 'User  Nickname'),
             'USER_PASSWORD' => Yii::t('app/user', 'User  Password'),
             'USER_ADDRESS' => Yii::t('app/user', 'User  Address'),
@@ -154,7 +154,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'TMP_PASSWORD','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
-            'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
+            'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
             'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
             'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
         ];

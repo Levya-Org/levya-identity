@@ -27,6 +27,7 @@ use yii\helpers\ArrayHelper;
  * @property DONATION[] $dONATIONs
  * @property POSITION[] $pOSITIONs
  * @property WORK[] $wORKs
+ * @property USER[] $r_UserRequests
  */
 class Project extends \yii\db\ActiveRecord
 {
@@ -91,6 +92,7 @@ class Project extends \yii\db\ActiveRecord
     public function scenarios()
     {
         return [
+            'create' => ['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_CREATIONDATE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'],
             'update' => ['PROJECT_NAME', 'PROJECT_DESCRIPTION', 'PROJECT_WEBSITE', 'PROJECT_CREATIONDATE', 'PROJECT_ISACTIVE', 'PROJECT_ISDELETED', 'PROJECT_ISOPEN'],
         ];
     }
@@ -122,7 +124,7 @@ class Project extends \yii\db\ActiveRecord
      */
     public function getPOSITIONs()
     {
-        return $this->hasMany(POSITION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
+        return $this->hasMany(POSITION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID'])->where(['POSITION_ISDELETED' => false])->orderBy('POSITION_LEVEL');
     }
 
     /**
@@ -131,6 +133,21 @@ class Project extends \yii\db\ActiveRecord
     public function getWORKs()
     {
         return $this->hasMany(WORK::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
+    }
+    
+    /**
+     * Return all membership request
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_UserRequests(){
+        return $this->hasMany(User::className(), ['USER_ID' => 'USER_USER_ID'])                
+                ->viaTable(Work::tableName(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID'], function($query) {
+                          $query->onCondition([
+                              'WORK_TO' => null,
+                              'WORK_ISACCEPTED' => false                            
+                            ]);
+                      });
+//                ->select(['*']);
     }
     
     /**

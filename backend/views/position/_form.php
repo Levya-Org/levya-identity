@@ -17,6 +17,11 @@ use kartik\markdown\MarkdownEditor;
     <?= $form->field($model, 'POSITION_NAME')->textInput(['maxlength' => 45]) ?>
 
     <?= $form->field($model, 'POSITION_DESCRIPTION')->widget(MarkdownEditor::className()) ?>
+    
+    <?= $form->field($model, 'POSITION_LEVEL')->input('number', [
+        'min' => 0,
+        'max' => 32767
+    ]) ?>
 
     <?= $form->field($model, 'POSITION_ISOBLIGATORY')->checkbox() ?>
 

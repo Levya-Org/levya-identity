@@ -24,7 +24,8 @@
         "kartik-v/yii2-widget-datepicker": "*",
         "kartik-v/bootstrap-tabs-x": "dev-master",
         "michelf/php-smartypants": "dev-lib",
-        "kartik-v/yii2-markdown": "dev-master"
+        "kartik-v/yii2-markdown": "dev-master",
+        "kartik-v/yii2-tabs-x": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

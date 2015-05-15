@@ -1,10 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yii\helpers\Url;
 
 use common\helpers\RoleHelper;
+
 use kartik\markdown\Markdown;
+use kartik\tabs\TabsX;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Project */
@@ -27,29 +29,35 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ]) ?>
     </p>
-
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
+    
+    <?=
+    TabsX::widget([
+        'position' => TabsX::POS_ABOVE,
+        'align' => TabsX::ALIGN_LEFT,
+        'items' => [
             [
-                'attribute'=> 'PROJECT_ID',
-                'visible' => RoleHelper::userHasRole(\Yii::$app->user->id, RoleHelper::ROLE_DEVELOPER)
+                'label' => 'Informations',
+                'content' => $this->render('view_informations', ['model' => $model]),
+                'active' => true
             ],
-            'PROJECT_NAME',
             [
-                'attribute'=> 'PROJECT_DESCRIPTION',
-                'format' => 'raw',
-                'value' => Markdown::convert($model->PROJECT_DESCRIPTION),
+                'label' => 'Description',
+                'content' => Markdown::convert($model->PROJECT_DESCRIPTION),
             ],
-            'PROJECT_WEBSITE:url',
-            'PROJECT_LOGO',
-            'PROJECT_CREATIONDATE:datetime',
-            'PROJECT_UPDATEDATE:datetime',
-            'PROJECT_ISACTIVE:boolean',
-            'PROJECT_ISDELETED:boolean',
-            'PROJECT_ISOPEN:boolean',
-            'PROJECT_PRIORITY:boolean',
+            [
+                'label' => 'Positions',
+                'content' => $this->render('view_positions', ['model' => $model]),
+            ],
+            [
+                'label' => 'Members',
+                'content' => $this->render('view_members', ['model' => $model]),
+            ],
+            [
+                'label' => 'Member Requests',
+                'content' => $this->render('view_requests', ['model' => $model]),
+            ],
         ],
-    ]) ?>
+    ]);
+    ?>
 
 </div>
