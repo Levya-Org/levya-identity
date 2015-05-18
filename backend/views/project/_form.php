@@ -41,8 +41,11 @@ use kartik\markdown\MarkdownEditor;
     <?= $form->field($model, 'PROJECT_ISDELETED')->checkbox() ?>
 
     <?= $form->field($model, 'PROJECT_ISOPEN')->checkbox() ?>
-
-    <?= $form->field($model, 'PROJECT_PRIORITY')->textInput() ?>
+    
+    <?= $form->field($model, 'PROJECT_PRIORITY')->input('number', [
+        'min' => 0,
+        'max' => 32767
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/project', 'Create') : Yii::t('app/project', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
