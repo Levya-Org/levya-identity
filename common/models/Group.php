@@ -13,8 +13,8 @@ use Yii;
  * @property integer $GROUP_ISENABLE
  * @property integer $GROUP_ISDEFAULT
  *
- * @property BELONG[] $bELONGS
- * @property SERVICE[] $sERVICES
+ * @property BELONG[] $r_Belongs
+ * @property SERVICE[] $r_Services
  */
 class Group extends \yii\db\ActiveRecord
 {
@@ -58,7 +58,7 @@ class Group extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBELONGS()
+    public function getr_Belongs()
     {
         return $this->hasMany(BELONG::className(), ['GROUP_GROUP_ID' => 'GROUP_ID']);
     }
@@ -66,7 +66,7 @@ class Group extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSERVICES()
+    public function getr_Services()
     {
         return $this->hasMany(Service::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID'])
                 ->viaTable(GroupAccessService::tableName(), ['GROUP_GROUP_ID' => 'GROUP_ID']);

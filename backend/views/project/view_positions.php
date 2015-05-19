@@ -29,7 +29,7 @@ use common\helpers\RoleHelper;
 
 <?= GridView::widget([
         'id' => 'position-cgridview',
-        'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getPOSITIONs()]),
+        'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getr_Positions()]),
         'columns' => [
             
             [

@@ -38,14 +38,14 @@ use \common\helpers\LDAPHelper;
  * @property double $USER_LONGITUDE
  * @property double $USER_LATITUDE
  *
- * @property ACTIONHISTORY[] $ACTIONHISTORIES
- * @property BELONG[] $BELONGS
- * @property DONATION[] $DONATIONS
- * @property SOCIALACCOUNT[] $SOCIALACCOUNTS
- * @property TOKEN[] $TOKENS
- * @property Country $COUNTRY
- * @property USERSTATE $USERSTATEUSERSTATE
- * @property WORK[] $WORKS
+ * @property ACTIONHISTORY[] $r_ActionHistories
+ * @property BELONG[] $r_Belongs
+ * @property DONATION[] $r_Donations
+ * @property SOCIALACCOUNT[] $r_SocialAccounts
+ * @property TOKEN[] $r_Tokens
+ * @property Country $r_Country
+ * @property USERSTATE $r_UserState
+ * @property WORK[] $r_Works
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -214,7 +214,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getACTIONHISTORIES()
+    public function getr_ActionHistories()
     {
         return $this->hasMany(ActionHistory::className(), ['USER_USER_ID' => 'USER_ID']);
     }
@@ -222,7 +222,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getBELONGS()
+    public function getr_Belongs()
     {
         return $this->hasMany(Belong::className(), ['USER_USER_ID' => 'USER_ID']);
     }
@@ -230,7 +230,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDONATIONS()
+    public function getr_Donations()
     {
         return $this->hasMany(Donation::className(), ['USER_ID' => 'USER_ID']);
     }
@@ -238,7 +238,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSOCIALACCOUNTS()
+    public function getr_SocialAccounts()
     {
         return $this->hasMany(SOCIALACCOUNT::className(), ['USER_USER_ID' => 'USER_ID']);
     }
@@ -246,7 +246,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTOKENS()
+    public function getr_Tokens()
     {
         return $this->hasMany(Token::className(), ['USER_USER_ID' => 'USER_ID']);
     }
@@ -254,7 +254,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCOUNTRY()
+    public function getr_Country()
     {
         return $this->hasOne(Country::className(), ['CountryId' => 'COUNTRY_CountryId']);
     }
@@ -262,7 +262,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUSERSTATEUSERSTATE()
+    public function getr_UserState()
     {
         return $this->hasOne(USERSTATE::className(), ['USERSTATE_ID' => 'USERSTATE_USERSTATE_ID']);
     }
@@ -270,7 +270,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getWORKS() {
+    public function get_Works() {
         return $this->hasMany(WORK::className(), ['USER_USER_ID' => 'USER_ID']);
     }
 
@@ -453,7 +453,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         ]);
         
         $toReturn = array();
-        $toReturn[] = $belong->gROUPGROUP->GROUP_LDAPNAME;
+        $toReturn[] = $belong->r_Group->GROUP_LDAPNAME;
         
         return $toReturn;
     }
@@ -468,7 +468,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'USER_USER_ID' => $this->USER_ID,
             'BELONG_TO' => null
         ]);
-        $services = $belong->gROUPGROUP->sERVICES;
+        $services = $belong->r_Group->r_Services;
         
         $toReturn = array();
         

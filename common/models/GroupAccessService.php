@@ -10,8 +10,8 @@ use Yii;
  * @property integer $GROUP_GROUP_ID
  * @property integer $SERVICE_SERVICE_ID
  *
- * @property GROUP $GROUP
- * @property SERVICE $SERVICE
+ * @property GROUP $r_Group
+ * @property SERVICE $r_Service
  */
 class GroupAccessService extends \yii\db\ActiveRecord
 {
@@ -48,7 +48,7 @@ class GroupAccessService extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getGROUP()
+    public function getr_Group()
     {
         return $this->hasOne(GROUP::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
     }
@@ -56,7 +56,7 @@ class GroupAccessService extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getSERVICE()
+    public function getr_Service()
     {
         return $this->hasOne(SERVICE::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID']);
     }

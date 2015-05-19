@@ -17,8 +17,8 @@ use yii\helpers\VarDumper;
  * @property string $USER_USER_ID
  * @property integer $GROUP_GROUP_ID
  *
- * @property GROUP $gROUPGROUP
- * @property USER $uSERUSER
+ * @property GROUP $r_Group
+ * @property USER $r_User
  */
 class Belong extends \yii\db\ActiveRecord
 {
@@ -73,7 +73,7 @@ class Belong extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getGROUPGROUP()
+    public function getr_Group()
     {
         return $this->hasOne(GROUP::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
     }
@@ -81,7 +81,7 @@ class Belong extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUSERUSER()
+    public function getr_User()
     {
         return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
     }

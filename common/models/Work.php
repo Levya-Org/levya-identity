@@ -20,9 +20,9 @@ use yii\helpers\VarDumper;
  * @property integer $PROJECT_PROJECT_ID
  * @property integer $POSITION_POSITION_ID
  *
- * @property USER $uSERUSER
- * @property POSITION $pOSITIONPOSITION
- * @property PROJECT $pROJECTPROJECT
+ * @property USER $r_User
+ * @property POSITION $r_Position
+ * @property PROJECT $r_Project
  */
 class Work extends \yii\db\ActiveRecord
 {
@@ -81,7 +81,7 @@ class Work extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUSERUSER()
+    public function getr_User()
     {
         return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
     }
@@ -89,7 +89,7 @@ class Work extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPOSITIONPOSITION()
+    public function getr_Position()
     {
         return $this->hasOne(POSITION::className(), ['POSITION_ID' => 'POSITION_POSITION_ID']);
     }
@@ -97,7 +97,7 @@ class Work extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPROJECTPROJECT()
+    public function getr_Project()
     {
         return $this->hasOne(PROJECT::className(), ['PROJECT_ID' => 'PROJECT_PROJECT_ID']);
     }

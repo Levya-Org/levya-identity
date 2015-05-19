@@ -19,7 +19,7 @@ use common\helpers\IPHelper;
  * @property string $ACTION_HISTORY_IP
  * @property string $USER_USER_ID
  *
- * @property USER $user
+ * @property USER $r_User
  */
 class ActionHistory extends \yii\db\ActiveRecord
 {    
@@ -91,7 +91,7 @@ class ActionHistory extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getuser()
+    public function getr_User()
     {
         return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
     }

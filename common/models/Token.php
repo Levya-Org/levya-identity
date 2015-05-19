@@ -15,7 +15,7 @@ use yii\helpers\VarDumper;
  * @property integer $TOKEN_TYPE
  * @property string $USER_USER_ID
  *
- * @property USER $user
+ * @property USER $r_User
  */
 class Token extends \yii\db\ActiveRecord
 {    
@@ -72,7 +72,7 @@ class Token extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getuser()
+    public function getr_User()
     {
         return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
     }

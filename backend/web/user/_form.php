@@ -36,7 +36,7 @@ use common\models\UserState;
 
     <?= $form->field($model, 'USERSTATE_USERSTATE_ID')->dropDownList(UserState::getUserStatesList()) ?>
 
-    <?= $form->field($model, 'r_Country')->textInput() ?>
+    <?= $form->field($model, 'cOUNTRY')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/user', 'Create') : Yii::t('app/user', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'USER_MAIL',
             'USER_NICKNAME',            
             'USER_LDAPUID',
-            'r_Country'
+            'cOUNTRY'
         ],
     ]) ?>
 

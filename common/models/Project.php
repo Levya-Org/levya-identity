@@ -24,9 +24,9 @@ use yii\helpers\ArrayHelper;
  * @property integer $PROJECT_ISOPEN
  * @property integer $PROJECT_PRIORITY
  *
- * @property DONATION[] $dONATIONs
- * @property POSITION[] $pOSITIONs
- * @property WORK[] $wORKs
+ * @property DONATION[] $r_Donations
+ * @property POSITION[] $r_Positions
+ * @property WORK[] $r_Works
  * @property USER[] $r_UserRequests
  */
 class Project extends \yii\db\ActiveRecord
@@ -114,7 +114,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getDONATIONs()
+    public function getr_Donations()
     {
         return $this->hasMany(DONATION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
     }
@@ -122,7 +122,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getPOSITIONs()
+    public function getr_Positions()
     {
         return $this->hasMany(POSITION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID'])->where(['POSITION_ISDELETED' => false])->orderBy('POSITION_LEVEL');
     }
@@ -130,7 +130,7 @@ class Project extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getWORKs()
+    public function getr_Works()
     {
         return $this->hasMany(WORK::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
     }

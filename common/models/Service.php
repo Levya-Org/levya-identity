@@ -15,7 +15,6 @@ use \yii\helpers\ArrayHelper;
  * @property integer $SERVICE_ISENABLE
  * @property integer $SERVICE_STATE
  *
- * @property GROUPACCESSSERVICE[] $gROUPACCESSSERVICEs
  * @property POSITIONACCESSSERVICE[] $pOSITIONACCESSSERVICEs
  */
 class Service extends \yii\db\ActiveRecord

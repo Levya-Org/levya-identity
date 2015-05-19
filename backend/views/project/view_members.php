@@ -35,7 +35,7 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_project.js', [
 
 <?php
     Pjax::begin(['id' => 'pjax-member']);
-    foreach ($model->pOSITIONs as $positionModel) {
+    foreach ($model->r_Positions as $positionModel) {
         echo Html::tag('h3', Html::encode($positionModel->POSITION_NAME));
         echo $this->render('view_members_position', [
             'model' => $positionModel
