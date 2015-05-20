@@ -82,7 +82,7 @@ class RegisterForm_Register extends Model
             
             if($user->create()){
                 try {
-                    $token = Token::createToken($user->USER_ID, TokenExt::TYPE_CONFIRMATION);
+                    $token = Token::createToken($user->USER_ID, TokenExt::TYPE_USER_CONFIRMATION);
                     MailHelper::registrationMail($user, $token);
 
                     \Yii::$app->session->setFlash('user.confirmation_sent');

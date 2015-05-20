@@ -10,7 +10,7 @@ use yii\helpers\VarDumper;
 
 use common\helpers\IPHelper;
 use common\helpers\PasswordHelper;
-use \common\helpers\LDAPHelper;
+use common\helpers\LDAPHelper;
 
 
 /**
@@ -32,11 +32,12 @@ use \common\helpers\LDAPHelper;
  * @property string $USER_REGISTRATIONIP
  * @property string $USER_UPDATEDATE
  * @property string $USER_AUTHKEY
- * @property string $USERSTATE_USERSTATE_ID
+ * @property integer $USERSTATE_USERSTATE_ID
  * @property string $USER_LDAPUID
  * @property integer $COUNTRY_CountryId
  * @property double $USER_LONGITUDE
  * @property double $USER_LATITUDE
+ * @property integer $USER_ISDELETED 
  *
  * @property ACTIONHISTORY[] $r_ActionHistories
  * @property BELONG[] $r_Belongs
@@ -141,9 +142,10 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'USER_AUTHKEY' => Yii::t('app/user', 'User  Authkey'),
             'USERSTATE_USERSTATE_ID' => Yii::t('app/user', 'Userstate  Userstate  ID'),
             'USER_LDAPUID' => Yii::t('app/user', 'User  Ldapuid'),
-            'cOUNTRY' => Yii::t('app/user', 'Country'),
+            'r_Country' => Yii::t('app/user', 'Country'),
             'USER_LONGITUDE' => Yii::t('app/user', 'User Longitude'), 
-            'USER_LATITUDE' => Yii::t('app/user', 'User Latitude')
+            'USER_LATITUDE' => Yii::t('app/user', 'User Latitude'),
+            'USER_ISDELETED' => Yii::t('app/user', 'User Isdeleted'),
         ];
     }
     
@@ -156,7 +158,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'TMP_PASSWORD','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
             'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
             'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
-            'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
+            'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL' , 'USER_MAIL_PROJECT', 'USER_PASSWORD'],
         ];
     }
     
@@ -390,17 +392,38 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
     
     /**
-     * Confirm a user registration
+     * Confirm a user Token
      * @param type $token
      * @return boolean
      */
-    public function confirm($token){
+    public function confirmToken($token){
         $token = Token::findOne(['TOKEN_CODE' => $token]);
             
         if($token != null 
                 && !$token->getIsExpired() 
                 && $token->USER_USER_ID == $this->USER_ID){
-            $this->setScenario('user_register');
+            
+            switch ($token->TOKEN_TYPE) {
+                case TokenExt::TYPE_USER_CONFIRMATION:
+                    $this->setScenario('user_register');
+                    break;
+                case TokenExt::TYPE_MEMBER_CONFIRMATION:
+                    $this->setScenario('user_AsMember_register');
+                    break;
+                case TokenExt::TYPE_CONFIRM_NEW_EMAIL:
+                    break;
+                case TokenExt::TYPE_RECOVERY:             
+                    break;
+                case TokenExt::TYPE_CNIL_ACCESS:
+                    break;
+                case TokenExt::TYPE_CNIL_PARTIAL_DELETE:
+                    break;
+                case TokenExt::TYPE_CNIL_FULL_DELETE:
+                    return true;
+                default:
+                    Yii::getLogger()->log('Unknow Token type', Logger::LEVEL_ERROR);
+            }          
+            
             if($this->save()){
                 $token->delete();
             }
@@ -438,6 +461,77 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         } catch (Exception $exc) {
             $transaction->rollBack();
             \Yii::getLogger()->log('An error occurred while updating user password account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+        }
+        return false;
+    }
+    
+    /**
+     * Delete all personnal data from User.
+     * @return boolean
+     */
+    public function cnilPartialDelete(){
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            //Retained Data
+            $nickName = $this->USER_NICKNAME;
+            $registrationDate = $this->USER_REGISTRATIONDATE;
+            $creationDate = $this->USER_CREATIONDATE;
+            $ldapId = $this->USER_LDAPUID;
+            $secretKey = $this->USER_SECRETKEY;
+            $fakeMail = "deleted@account.cnil";
+            
+            //Reset Data
+            $this->loadDefaultValues(false);  
+            
+            //Set Data
+            $this->USER_NICKNAME = $nickName ;
+            $this->USER_REGISTRATIONDATE = $registrationDate;
+            $this->USER_CREATIONDATE = $creationDate;
+            $this->USER_LDAPUID = $ldapId;
+            $this->USER_SECRETKEY = $secretKey;
+            $this->USER_MAIL =  "deleted@account.cnil";
+            $this->USER_ISDELETED = true;            
+            
+            if ($this->update(FALSE) !== false) {
+                \Yii::getLogger()->log('User has been partially deleted.', Logger::LEVEL_INFO);
+                
+                //TODO
+//                $ldap = new LDAPHelper();
+                
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('User hasn\'t been partially deleted : '.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+            }
+        } catch (Exception $exc) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while deleting partially a user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+        }
+        return false;
+    }
+    
+    /**
+     * Delete all data related from User except created Project
+     * @return boolean
+     */
+    public function cnilFullDelete(){
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            Token::deleteAll(['USER_USER_ID' => $this->USER_ID ]);
+            ActionHistory::deleteAll(['USER_USER_ID' => $this->USER_ID ]);
+            Belong::deleteAll(['USER_USER_ID' => $this->USER_ID ]);
+            Work::deleteAll(['USER_USER_ID' => $this->USER_ID ]);
+            $this->delete();
+            //TODO
+            // Unlink all donations
+            // Delete SocialAccounts
+            // $ldap = new LDAPHelper();
+            
+            $transaction->commit();
+        } catch (Exception $exc) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while deleting partially a user account'.VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
         }
         return false;
     }

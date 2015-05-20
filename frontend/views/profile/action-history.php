@@ -10,7 +10,7 @@ use common\models\ActionHistoryExt;
 /* @var $data app\models\ActionHistory */
 
 $this->title = Yii::t('app/profile', 'Action Histories');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile')];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="action-history-index">

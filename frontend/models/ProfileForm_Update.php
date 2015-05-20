@@ -55,7 +55,7 @@ class ProfileForm_Update extends User
     {
         return array_merge(User::scenarios(), [
             'user_settings'   => ['USER_NICKNAME', 'USER_MAIL', 'TMP_PASSWORD', 'TMP_PASSWORD_VERIFY', 'USER_PASSWORD_VERIFY'],
-            'user_AsMember_settings' => ['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_MAIL', 'TMP_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'TMP_PASSWORD_VERIFY', 'USER_PASSWORD_VERIFY'],
+            'user_AsMember_settings' => ['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'TMP_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'TMP_PASSWORD_VERIFY', 'USER_PASSWORD_VERIFY'],
         ]);                    
     }
     

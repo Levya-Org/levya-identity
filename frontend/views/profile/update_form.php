@@ -8,13 +8,15 @@ use kartik\password\PasswordInput;
 /* @var $this yii\web\View */
 /* @var $user app\models\ProfileForm_Update */
 /* @var $form yii\widgets\ActiveForm */
+
+$isMember = RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_MEMBER);
 ?>
 
 <div class="user-form">
 
     <?php $form = ActiveForm::begin(); ?>
     
-    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_MEMBER)): ?>
+    <?php if($isMember): ?>
 
         <?= $form->field($model, 'USER_LASTNAME')->textInput(['maxlength' => 80]) ?>
 
@@ -25,6 +27,12 @@ use kartik\password\PasswordInput;
     <?= $form->field($model, 'USER_NICKNAME')->textInput(['maxlength' => 80]) ?>
 
     <?= $form->field($model, 'USER_MAIL')->textInput(['maxlength' => 254]) ?> 
+    
+    <?php if($isMember): ?>
+
+        <?= $form->field($model, 'USER_MAIL_PROJECT')->textInput(['maxlength' => 80]) ?>
+    
+    <?php endif; ?>
 
     <?= $form->field($model, 'TMP_PASSWORD')->widget(PasswordInput::className(), [
         'pluginOptions' => [
@@ -37,7 +45,7 @@ use kartik\password\PasswordInput;
     
     <?= $form->field($model, 'USER_PASSWORD_VERIFY')->passwordInput(['maxlength' => 255]) ?>
     
-    <?php if(RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_MEMBER)): ?>
+    <?php if($isMember): ?>
 
         <?= $form->field($model, 'USER_ADDRESS')->textarea(['rows' => 6]) ?>
 

@@ -8,7 +8,7 @@ use common\helpers\RoleHelper;
 /* @var $model app\models\User */
 
 $this->title = $model->USER_NICKNAME;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile')];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=> 'USER_ADDRESS',
                 'visible'=> RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_MEMBER),
             ],
-            'cOUNTRY',
+            'r_Country',
             [
                 'attribute'=> 'USER_PHONE',
                 'visible'=> RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_MEMBER),

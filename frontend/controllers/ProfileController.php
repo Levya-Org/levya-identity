@@ -25,7 +25,7 @@ class ProfileController extends \yii\web\Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'update', 'view', 'view-raw', 'action-history'],
+                        'actions' => ['index', 'update', 'view', 'view-raw', 'cnil-pdelete', 'cnil-fdelete', 'action-history'],
                         'roles' => ['@']
                     ],
                 ]
@@ -33,7 +33,6 @@ class ProfileController extends \yii\web\Controller
         ];
     }
     
-    //TODO: add orderby HistoryDate
     public function actionActionHistory()
     {
         $searchModel = new ActionHistorySearch();
@@ -80,9 +79,51 @@ class ProfileController extends \yii\web\Controller
         ]);
     }
 
-    public function actionViewRaw()
+    public function actionViewRaw($token)
     {
-        return $this->render('view-raw');
+        $model = $this->findUser(\Yii::$app->user->id);
+        
+        if($model->confirmToken($token)){
+            \Yii::$app->session->setFlash('user.cnil-raw_ok');
+        } 
+        else {
+            \Yii::$app->session->setFlash('user.cnil-raw_ko');
+            $model = new common\models\User();
+        }
+        
+        return $this->render('view-raw', [
+            'model' => $model,
+        ]);
+    }
+    
+    public function actionCnilPdelete($token)
+    {
+        $model = $this->findUser(\Yii::$app->user->id);
+        
+        if($model->confirmToken($token)){
+            $model->cnilFullDelete();
+            \Yii::$app->session->setFlash('user.cnil-pdelete_ok');
+        } 
+        else {
+            \Yii::$app->session->setFlash('user.cnil-pdelete_ko');
+        }
+        
+        return $this->render('cnil-pdelete');
+    }
+    
+    public function actionCnilFdelete($token)
+    {
+        $model = $this->findUser(\Yii::$app->user->id);
+        
+        if($model->confirmToken($token)){
+            $model->cnilFullDelete();
+            \Yii::$app->session->setFlash('user.cnil-fdelete_ok');
+        }
+        else {
+            \Yii::$app->session->setFlash('user.cnil-pdelete_ko');
+        }
+        
+        return $this->render('cnil-fdelete');
     }
     
     /**
@@ -100,5 +141,4 @@ class ProfileController extends \yii\web\Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
 }

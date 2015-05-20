@@ -83,38 +83,71 @@ class Token extends \yii\db\ActiveRecord
      */
     public function getUrl()
     {
-        switch ($this->TOKEN_TYPE) {
-            case self::TYPE_CONFIRMATION:
-                $route = '/registration/confirm';
+         switch ($this->TOKEN_TYPE) {
+            case TokenExt::TYPE_USER_CONFIRMATION:
+            case TokenExt::TYPE_MEMBER_CONFIRMATION:
+                $route = 'registration/confirm';
+                $params = [
+                    'mail' => $this->r_User->USER_MAIL,
+                    'token' => $this->TOKEN_CODE,
+                ];
                 break;
-            case self::TYPE_RECOVERY:
-                $route = '/registration/reset';
+            case TokenExt::TYPE_CONFIRM_NEW_EMAIL:
                 break;
-            case self::TYPE_CONFIRM_NEW_EMAIL:
-                $route = '/user/settings/confirm';
+            case TokenExt::TYPE_RECOVERY:             
+                break;
+            case TokenExt::TYPE_CNIL_ACCESS:
+                $route = 'profile/view-raw';
+                $params = [
+                    'token' => $this->TOKEN_CODE,
+                ];
+                break;
+            case TokenExt::TYPE_CNIL_PARTIAL_DELETE:
+                $route = 'profile/cnil-pdelete';
+                $params = [
+                    'token' => $this->TOKEN_CODE,
+                ];
+                break;
+            case TokenExt::TYPE_CNIL_FULL_DELETE:
+                $route = 'profile/cnil-fdelete';
+                $params = [
+                    'token' => $this->TOKEN_CODE,
+                ];
                 break;
             default:
-                throw new \RuntimeException;
+                Yii::getLogger()->log('Unknow Token type', Logger::LEVEL_WARNING);
         }
 
-        return Url::to([$route, 'id' => $this->USER_USER_ID, 'code' => $this->TOKEN_CODE], true);
+        return Url::to(($route+$params), 'https');
     }
     
     /**
-     * @return bool Whether token has expired.
+     * Is token expired
+     * @return bool 
      */
     public function getIsExpired()
     {
         switch ($this->TOKEN_TYPE) {
-            case TokenExt::TYPE_CONFIRMATION:
+            case TokenExt::TYPE_USER_CONFIRMATION:
+                $expirationTime = Param::getParamValue('token:confirmUserWithin');
+                break;
+            case TokenExt::TYPE_MEMBER_CONFIRMATION:
+                $expirationTime = Param::getParamValue('token:confirmMemberWithin');
+                break;
             case TokenExt::TYPE_CONFIRM_NEW_EMAIL:
-                $expirationTime = \Yii::$app->params['token:confirmWithin'];
+                $expirationTime = Param::getParamValue('token:confirmEmailWithin');
                 break;
             case TokenExt::TYPE_RECOVERY:
-                $expirationTime = \Yii::$app->params['token:recoverWithin'];
+                $expirationTime = Param::getParamValue('token:recoverWithin');
+                break;
+            case TokenExt::TYPE_CNIL_ACCESS:
+            case TokenExt::TYPE_CNIL_PARTIAL_DELETE:
+            case TokenExt::TYPE_CNIL_FULL_DELETE:
+                $expirationTime = Param::getParamValue('token:cnilWithIn');
                 break;
             default:
-                throw new \RuntimeException;
+                Yii::getLogger()->log('Unknow Token type', Logger::LEVEL_WARNING);
+                break;
         }
         
         $date = null;

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 $this->title = Yii::t('app/profile', 'Update Profile: ', [
     'modelClass' => 'User',
 ]) . ' ' . $model->USER_NICKNAME;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile')];
 $this->params['breadcrumbs'][] = Yii::t('app/user', 'Update');
 ?>
 <div class="user-update">

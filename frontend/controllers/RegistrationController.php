@@ -42,7 +42,7 @@ class RegistrationController extends Controller
             throw new NotFoundHttpException;
         }
         
-        if ($user->confirm($token)) {
+        if ($user->confirmToken($token)) {
             $ldap = new LDAPHelper();
             $userDn = $ldap->getDNfromUser($user->USER_LDAPUID);
             $ldap->addUserToGroup($userDn, $user->getLDAPGroup());

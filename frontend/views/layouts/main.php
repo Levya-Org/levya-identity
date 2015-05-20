@@ -39,8 +39,6 @@ AppAsset::register($this);
                     ['label' => 'Profile', 'visible' => !Yii::$app->user->isGuest, 'items' => [
                         ['label' => 'Action History', 'url' => ['/profile/action-history']],
                         ['label' => 'View Infos.', 'url' => ['/profile/view']],
-                        ['label' => 'View Raw Infos. (CNIL)', 'url' => ['/profile/view-raw']],
-                        ['label' => 'Update', 'url' => ['/profile/update']],
                     ]],                  
                     ['label' => 'About', 'url' => ['/site/about']],
                     Yii::$app->user->isGuest ?
