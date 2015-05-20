@@ -1,6 +1,6 @@
 # Contributing to Levya Org. : Indentity
 
-[Levya-Indentity](http://thandortr.levya.fr/) and want to get involved ?
+Like [Levya-Indentity](https://identity.levya.org/) and want to get involved ?
 Thanks! There are plenty of ways you can help!
 
 
@@ -9,7 +9,7 @@ Thanks! There are plenty of ways you can help!
 A bug is a _demonstrable problem_ that is caused by the code in the
 repository.
 
-Please read the following guidelines before you [report an issue](https:/google.fr/):
+Please read the following guidelines before you [report an issue](https://github.com/Levya-Org/levya-identity/issues/new):
 
 1. **Use the [Repository](https://github.com/Levya-Org/levya-identity/issues) issue search** &mdash; check if the issue has already been
    reported. If it has been, please comment on the existing issue.
@@ -18,24 +18,34 @@ Please read the following guidelines before you [report an issue](https:/google.
    development branch may already contain a fix.
 
 3. **Isolate the demonstrable problem** &mdash; make sure that the code in the
-   project's repository is _definitely_ responsible for the issue. 
+   project's repository is _definitely_ responsible for the issue.
 
 
 Please try to be as detailed as possible in your report too. What is your
-environment? What steps will reproduce the issue? What would you expect 
-to be the outcome? All these details will help people to assess and fix 
+environment? What steps will reproduce the issue? What would you expect
+to be the outcome? All these details will help people to assess and fix
 any potential bugs.
 
 ### Example of a good bug report:
 
 > Short and descriptive title
 >
-> A summary of the issue and the OS environment in which it occurs. If
-> suitable, include the steps required to reproduce the bug.
+> ### Summary :
+> A summary of the issue and the OS environment in which it occurs.
 >
+> ### Expected behavior:
+>
+>
+> ### Observed behavior:
+>
+>
+> ### Steps to reproduce:
+> If suitable, include the steps required to reproduce the bug.
 > 1. This is the first step
 > 2. This is the second step
 > 3. Further steps, etc.
+>
+> ### Output of checks :
 >
 > `<url>` (a link to the log file / screenshot)
 >
@@ -52,7 +62,7 @@ information that is required to assess or fix the bug.
 
 ## Pull requests
 
-Good pull requests — patches, improvements, new features — are a fantastic
+Good pull requests ï¿½ patches, improvements, new features ï¿½ are a fantastic
 help. They should remain focused in scope and avoid containing unrelated
 commits.
 
@@ -62,7 +72,7 @@ changes to any part of the project, please open an issue to discuss it first.
 Please follow this process; it's the best way to get your work included in the
 project:
 
-1. [Fork](http://help.github.com/fork-a-repo/) the project.
+1. [Fork](https://help.github.com/articles/fork-a-repo/) the project.
 
 2. Clone your fork (`git clone
    https://github.com/<your-username>/levya-identity.git`).

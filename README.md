@@ -1,22 +1,18 @@
-﻿#Levya Org. : Indentity
-=======================
+#Levya Org. : Identity
 
 This is the SRC folder of the project, for more information see the public Owncloud Folder [here]().
 
 ##Folder Organisation :
------------------------
 
 
 ##File Description :
---------------------
 
 .\README : this file  
-.\AUTORS : list of authors      
-.\LICENSE : license file for the project
-.\CONTRIBUTING : How To contribute  
+.\AUTORS : list of authors  
+.\LICENSE : license file for the project  
+.\CONTRIBUTING : How To contribute
 
 ##Licence :
------------
 
 This file is part of Levya Org. project.
 
