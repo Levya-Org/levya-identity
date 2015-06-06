@@ -40,7 +40,7 @@ AppAsset::register($this);
                     ['label' => 'Home', 'url' => ['/site/index']],
                     ['label' => 'User Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
                         ['label' => 'Users', 'url' => ['/user/index']],
-                        ['label' => 'UserStates', 'url' => ['/userstate/index']],
+                        ['label' => 'UserStates', 'url' => ['/user-state/index']],
                     ]],
                     ['label' => 'Project Page', 'visible' => RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_ADMINISTRATOR), 'items' => [
                         ['label' => 'Projects', 'url' => ['/project/index']],
