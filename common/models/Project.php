@@ -8,6 +8,7 @@ use yii\db\Expression;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
 use yii\helpers\ArrayHelper;
+use common\helpers\LDAPHelper;
 
 /**
  * This is the model class for table "PROJECT".
@@ -148,6 +149,100 @@ class Project extends \yii\db\ActiveRecord
                             ]);
                       });
 //                ->select(['*']);
+    }
+    
+    /**
+     * Create a Project with default position
+     * Do RBAC assignement
+     * TODO: Project Position Name I18N / Param
+     * @param type $userId
+     * @return boolean
+     * @throws \RuntimeException
+     * @throws \common\models\Exception
+     * @throws \ErrorException
+     */
+    public function create($userId = null){
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing Project');
+        }
+        
+        if(!isset($userId)){
+            $userId = Yii::$app->user->id;
+        }
+        
+        $transaction = $this->getDb()->beginTransaction();
+        
+        try {            
+            if ($this->save()) {
+                \Yii::getLogger()->log('Project has been created', Logger::LEVEL_INFO);
+                
+                //POSITION
+                {
+                    //LEADER
+                    {
+                        $position = new Position([
+                            'scenario' => 'position_create',
+                            'POSITION_LEVEL' => 0,
+                            'POSITION_NAME' => "Project Leader",
+                            'POSITION_ISOBLIGATORY' => true,
+                            'POSITION_NEEDDONATION' => false,
+                            'POSITION_NEEDSUBSCRIPTION' => false,
+                            'PROJECT_PROJECT_ID' => $this->primaryKey
+                        ]);
+                        $position->create();
+                        $position->addUser($userId, true);
+                    }
+                    //MEMBER
+                    {
+                        $position = new Position([
+                            'scenario' => 'position_create',
+                            'POSITION_LEVEL' => 1,
+                            'POSITION_NAME' => "Project Member",
+                            'POSITION_ISOBLIGATORY' => false,
+                            'POSITION_NEEDDONATION' => false,
+                            'POSITION_NEEDSUBSCRIPTION' => false,
+                            'PROJECT_PROJECT_ID' => $this->primaryKey
+                        ]);
+                        $position->create();
+                    }
+                    //GUEST
+                    {
+                        $position = new Position([
+                            'scenario' => 'position_create',
+                            'POSITION_LEVEL' => 2,
+                            'POSITION_NAME' => "Project Guest",
+                            'POSITION_ISOBLIGATORY' => false,
+                            'POSITION_NEEDDONATION' => false,
+                            'POSITION_NEEDSUBSCRIPTION' => false,
+                            'PROJECT_PROJECT_ID' => $this->primaryKey
+                        ]);
+                        $position->create();
+                    }
+                }
+                //RBAC LEADER
+                {
+                    $projectLeader = \Yii::$app->authManager->getRole('project.leader');
+                    \Yii::$app->authManager->assign($projectLeader, $userId);                  
+                }
+                //LDAP
+                {
+                    $ldap = new LDAPHelper();
+                    //TODO
+                }
+                
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('Project hasn\'t been created'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Project error at creation, see Model error.');
+            }
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while creating a Project '.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
+        }
+        return false;
     }
     
     /**

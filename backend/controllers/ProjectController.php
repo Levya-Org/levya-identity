@@ -80,7 +80,8 @@ class ProjectController extends Controller
         $model = new Project();
         $model->setScenario('create');
         
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        //TODO: find user by mail and pass ID to create()
+        if ($model->load(Yii::$app->request->post()) && $model->create()) {
             return $this->redirect(['view', 'id' => $model->PROJECT_ID]);
         } else {
             return $this->render('create', [

@@ -70,6 +70,16 @@ class Position extends \yii\db\ActiveRecord
         ];
     }
     
+    /**
+     * @inheritdoc
+     */
+    public function scenarios() {
+        return [
+            'position_create' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'],
+            'position_update' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'],
+        ];
+    }
+
     public function validePosition($attribute,$params){
         switch ($attribute){
             case 'POSITION_NAME':{
@@ -178,5 +188,79 @@ class Position extends \yii\db\ActiveRecord
                 ->andWhere('POSITION_LEVEL != :level', [':level' => $level])
                 ->all();
         return ArrayHelper::map($query, 'POSITION_ID', 'POSITION_NAME');
+    }
+    
+    /**
+     * Create a Position
+     * @return boolean
+     * @throws \RuntimeException
+     * @throws \common\models\Exception
+     * @throws \ErrorException
+     */
+    public function create(){
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing Position');
+        }
+        
+        $transaction = $this->getDb()->beginTransaction();
+        
+        try {            
+            if ($this->save()) {
+                \Yii::getLogger()->log('Position has been created', Logger::LEVEL_INFO);
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('Position hasn\'t been created'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Position error at creation, see Model error.');
+            }
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while creating a Position'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
+        }
+        return false;
+    }
+    
+    /**
+     * Add a User to Project with a Position
+     * @param int $userId
+     * @param bool $locked If Project Leader
+     * @return type
+     */
+    public function addUser($userId, $locked = false){
+        if(!isset($userId)){
+            \Yii::getLogger()->log('Position->addUser called without userId param', Logger::LEVEL_ERROR);
+            return;
+        }
+        
+        $work = new Work([
+            'USER_USER_ID' => $userId,
+            'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID,                                      
+            'POSITION_POSITION_ID' => $this->POSITION_ID,
+            'WORK_ISACCEPTED' => true,
+            'WORK_ISLOCKED' => $locked
+        ]);
+        $work->create();
+    }
+    
+    /**
+     * Remove a User to Project with a Position
+     * @param type $userId
+     * @return type
+     */
+    public function removeUser($userId){
+        if(!isset($userId)){
+            \Yii::getLogger()->log('Position->removeUser called without userId param', Logger::LEVEL_ERROR);
+            return;
+        }
+        
+        Work::findOne([
+            'USER_USER_ID' => $userId,
+            'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID,
+            'POSITION_POSITION_ID' => $this->POSITION_ID,
+            'WORK_TO' => null ,
+            'WORK_ISACCEPTED' => true,
+        ])->endWork();  
     }
 }

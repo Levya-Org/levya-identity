@@ -44,7 +44,7 @@ use common\helpers\RoleHelper;
             'PROJECT_ISACTIVE:boolean',
             'PROJECT_ISDELETED:boolean',
             'PROJECT_ISOPEN:boolean',
-            'PROJECT_PRIORITY:boolean',
+            'PROJECT_PRIORITY',
         ],
     ])
 ?>
