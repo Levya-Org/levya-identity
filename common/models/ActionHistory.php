@@ -39,6 +39,7 @@ class ActionHistory extends \yii\db\ActiveRecord
         return [
             [['ACTION_HISTORY_IP', 'USER_USER_ID'], 'required'],
             [['ACTION_HISTORY_ACTION', 'USER_USER_ID'], 'integer'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
             [['ACTION_HISTORY_IP'], 'string', 'max' => 16]
         ];
     }

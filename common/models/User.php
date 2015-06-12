@@ -34,7 +34,7 @@ use common\helpers\LDAPHelper;
  * @property string $USER_AUTHKEY
  * @property integer $USERSTATE_USERSTATE_ID
  * @property string $USER_LDAPUID
- * @property integer $COUNTRY_CountryId
+ * @property integer $COUNTRY_CountryId //TODO refactor for new DB schema
  * @property double $USER_LONGITUDE
  * @property double $USER_LATITUDE
  * @property integer $USER_ISDELETED 
@@ -97,6 +97,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             //
             [['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_SECRETKEY'], 'string', 'max' => 80],
             [['USERSTATE_USERSTATE_ID', 'COUNTRY_CountryId'], 'integer'],
+            ['USERSTATE_USERSTATE_ID', 'exist', 'targetClass' => 'common\models\USERSTATE', 'targetAttribute' => 'USERSTATE_ID'],
             [['USER_ADDRESS'], 'string'],
             [['USER_PASSWORD'], 'string', 'max' => 255],
             [['USER_PHONE'], 'string', 'max' => 20],

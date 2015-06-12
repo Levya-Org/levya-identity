@@ -38,7 +38,9 @@ class Belong extends \yii\db\ActiveRecord
         return [
             [['USER_USER_ID', 'GROUP_GROUP_ID'], 'required'],
             [['BELONG_FROM', 'BELONG_TO'], 'safe'],
-            [['USER_USER_ID', 'GROUP_GROUP_ID'], 'integer']
+            [['USER_USER_ID', 'GROUP_GROUP_ID'], 'integer'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
+            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\GROUP', 'targetAttribute' => 'GROUP_ID']
         ];
     }
 

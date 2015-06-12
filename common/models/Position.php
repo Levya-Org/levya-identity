@@ -46,6 +46,7 @@ class Position extends \yii\db\ActiveRecord
             [['POSITION_DESCRIPTION'], 'string'],
             [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION'], 'boolean'],
             [['PROJECT_PROJECT_ID', 'POSITION_LEVEL'], 'integer'],
+            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\PROJECT', 'targetAttribute' => 'PROJECT_ID'],
             [['POSITION_NAME'], 'string', 'max' => 45],
             
             [['POSITION_NAME', 'POSITION_LEVEL'], 'validePosition']

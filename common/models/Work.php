@@ -42,6 +42,9 @@ class Work extends \yii\db\ActiveRecord
         return [
             [['WORK_FROM', 'WORK_TO'], 'safe'],
             [['USER_USER_ID', 'PROJECT_PROJECT_ID', 'POSITION_POSITION_ID'], 'integer'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
+            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\PROJECT', 'targetAttribute' => 'PROJECT_ID'],
+            ['POSITION_POSITION_ID', 'exist', 'targetClass' => 'common\models\POSITION', 'targetAttribute' => 'POSITION_ID'],
             [['WORK_ISACCEPTED', 'WORK_ISLOCKED'], 'boolean'],
             [['USER_USER_ID', 'PROJECT_PROJECT_ID', 'POSITION_POSITION_ID'], 'required']
         ];
