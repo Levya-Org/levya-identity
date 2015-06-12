@@ -30,7 +30,10 @@ class GroupAccessService extends \yii\db\ActiveRecord
     {
         return [
             [['GROUP_GROUP_ID', 'SERVICE_SERVICE_ID'], 'required'],
-            [['GROUP_GROUP_ID', 'SERVICE_SERVICE_ID'], 'integer']
+            [['GROUP_GROUP_ID', 'SERVICE_SERVICE_ID'], 'integer'],
+            ['SERVICE_SERVICE_ID', 'exist', 'targetClass' => 'common\models\SERVICE', 'targetAttribute' => 'SERVICE_ID'],
+            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\GROUP', 'targetAttribute' => 'GROUP_ID'],
+            [['SERVICE_SERVICE_ID', 'GROUP_GROUP_ID'], 'unique', 'targetAttribute' => ['SERVICE_SERVICE_ID', 'GROUP_GROUP_ID']]
         ];
     }
 

@@ -9,6 +9,7 @@ use yii\log\Logger;
 use yii\helpers\VarDumper;
 use yii\helpers\ArrayHelper;
 use common\helpers\LDAPHelper;
+use common\helpers\RoleHelper;
 
 /**
  * This is the model class for table "PROJECT".
@@ -191,6 +192,12 @@ class Project extends \yii\db\ActiveRecord
                         ]);
                         $position->create();
                         $position->addUser($userId, true);
+                        
+                        //Leader has access to all services
+                        $services = Service::getServicesList();
+                        foreach ($services as $key => $value) {
+                            $position->addService($key);
+                        }
                     }
                     //MEMBER
                     {
@@ -221,8 +228,10 @@ class Project extends \yii\db\ActiveRecord
                 }
                 //RBAC LEADER
                 {
-                    $projectLeader = \Yii::$app->authManager->getRole('project.leader');
-                    \Yii::$app->authManager->assign($projectLeader, $userId);                  
+                    if(!RoleHelper::userHasRole($userId, RoleHelper::ROLE_PROJECT_LEADER)){
+                        $projectLeader = \Yii::$app->authManager->getRole('project.leader');
+                        \Yii::$app->authManager->assign($projectLeader, $userId);   
+                    }                                   
                 }
                 //LDAP
                 {

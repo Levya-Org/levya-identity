@@ -263,4 +263,39 @@ class Position extends \yii\db\ActiveRecord
             'WORK_ISACCEPTED' => true,
         ])->endWork();  
     }
+    
+    /**
+     * Add a service to the Position
+     * @param int $serviceId
+     * @return boolean
+     */
+    public function addService($serviceId){
+        if(!isset($serviceId)){
+            \Yii::getLogger()->log('Position->addService called without serviceId param', Logger::LEVEL_ERROR);
+            return;
+        }
+        
+        $pas = new PositionAccessService([
+            'SERVICE_SERVICE_ID' => $serviceId,
+            'POSITION_POSITION_ID' => $this->POSITION_ID
+        ]);
+        return $pas->create();
+    }
+    
+    /**
+     * Remove a service from the Position
+     * @param int $serviceId
+     * @return type
+     */
+    public function removeService($serviceId){
+        if(!isset($serviceId)){
+            \Yii::getLogger()->log('Position->addService called without serviceId param', Logger::LEVEL_ERROR);
+            return;
+        }
+        
+        PositionAccessService::deleteAll([
+            'SERVICE_SERVICE_ID' => $serviceId,
+            'POSITION_POSITION_ID' => $this->POSITION_ID
+        ]);
+    }
 }

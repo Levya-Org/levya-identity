@@ -66,6 +66,14 @@ class Service extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(Service::find()->all(), 'SERVICE_ID', 'SERVICE_NAME');
     }
+    
+    /**
+     * Return an array of all enabled services
+     * @return array[SERVICE_ID,SERVICE_NAME]
+     */
+    public static function getAllServices(){
+        return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_ID');
+    }
 
     /**
      * @return \yii\db\ActiveQuery
