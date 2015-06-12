@@ -554,22 +554,52 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     
     /**
      * Return array of LDAP Access Name
+     * From MySQL Database
      * @return array
      */
-    //TODO: add project access
     public function getLDAPAccess(){
+        $services = array();
+        
+        //Group <> Belong
         $belong = Belong::findOne([
             'USER_USER_ID' => $this->USER_ID,
             'BELONG_TO' => null
         ]);
         $services = $belong->r_Group->r_Services;
         
-        $toReturn = array();
+        $belongServices = array();
         
         foreach ($services as $service) {
-            $toReturn[] = $service->SERVICE_LDAPNAME;
+            $belongServices[] = $service->SERVICE_LDAPNAME;
         }
         
-        return $toReturn;
+        //Project <> Position
+        $works = Work::findAll([
+            'USER_USER_ID' => $this->USER_ID,
+            'WORK_ISACCEPTED' => true,
+            'WORK_TO' => null
+        ]);
+        
+        $positions = array();
+        
+        foreach ($works as $work) {
+            if($work->r_Position->isActive()){
+                $positions[] = $work->r_Position;
+            }
+        }
+        
+        $workServices = array();
+        
+        foreach ($positions as $position) {
+            foreach ($position->r_Services as $service) {
+                $workServices[] = $service->SERVICE_LDAPNAME;
+            }
+        }
+        //Remove duplicate
+        $workServices = array_unique($workServices);
+        
+        $services = array_unique(array_merge($belongServices, $workServices));
+        
+        return $services;
     }
 }

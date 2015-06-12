@@ -160,6 +160,14 @@ class Position extends \yii\db\ActiveRecord
     }
     
     /**
+     * Is Position active or not
+     * @return boolean
+     */
+    public function isActive(){
+        return !$this->POSITION_ISDELETED;
+    }
+    
+    /**
      * Return an array of all position
      * @return array[POSITION_ID,POSITION_NAME]
      */
