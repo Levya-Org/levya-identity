@@ -8,26 +8,11 @@ use yii\helpers\ArrayHelper;
 /**
  * This is the model class for table "COUNTRY".
  *
- * @property integer $CountryId
- * @property string $Country
- * @property string $FIPS104
- * @property string $ISO2
- * @property string $ISO3
- * @property string $ISON
- * @property string $Internet
- * @property string $Capital
- * @property string $MapReference
- * @property string $NationalitySingular
- * @property string $NationalityPlural
- * @property string $Currency
- * @property string $CurrencyCode
- * @property string $Population
- * @property string $Title
- * @property string $Comment
- *
- * @property City[] $cITies
- * @property REGION[] $rEGIONs
- * @property USER[] $uSERs
+ * @property integer $COUNTRY_ID
+ * @property string $COUNTRY_CODE
+ * @property string $COUNTRY_NAME
+ * @property string $COUNTRY_CONTINENT
+ * @property USER[] $r_Users
  */
 class Country extends \yii\db\ActiveRecord
 {
@@ -45,16 +30,9 @@ class Country extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['Country', 'FIPS104', 'ISO2', 'ISO3', 'ISON', 'Internet'], 'required'],
-            [['Population'], 'integer'],
-            [['Country', 'MapReference', 'Title'], 'string', 'max' => 50],
-            [['FIPS104', 'ISO2', 'Internet'], 'string', 'max' => 2],
-            [['ISO3', 'CurrencyCode'], 'string', 'max' => 3],
-            [['ISON'], 'string', 'max' => 4],
-            [['Capital'], 'string', 'max' => 25],
-            [['NationalitySingular', 'NationalityPlural'], 'string', 'max' => 35],
-            [['Currency'], 'string', 'max' => 30],
-            [['Comment'], 'string', 'max' => 255]
+            [['COUNTRY_CODE', 'COUNTRY_NAME'], 'required'],
+            [['COUNTRY_CODE', 'COUNTRY_CONTINENT'], 'string', 'max' => 2],
+            [['COUNTRY_NAME'], 'string', 'max' => 45]
         ];
     }
 
@@ -64,56 +42,28 @@ class Country extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'CountryId' => Yii::t('app/geodata', 'Country ID'),
-            'Country' => Yii::t('app/geodata', 'Country'),
-            'FIPS104' => Yii::t('app/geodata', 'Fips104'),
-            'ISO2' => Yii::t('app/geodata', 'Iso2'),
-            'ISO3' => Yii::t('app/geodata', 'Iso3'),
-            'ISON' => Yii::t('app/geodata', 'Ison'),
-            'Internet' => Yii::t('app/geodata', 'Internet'),
-            'Capital' => Yii::t('app/geodata', 'Capital'),
-            'MapReference' => Yii::t('app/geodata', 'Map Reference'),
-            'NationalitySingular' => Yii::t('app/geodata', 'Nationality Singular'),
-            'NationalityPlural' => Yii::t('app/geodata', 'Nationality Plural'),
-            'Currency' => Yii::t('app/geodata', 'Currency'),
-            'CurrencyCode' => Yii::t('app/geodata', 'Currency Code'),
-            'Population' => Yii::t('app/geodata', 'Population'),
-            'Title' => Yii::t('app/geodata', 'Title'),
-            'Comment' => Yii::t('app/geodata', 'Comment'),
+            'COUNTRY_ID' => Yii::t('app/geodata', 'Country ID'),
+            'COUNTRY_CODE' => Yii::t('app/geodata', 'Country Code'),
+            'COUNTRY_NAME' => Yii::t('app/geodata', 'Country Name'),
+            'COUNTRY_CONTINENT' => Yii::t('app/geodata', 'Country Continent'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCITies()
+    public function getr_Users()
     {
-        return $this->hasMany(City::className(), ['CountryID' => 'CountryId']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getREGIONs()
-    {
-        return $this->hasMany(REGION::className(), ['CountryID' => 'CountryId']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUSERs()
-    {
-        return $this->hasMany(USER::className(), ['COUNTRY_CountryId' => 'CountryId']);
+        return $this->hasMany(USER::className(), ['COUNTRY_COUNTRY_ID' => 'COUNTRY_ID']);
     }
     
     /**
      * Return an array of all countries
-     * @return array[CountryId,Country]
+     * @return array[COUNTRY_ID,Country]
      */
     public static function getCountriesList()
     {
-        return ArrayHelper::map(Country::find()->all(), 'CountryId', 'Country');
+        return ArrayHelper::map(Country::find()->all(), 'COUNTRY_ID', 'COUNTRY_NAME');
     }
     
     /**
@@ -121,13 +71,13 @@ class Country extends \yii\db\ActiveRecord
      * @param type $term
      * @return type
      */
-    public function getCountryLike($term) {
+    public static function getCountryLike($term) {
         return Country::find()
                 ->select([
-                    'CountryId',
-                    'Country'
+                    'COUNTRY_ID',
+                    'COUNTRY_NAME'
                 ])
-                ->andFilterWhere(['like', 'Country', $term])
+                ->andFilterWhere(['like', 'COUNTRY_NAME', $term])
                 ->all();
     }
 }

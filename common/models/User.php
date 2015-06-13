@@ -34,7 +34,7 @@ use common\helpers\LDAPHelper;
  * @property string $USER_AUTHKEY
  * @property integer $USERSTATE_USERSTATE_ID
  * @property string $USER_LDAPUID
- * @property integer $COUNTRY_CountryId //TODO refactor for new DB schema
+ * @property integer $COUNTRY_COUNTRY_ID
  * @property double $USER_LONGITUDE
  * @property double $USER_LATITUDE
  * @property integer $USER_ISDELETED 
@@ -69,7 +69,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         return [
             //Required
             [['USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID'], 'required', 'on' => 'user_register'],
-            [['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], 'required', 'on' => 'user_AsMember_register'],
+            [['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USERSTATE_USERSTATE_ID', 'USER_LDAPUID', 'COUNTRY_COUNTRY_ID', 'USER_LONGITUDE', 'USER_LATITUDE'], 'required', 'on' => 'user_AsMember_register'],
             
             //USER_NICKNAME
             [['USER_NICKNAME'], 'unique'],
@@ -96,7 +96,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             
             //
             [['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_SECRETKEY'], 'string', 'max' => 80],
-            [['USERSTATE_USERSTATE_ID', 'COUNTRY_CountryId'], 'integer'],
+            [['USERSTATE_USERSTATE_ID', 'COUNTRY_COUNTRY_ID'], 'integer'],
             ['USERSTATE_USERSTATE_ID', 'exist', 'targetClass' => 'common\models\USERSTATE', 'targetAttribute' => 'USERSTATE_ID'],
             [['USER_ADDRESS'], 'string'],
             [['USER_PASSWORD'], 'string', 'max' => 255],
@@ -104,7 +104,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             [['USER_REGISTRATIONIP'], 'string', 'max' => 16],
             
             //SAFE
-            [['USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME','USER_LASTNAME','USER_FORNAME','USER_ADDRESS', 'USER_PHONE','COUNTRY_CountryId' ], 'safe']
+            [['USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME','USER_LASTNAME','USER_FORNAME','USER_ADDRESS', 'USER_PHONE','COUNTRY_COUNTRY_ID' ], 'safe']
         ];
     }
     
@@ -157,8 +157,8 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     {
         return [
             'user_register' => ['USER_MAIL', 'USER_NICKNAME', 'TMP_PASSWORD','!USER_PASSWORD', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID'],
-            'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_CountryId', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
-            'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD'],
+            'user_AsMember_register' => ['USER_LASTNAME','USER_FORNAME', 'USER_MAIL', 'USER_MAIL_PROJECT', 'USER_NICKNAME', '!USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', '!USER_SECRETKEY', '!USERSTATE_USERSTATE_ID', '!USER_LDAPUID', 'COUNTRY_COUNTRY_ID', 'USER_LONGITUDE', 'USER_LATITUDE'], //NEED BETTER DB data
+            'user_update'   => ['USER_NICKNAME', 'USER_MAIL', 'USER_PASSWORD', 'COUNTRY_COUNTRY_ID'],
             'user_AsMember_update' => ['USER_NICKNAME', 'USER_MAIL' , 'USER_MAIL_PROJECT', 'USER_PASSWORD'],
         ];
     }
@@ -259,7 +259,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function getr_Country()
     {
-        return $this->hasOne(Country::className(), ['CountryId' => 'COUNTRY_CountryId']);
+        return $this->hasOne(Country::className(), ['COUNTRY_ID' => 'COUNTRY_COUNTRY_ID']);
     }
 
     /**

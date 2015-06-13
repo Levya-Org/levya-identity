@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=> 'USER_ADDRESS',
                 'visible'=> RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_MEMBER),
             ],
-            'r_Country',
+            'r_Country.COUNTRY_NAME',
             [
                 'attribute'=> 'USER_PHONE',
                 'visible'=> RoleHelper::userHasRole(Yii::$app->user->id, RoleHelper::ROLE_MEMBER),

@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'USER_AUTHKEY',
             // 'USERSTATE_USERSTATE_ID',
             // 'USER_LDAPUID',
-            // 'COUNTRIE_CountryId',
+            // 'COUNTRIE_COUNTRY_ID',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

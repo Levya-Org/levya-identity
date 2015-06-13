@@ -18,6 +18,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $POSITION_ISDELETED
  * @property integer $POSITION_NEEDDONATION
  * @property integer $POSITION_NEEDSUBSCRIPTION
+ * @property integer $POSITION_ISREQVISIBLE 
+ * @property integer $POSITION_ISDEFAULT 
  * @property integer $PROJECT_PROJECT_ID
  *
  * @property PROJECT $r_Project
@@ -67,6 +69,8 @@ class Position extends \yii\db\ActiveRecord
             'POSITION_ISDELETED' => Yii::t('app/position', 'Position  Isdeleted'),
             'POSITION_NEEDDONATION' => Yii::t('app/position', 'Position  Needdonation'),
             'POSITION_NEEDSUBSCRIPTION' => Yii::t('app/position', 'Position  Needsubscription'),
+            'POSITION_ISREQVISIBLE' => Yii::t('app/geodata', 'Position is request visible'),
+            'POSITION_ISDEFAULT' => Yii::t('app/geodata', 'Position Isdefault'),
             'PROJECT_PROJECT_ID' => Yii::t('app/position', 'Project  Project  ID'),
         ];
     }
@@ -76,8 +80,8 @@ class Position extends \yii\db\ActiveRecord
      */
     public function scenarios() {
         return [
-            'position_create' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'],
-            'position_update' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'],
+            'position_create' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'POSITION_ISREQVISIBLE', 'POSITION_ISDEFAULT', 'PROJECT_PROJECT_ID'],
+            'position_update' => ['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'POSITION_ISREQVISIBLE', 'POSITION_ISDEFAULT', 'PROJECT_PROJECT_ID'],
         ];
     }
 

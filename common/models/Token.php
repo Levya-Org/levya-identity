@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "TOKEN".

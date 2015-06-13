@@ -17,7 +17,7 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['USER_ID', 'USERSTATE_USERSTATE_ID', 'COUNTRIE_CountryId', 'REGION_RegionID', 'CITIE_CityId'], 'integer'],
+            [['USER_ID', 'USERSTATE_USERSTATE_ID', 'COUNTRY_COUNTRY_ID'], 'integer'],
             [['USER_LASTNAME', 'USER_FORNAME', 'USER_MAIL', 'USER_NICKNAME', 'USER_PASSWORD', 'USER_ADDRESS', 'USER_PHONE', 'USER_SECRETKEY', 'USER_CREATIONDATE', 'USER_REGISTRATIONDATE', 'USER_REGISTRATIONIP', 'USER_UPDATEDATE', 'USER_AUTHKEY', 'USER_LDAPUID'], 'safe'],
         ];
     }
@@ -56,9 +56,7 @@ class UserSearch extends User
             'USER_REGISTRATIONDATE' => $this->USER_REGISTRATIONDATE,
             'USER_UPDATEDATE' => $this->USER_UPDATEDATE,
             'USERSTATE_USERSTATE_ID' => $this->USERSTATE_USERSTATE_ID,
-            'COUNTRIE_CountryId' => $this->COUNTRIE_CountryId,
-            'REGION_RegionID' => $this->REGION_RegionID,
-            'CITIE_CityId' => $this->CITIE_CityId,
+            'COUNTRY_COUNTRY_ID' => $this->COUNTRIE_COUNTRY_ID,
         ]);
 
         $query->andFilterWhere(['like', 'USER_LASTNAME', $this->USER_LASTNAME])

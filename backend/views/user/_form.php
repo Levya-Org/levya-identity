@@ -4,9 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\helpers\RoleHelper;
 use common\models\UserState;
+use yii\helpers\BaseUrl;
+use yii\jui\AutoComplete;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model common\models\User */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -36,7 +38,31 @@ use common\models\UserState;
 
     <?= $form->field($model, 'USERSTATE_USERSTATE_ID')->dropDownList(UserState::getUserStatesList()) ?>
 
-    <?= $form->field($model, 'r_Country')->textInput() ?>
+    <?= Html::activeLabel($model, 'COUNTRY_COUNTRY_ID') ?>
+    <?= AutoComplete::widget([
+        'id' => 'auto-country',
+        'name' => 'auto_country',
+        'clientOptions' => [
+            'source' => BaseUrl::toRoute('geodata/country'),
+            'minLength' => 2,
+            'create' => new yii\web\JsExpression(
+                    'function(event, ui) {
+                        $.getJSON( "'. BaseUrl::toRoute(['geodata/country-by-id', 'id' => $model->COUNTRY_COUNTRY_ID]) .'", function( data ) {
+                            $(this).val(data[0].value);
+                        });
+                      }'
+                    ),
+            'select' => new yii\web\JsExpression(
+                'function(event, ui) {
+                    event.preventDefault();
+                    $(this).val(ui.item.value);
+                    $("#' . Html::getInputId($model, 'COUNTRY_COUNTRY_ID') . '").val(ui.item.id);
+                }'
+            )
+        ],
+    ]); ?>
+    
+    <?= Html::activeHiddenInput($model, 'COUNTRY_COUNTRY_ID'); ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app/user', 'Create') : Yii::t('app/user', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

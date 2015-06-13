@@ -28,6 +28,10 @@ use kartik\markdown\MarkdownEditor;
     <?= $form->field($model, 'POSITION_ISDELETED')->checkbox() ?>
 
     <?= $form->field($model, 'POSITION_NEEDDONATION')->checkbox() ?>
+    
+    <?= $form->field($model, 'POSITION_ISREQVISIBLE')->checkbox() ?>
+    
+    <?= $form->field($model, 'POSITION_ISDEFAULT')->checkbox() ?>
 
     <?= $form->field($model, 'POSITION_NEEDSUBSCRIPTION')->checkbox() ?>
     
