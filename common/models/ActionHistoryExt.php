@@ -128,44 +128,6 @@ class ActionHistoryExt extends ActionHistory {
         $ac = new ActionHistory();
         switch ($system){
             case 'IDENTITY':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_IDENTITY, $userId);
-                break;
-            case 'WIKI':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_WIKI, $userId);
-                break;
-            case 'REDMINE':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_REDMINE, $userId);
-                break;
-            case 'CLOUD':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_CLOUD, $userId);
-                break;
-            case 'GITLAB':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_GITLAB, $userId);
-                break;
-            case 'STATUS':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_STATUS, $userId);
-                break;
-            case 'FORUM':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_FORUM, $userId);
-                break;
-            case 'WEB':
-                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_WEB, $userId);
-                break;
-            default:
-                Yii::getLogger()->log('ActionHistoryExt no or unknow system specified : '.VarDumper::dumpAsString($system), Logger::LEVEL_ERROR);
-                break;
-        }
-    }
-    
-    /**
-     * Create a ActionHistory for a False Loging.
-     * @param type $userId
-     * @param SystemHelper $system
-     */
-    public static function ahUserTriedConnection($userId, $system){
-        $ac = new ActionHistory();
-        switch ($system){
-            case 'IDENTITY':
                 $ac->create(ActionHistoryExt::AH_USER_CONNECTION_IDENTITY, $userId);
                 break;
             case 'WIKI':
@@ -188,6 +150,44 @@ class ActionHistoryExt extends ActionHistory {
                 break;
             case 'WEB':
                 $ac->create(ActionHistoryExt::AH_USER_CONNECTION_WEB, $userId);
+                break;
+            default:
+                Yii::getLogger()->log('ActionHistoryExt no or unknow system specified : '.VarDumper::dumpAsString($system), Logger::LEVEL_ERROR);
+                break;
+        }
+    }
+    
+    /**
+     * Create a ActionHistory for a False Loging.
+     * @param type $userId
+     * @param SystemHelper $system
+     */
+    public static function ahUserTriedConnection($userId, $system){
+        $ac = new ActionHistory();
+        switch ($system){
+            case 'IDENTITY':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_IDENTITY, $userId);
+                break;
+            case 'WIKI':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_WIKI, $userId);
+                break;
+            case 'REDMINE':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_REDMINE, $userId);
+                break;
+            case 'CLOUD':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_CLOUD, $userId);
+                break;
+            case 'GITLAB':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_GITLAB, $userId);
+                break;
+            case 'STATUS':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_STATUS, $userId);
+                break;
+            case 'FORUM':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_FORUM, $userId);
+                break;
+            case 'WEB':
+                $ac->create(ActionHistoryExt::AH_USER_TRYCONNECTION_WEB, $userId);
                 break;
             default:
                 Yii::getLogger()->log('ActionHistoryExt no or unknow system specified : '.VarDumper::dumpAsString($system), Logger::LEVEL_ERROR);
