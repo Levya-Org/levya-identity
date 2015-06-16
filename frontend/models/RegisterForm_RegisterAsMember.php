@@ -6,6 +6,8 @@ use yii\log\Logger;
 
 use common\models\User;
 use common\models\ActionHistoryExt;
+use common\models\Token;
+use common\models\TokenExt;
 
 class RegisterForm_RegisterAsMember extends User
 {
@@ -43,9 +45,9 @@ class RegisterForm_RegisterAsMember extends User
     {
         \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
         if ($this->validate()) {
-            $model->update();
-            $ah = ActionHistoryExt::ahUserMemberRegistration($model->USER_ID);
-            $token = Token::createToken($model->USER_ID, Token::TYPE_MEMBER_CONFIRMATION);
+            $this->update();
+            $ah = ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
+            $token = Token::createToken($this->USER_ID, TokenExt::TYPE_MEMBER_CONFIRMATION);
             //TODO mail
             //TODO donation
             \Yii::$app->session->setFlash('user.confirmation_sent');

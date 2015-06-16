@@ -2,13 +2,21 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\models\Param;
 use yii\widgets\ActiveForm;
 use common\models\Country;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model common\models\User */
 /* @var $form ActiveForm */
+
+$this->registerJsFile('https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key='.Param::getParamValue('google:apiKey'), ['depends' => [\yii\web\JqueryAsset::className()]]);
+$this->registerJsFile(Yii::$app->request->baseUrl.'/js/register_member.js', [
+    'depends' => [\yii\web\JqueryAsset::className()],
+    'position' => \yii\web\View::POS_END]
+);
 ?>
+
 <div class="register-registerAsMember">
 
     <?php $form = ActiveForm::begin([
@@ -20,8 +28,69 @@ use common\models\Country;
     <?= $form->field($model, 'USER_LASTNAME') ?>
     
     <?= $form->field($model, 'USER_FORNAME') ?>
+    
+    <div class="form-group">
+        <input id="autocomplete" placeholder="Enter your address" onFocus="geolocate()" type="text" class="form-control"></input>
+    </div>
+    
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-2">
+                <label class="control-label" for="street_number">Street address</label>
+            </div>
+            <div class="col-xs-3">
+                <input class="form-control" id="street_number" disabled="true"></input>
+            </div>
+            <div class="col-xs-7">
+                <input class="form-control" id="route" disabled="true"></input>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-2">
+                <label class="control-label" for="locality">City</label>
+            </div>
+            <div class="col-xs-10">
+                <input class="form-control" id="locality" disabled="true"></input>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-2">
+                <label class="control-label" for="administrative_area_level_1">State</label>
+            </div>
+            <div class="col-xs-2">
+                <input class="form-control" id="administrative_area_level_1" disabled="true"></input>
+            </div>
+            <div class="col-xs-2">
+                <input class="form-control" id="administrative_area_level_2" disabled="true"></input>
+            </div>
+            <div class="col-xs-2">
+                <label class="control-label" for="postal_code">Zip code</label>
+            </div>
+            <div class="col-xs-4">
+                <input class="form-control" id="postal_code" disabled="true"></input>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-xs-2">
+                <label class="control-label" for="country">Country</label>
+            </div>
+            <div class="col-xs-10">
+                <input class="form-control" id="country" disabled="true"></input>
+            </div>
+        </div>
+    </div>
        
     <?= $form->field($model, 'USER_ADDRESS')->textarea() ?>
+    
+    <?= Html::activeHiddenInput($model, 'USER_LATITUDE'); ?>
+    
+    <?= Html::activeHiddenInput($model, 'USER_LONGITUDE'); ?>
     
     <?= $form->field($model, 'COUNTRY_COUNTRY_ID')->dropDownList(Country::getCountriesList(),[
         'prompt' => '- Choose your Country -'
