@@ -45,6 +45,7 @@ class RegisterForm_RegisterAsMember extends User
     {
         \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
         if ($this->validate()) {
+            $this->setScenario('user_AsMember_register');
             $this->update();
             $ah = ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
             $token = Token::createToken($this->USER_ID, TokenExt::TYPE_MEMBER_CONFIRMATION);

@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use common\helpers\RoleHelper;
+use common\models\Country;
 use kartik\password\PasswordInput;
 
 /* @var $this yii\web\View */
@@ -33,6 +34,11 @@ $isMember = RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_MEMBER);
         <?= $form->field($model, 'USER_MAIL_PROJECT')->textInput(['maxlength' => 80]) ?>
     
     <?php endif; ?>
+    
+    <?= $form->field($model, 'COUNTRY_COUNTRY_ID')->dropDownList(Country::getCountriesList(),[
+        'prompt' => '- Choose your Country -'
+        ]);
+    ?>
 
     <?= $form->field($model, 'TMP_PASSWORD')->widget(PasswordInput::className(), [
         'pluginOptions' => [

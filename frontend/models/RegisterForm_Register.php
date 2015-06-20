@@ -5,10 +5,9 @@ namespace frontend\models;
 use yii\base\Model;
 use yii\log\Logger;
 use common\models\User;
-use common\models\ActionHistoryExt;
+use common\models\Token;
 use common\models\TokenExt;
 
-use common\helpers\LDAPHelper;
 use common\helpers\MailHelper;
 
 use kartik\password\StrengthValidator;
