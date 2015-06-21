@@ -49,7 +49,7 @@ $positionName = $model->POSITION_NAME;
             ],
             'USER_NICKNAME',
             'USER_MAIL', 
-            'r_Country',
+            'r_Country.COUNTRY_NAME',
             
             [
                 'class' => 'yii\grid\ActionColumn',

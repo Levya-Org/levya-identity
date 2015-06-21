@@ -7,6 +7,7 @@ use yii\log\Logger;
 use yii\helpers\VarDumper;
 
 use common\models\User;
+use common\models\Project;
 use common\models\ActionHistoryExt;
 use common\models\Token;
 use common\models\TokenExt;
@@ -43,7 +44,6 @@ class RegisterForm_RegisterAsMember extends User
      * Register a User as Member 
      * @return bool
      */
-    //TODO : RBAC
     public function registerAsMember()
     {
         \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
@@ -52,11 +52,18 @@ class RegisterForm_RegisterAsMember extends User
         if ($this->validate()) {
             try {
                 if($this->update() !== false){
+                    //Add to Levya Project Member
+                    $memberPosition = Project::findOne(['PROJECT_PRIORITY' => 0])->getDefaultPosition(); 
+                    $memberPosition->addUser($this->USER_ID);
+                    //AH
                     ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
+                    //Token
                     $token = Token::createToken($this->USER_ID, TokenExt::TYPE_MEMBER_CONFIRMATION);
+                    //Mail
                     MailHelper::registrationMemberMail($this, $token);
                     MailHelper::statuteMail($this, Yii::getAlias('@common/mail/FILES/EN_en-Statutes.pdf'));
                     MailHelper::internalRuleMail($this, Yii::getAlias('@common/mail/FILES/En_en-IntenRules.pdf'));
+                    //Flash
                     Yii::$app->session->setFlash('user.confirmation_sent');
                     $transaction->commit();
                     return true;

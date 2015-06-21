@@ -186,13 +186,27 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                 $this->USER_PASSWORD = PasswordHelper::hash($this->TMP_PASSWORD);
             }
             else {
-                //TODO ActionHistory
                 if (isset($this->scenario)) {
+                    
+                    if($this->scenario == 'user_register' || 
+                            $this->scenario == 'user_AsMember_register' ){
+                        //DATA
+                        $this->USER_REGISTRATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
+                        $this->USER_REGISTRATIONDATE = new Expression('NOW()');
+                        
+                        //LDAP
+                        $ldap = new LDAPHelper();
+                        $userDn = $ldap->getDNfromUser($this->USER_LDAPUID);
+                        $ldap->addUserToGroup($userDn, $this->getLDAPGroup());
+                        $ldap->addUserToAccess($userDn, $this->getLDAPAccess());
+                    }
+                    
                     switch ($this->scenario) {
                         case 'user_register':
+                            ActionHistoryExt::ahUserRegistration($this->USER_ID);
+                            break;
                         case 'user_AsMember_register':
-                            $this->USER_REGISTRATIONIP = IPHelper::IPtoBin(Yii::$app->request->userIP);
-                            $this->USER_REGISTRATIONDATE = new Expression('NOW()');
+                            ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
                             break;
                         default:
                             break;
@@ -203,7 +217,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         }
         return false;
     }
-
+    
     public function afterFind() {
         if(parent::afterFind()){
             $this->USER_CREATIONIP = IPHelper::BinToStr($this->USER_CREATIONIP);

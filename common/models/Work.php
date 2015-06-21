@@ -122,10 +122,7 @@ class Work extends \yii\db\ActiveRecord
         try {
             if ($this->save()) {
                 \Yii::getLogger()->log('Work has been created', Logger::LEVEL_INFO);                
-                
-                //TODO
-                //ActionHistoryExt::ahUserCreation($this->primaryKey);
-                
+                                
                 $transaction->commit();
                 return true;
             }

@@ -40,6 +40,7 @@ use common\helpers\RoleHelper;
             'POSITION_ISOBLIGATORY:boolean',
             'POSITION_NEEDDONATION:boolean',
             'POSITION_NEEDSUBSCRIPTION:boolean',
+            'POSITION_ISDEFAULT:boolean',
             
             [
                 'class' => 'yii\grid\ActionColumn',

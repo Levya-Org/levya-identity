@@ -100,8 +100,9 @@ class PositionController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->setScenario('position_update');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->update()) {
             return $this->redirect(['view', 'id' => $model->POSITION_ID]);
         } else {
             return $this->render('update', [

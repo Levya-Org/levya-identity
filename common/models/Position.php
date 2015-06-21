@@ -44,9 +44,9 @@ class Position extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID'], 'required'],
+            [['POSITION_NAME', 'POSITION_LEVEL', 'POSITION_ISOBLIGATORY', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'PROJECT_PROJECT_ID', 'POSITION_ISDEFAULT'], 'required'],
             [['POSITION_DESCRIPTION'], 'string'],
-            [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION'], 'boolean'],
+            [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'POSITION_ISDEFAULT'], 'boolean'],
             [['PROJECT_PROJECT_ID', 'POSITION_LEVEL'], 'integer'],
             ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\PROJECT', 'targetAttribute' => 'PROJECT_ID'],
             [['POSITION_NAME'], 'string', 'max' => 45],
@@ -93,7 +93,7 @@ class Position extends \yii\db\ActiveRecord
                     'POSITION_NAME' => $this->POSITION_NAME,
                     'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID
                 ]);
-                if($position)
+                if($position && $this->POSITION_ID != $position->POSITION_ID)
                     $this->addError ($attribute, 'Name must be unique');
                 break;
             }
@@ -103,7 +103,7 @@ class Position extends \yii\db\ActiveRecord
                     'POSITION_LEVEL' => $this->POSITION_LEVEL,
                     'PROJECT_PROJECT_ID' => $this->PROJECT_PROJECT_ID
                 ]);
-                if($position)
+                if($position && $this->POSITION_ID != $position->POSITION_ID)
                     $this->addError ($attribute, 'An another Position has same level');
                 break;
             }

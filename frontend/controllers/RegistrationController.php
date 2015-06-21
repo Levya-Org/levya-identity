@@ -43,10 +43,6 @@ class RegistrationController extends Controller
         }
         
         if ($user->confirmToken($token)) {
-            $ldap = new LDAPHelper();
-            $userDn = $ldap->getDNfromUser($user->USER_LDAPUID);
-            $ldap->addUserToGroup($userDn, $user->getLDAPGroup());
-            $ldap->addUserToAccess($userDn, $user->getLDAPAccess());
             \Yii::$app->session->setFlash('user.confirmation_finished');
         }
         else {

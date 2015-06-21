@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'POSITION_ISDELETED:boolean',
             'POSITION_NEEDDONATION:boolean',
             'POSITION_NEEDSUBSCRIPTION:boolean',
+            'POSITION_ISDEFAULT:boolean',
             [
                 'attribute'=> 'PROJECT_PROJECT_ID',
                 'format' => 'raw',

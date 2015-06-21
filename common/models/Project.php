@@ -262,4 +262,15 @@ class Project extends \yii\db\ActiveRecord
     {
         return ArrayHelper::map(Project::findAll(['PROJECT_ISDELETED' => 0]), 'PROJECT_ID', 'PROJECT_NAME');
     }
+    
+    /**
+     * Return default Position of this Project
+     * @return \common\models\Position
+     */
+    public function  getDefaultPosition(){
+        foreach ($this->r_Positions as $position) {
+            if($position->POSITION_ISDEFAULT)
+                return $position;
+        }
+    }
 }
