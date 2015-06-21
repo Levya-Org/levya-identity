@@ -39,7 +39,8 @@ class PasswordHelper
         $sets = [
             'abcdefghijklmnopqrstuvwxyz',
             'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-            '123456789'
+            '123456789',
+            '&"#[(-|`\_^@)]=}$*'
         ];
         $all = '';
         $password = '';
