@@ -83,12 +83,11 @@ class RegisterForm_Register extends Model
                 try {
                     $token = Token::createToken($user->USER_ID, TokenExt::TYPE_USER_CONFIRMATION);
                     MailHelper::registrationMail($user, $token);
-
                     \Yii::$app->session->setFlash('user.confirmation_sent');
+                    return true;
                 } catch (Exception $ex) {
                     \Yii::getLogger()->log('An error occurred while creating user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
-                }
-                return true;
+                }                
             }
         }
         return false;

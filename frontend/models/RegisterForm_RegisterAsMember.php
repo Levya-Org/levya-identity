@@ -2,12 +2,15 @@
 
 namespace frontend\models;
 
+use Yii;
 use yii\log\Logger;
+use yii\helpers\VarDumper;
 
 use common\models\User;
 use common\models\ActionHistoryExt;
 use common\models\Token;
 use common\models\TokenExt;
+use common\helpers\MailHelper;
 
 class RegisterForm_RegisterAsMember extends User
 {
@@ -37,24 +40,32 @@ class RegisterForm_RegisterAsMember extends User
     }   
 
     /**
-     * Creates new confirmation token and sends it to the user.
-     *
+     * Register a User as Member 
      * @return bool
      */
+    //TODO : RBAC
     public function registerAsMember()
     {
         \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
+        $transaction = $this->getDb()->beginTransaction();
+        $this->setScenario('user_AsMember_register');
         if ($this->validate()) {
-            $this->setScenario('user_AsMember_register');
-            $this->update();
-            $ah = ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
-            $token = Token::createToken($this->USER_ID, TokenExt::TYPE_MEMBER_CONFIRMATION);
-            //TODO mail
-            //TODO donation
-            \Yii::$app->session->setFlash('user.confirmation_sent');
-            return true;
+            try {
+                if($this->update() !== false){
+                    ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
+                    $token = Token::createToken($this->USER_ID, TokenExt::TYPE_MEMBER_CONFIRMATION);
+                    MailHelper::registrationMemberMail($this, $token);
+                    MailHelper::statuteMail($this, Yii::getAlias('@common/mail/FILES/EN_en-Statutes.pdf'));
+                    MailHelper::internalRuleMail($this, Yii::getAlias('@common/mail/FILES/En_en-IntenRules.pdf'));
+                    Yii::$app->session->setFlash('user.confirmation_sent');
+                    $transaction->commit();
+                    return true;
+                }              
+            } catch (Exception $ex) {
+                $transaction->rollBack();
+                Yii::getLogger()->log('An error occurred while upgrading your user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            }
         }
-
         return false;
     }
     

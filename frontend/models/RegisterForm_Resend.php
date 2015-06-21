@@ -45,7 +45,7 @@ class RegisterForm_Resend extends Model
         return [
             ['USER_MAIL', 'required'],
             ['USER_MAIL', 'email'],
-            ['USER_MAIL', 'exist', 'targetClass' => 'app\models\User'],
+            ['USER_MAIL', 'exist', 'targetClass' => 'common\models\User'],
             ['USER_MAIL', function () {
                 if ($this->user != null && $this->user->isConfirmed()) {
                     $this->addError('USER_MAIL', \Yii::t('app/user', 'This account has already been confirmed'));
@@ -79,12 +79,10 @@ class RegisterForm_Resend extends Model
         if ($this->validate()) {
             ActionHistoryExt::ahUserResend($this->user->USER_ID);
             $token = Token::createToken($this->user->USER_ID, TokenExt::TYPE_CONFIRMATION);
-            MailHelper::registrationResendMail($this->getUser(), $token);
-            //TODO gestion erreur             
+            MailHelper::registrationResendMail($this->getUser(), $token);           
             \Yii::$app->session->setFlash('user.confirmation_sent');
             return true;
         }
-
         return false;
     }
 }

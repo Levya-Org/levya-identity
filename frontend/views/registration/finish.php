@@ -20,17 +20,6 @@ use yii\helpers\Html;
     </div>
 <?php endif ?>
 
-<?php if (Yii::$app->session->hasFlash('user.registration_finished')): ?>
-    <?php $this->title = Yii::t('app/user', 'Account has been created'); ?>
-    <div class="alert alert-success">
-        <h4>
-            <?= Html::encode($this->title) ?>
-        </h4>
-        <?= Yii::t('app/user', 'Thank you for signing up on our website') ?>.
-        <?= Yii::t('app/user', 'Your account has been created and you have been automatically logged in') ?>.
-    </div>
-<?php endif ?>
-
 <?php if (Yii::$app->session->hasFlash('user.confirmation_sent')): ?>
     <?php $this->title = Yii::t('app/user', 'We need to confirm your email address'); ?>
     <div class="alert alert-info">

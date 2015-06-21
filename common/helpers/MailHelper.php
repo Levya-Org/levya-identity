@@ -29,10 +29,15 @@ use yii\log\Logger;
  */
 class MailHelper {
     
+    /**
+     * Mail sended at User registration
+     * @param type $user
+     * @param type $token
+     */
     public static function registrationMail($user, $token){
         \Yii::getLogger()->log('registrationMail', Logger::LEVEL_TRACE);
         Yii::$app->mailer->compose([
-            'text' => 'En_us-registration-text',
+            'text' => 'En_us-registration-register-text',
         ], [
             'user' => $user,
             'token' => $token
@@ -43,6 +48,72 @@ class MailHelper {
         ->send();
     }
     
+    /**
+     * Mail sended at Member registration
+     * @param type $user
+     * @param type $file
+     */
+    public static function registrationMemberMail($user, $token){
+        \Yii::getLogger()->log('registrationMemberMail', Logger::LEVEL_TRACE);
+        Yii::$app->mailer->compose([
+            'text' => 'En_us-registration-register-member-text',
+        ], [
+            'user' => $user,
+            'token' => $token
+            ]) 
+        ->setFrom(['no-reply@indentity.levya.org' => 'Levya.Org Indentity'])
+        ->setTo($user->USER_MAIL)
+        ->setSubject('[Levya Org.] Welcome to Levya Org. Member')
+        ->send();
+    }
+    
+    /**
+     * Mail sended for new Member (1 time)
+     * Send Internal Rule file
+     * @param type $user
+     * @param type $file
+     */
+    public static function internalRuleMail($user, $file){
+        \Yii::getLogger()->log('registrationMemberMail', Logger::LEVEL_TRACE);
+        Yii::$app->mailer->compose([
+            'text' => 'En_us-registration-register-member-ir-text',
+        ], [
+            'user' => $user,
+            'file' => $file
+            ])
+        ->setFrom(['no-reply@indentity.levya.org' => 'Levya.Org Indentity'])
+        ->setTo($user->USER_MAIL)
+        ->setSubject('[Levya Org.] Interal Rules')
+        ->attach($file)
+        ->send();
+    }
+    
+    /**
+     * Mail sended for new Member (1 time)
+     * Send Statute file
+     * @param type $user
+     * @param type $file
+     */
+    public static function statuteMail($user, $file){
+        \Yii::getLogger()->log('registrationMemberMail', Logger::LEVEL_TRACE);
+        Yii::$app->mailer->compose([
+            'text' => 'En_us-registration-register-member-ir-text',
+        ], [
+            'user' => $user,
+            'file' => $file
+            ])
+        ->setFrom(['no-reply@indentity.levya.org' => 'Levya.Org Indentity'])
+        ->setTo($user->USER_MAIL)
+        ->setSubject('[Levya Org.] Statutes')
+        ->attach($file)
+        ->send();
+    }
+
+    /**
+     * Mail sended if User lost activation mail/link or that action token is out
+     * @param type $user
+     * @param type $token
+     */
     public static function registrationResendMail($user, $token){
         \Yii::getLogger()->log('registrationResendMail', Logger::LEVEL_TRACE);
         Yii::$app->mailer->compose([
@@ -57,6 +128,11 @@ class MailHelper {
         ->send();
     }
     
+    /**
+     * Mail sended if User ask for resetting his account password
+     * @param type $user
+     * @param type $token
+     */
     public static function registrationResetMail($user, $token){
         \Yii::getLogger()->log('registrationResetMail', Logger::LEVEL_TRACE);
         Yii::$app->mailer->compose([
