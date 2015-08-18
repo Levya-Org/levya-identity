@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ServiceSearch */
+/* @var $model common\models\ServiceSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

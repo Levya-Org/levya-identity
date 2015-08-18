@@ -9,7 +9,7 @@ use kartik\date\DatePicker;
 use kartik\markdown\MarkdownEditor;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Project */
+/* @var $model common\models\Project */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

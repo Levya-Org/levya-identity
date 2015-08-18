@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Param */
+/* @var $model common\models\Param */
 
 $this->title = $model->PARAM_NAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/param', 'Params'), 'url' => ['index']];

@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ServiceSearch */
+/* @var $searchModel common\models\ServiceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app/service', 'Services');

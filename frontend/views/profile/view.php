@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\User */
+/* @var $model common\models\User */
 
 $this->title = $model->USER_NICKNAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile')];

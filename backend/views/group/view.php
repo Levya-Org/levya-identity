@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Group */
+/* @var $model common\models\Group */
 
 $this->title = $model->GROUP_NAME;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/group', 'Groups'), 'url' => ['index']];

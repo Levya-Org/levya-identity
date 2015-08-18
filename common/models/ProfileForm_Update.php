@@ -21,9 +21,9 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\log\Logger;
-use app\models\User;
-use app\models\ActionHistoryExt;
-use app\helpers\LDAPHelper;
+use common\models\User;
+use common\models\ActionHistoryExt;
+use common\helpers\LDAPHelper;
 
 use app\helpers\PasswordHelper;
 use kartik\password\StrengthValidator;

@@ -6,7 +6,7 @@ use yii\widgets\Pjax;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ParamSearch */
+/* @var $searchModel common\models\ParamSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->registerJsFile(Yii::$app->request->baseUrl.'/js/index_param.js', [

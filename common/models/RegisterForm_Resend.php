@@ -4,10 +4,10 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\log\Logger;
-use app\models\User;
-use app\models\Token;
-use app\models\ActionHistoryExt;
-use app\helpers\MailHelper;
+use common\models\User;
+use common\models\Token;
+use common\models\ActionHistoryExt;
+use common\helpers\MailHelper;
 
 /**
  * ResendForm gets user USER_MAIL address and validates if user has already confirmed his account. If so, it shows error
@@ -45,7 +45,7 @@ class RegisterForm_Resend extends Model
         return [
             ['USER_MAIL', 'required'],
             ['USER_MAIL', 'email'],
-            ['USER_MAIL', 'exist', 'targetClass' => 'app\models\User'],
+            ['USER_MAIL', 'exist', 'targetClass' => 'common\models\User'],
             ['USER_MAIL', function () {
                 if ($this->user != null && $this->user->isConfirmed()) {
                     $this->addError('USER_MAIL', \Yii::t('app/user', 'This account has already been confirmed'));

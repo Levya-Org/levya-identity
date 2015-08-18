@@ -7,7 +7,7 @@ use common\helpers\RoleHelper;
 
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\ProjectSearch */
+/* @var $searchModel common\models\ProjectSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app/project', 'Projects');

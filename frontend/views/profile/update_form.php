@@ -7,7 +7,7 @@ use common\models\Country;
 use kartik\password\PasswordInput;
 
 /* @var $this yii\web\View */
-/* @var $user app\models\ProfileForm_Update */
+/* @var $user common\models\ProfileForm_Update */
 /* @var $form yii\widgets\ActiveForm */
 
 $isMember = RoleHelper::userHasRole($model->USER_ID, RoleHelper::ROLE_MEMBER);

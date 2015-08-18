@@ -4,7 +4,7 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Service */
+/* @var $model common\models\Service */
 
 $this->title = Yii::t('app/service', 'Create {modelClass}', [
     'modelClass' => 'Service',

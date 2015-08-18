@@ -7,7 +7,7 @@ use common\models\ActionHistoryExt;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $data app\models\ActionHistory */
+/* @var $data common\models\ActionHistory */
 
 $this->title = Yii::t('app/profile', 'Action Histories');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/profile', 'Profile')];

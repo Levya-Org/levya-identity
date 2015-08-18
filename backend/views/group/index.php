@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\GroupSearch */
+/* @var $searchModel common\models\GroupSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app/group', 'Groups');

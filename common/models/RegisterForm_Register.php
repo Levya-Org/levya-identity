@@ -4,12 +4,12 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\log\Logger;
-use app\models\User;
-use app\models\ActionHistoryExt;
-use app\models\TokenExt;
+use common\models\User;
+use common\models\ActionHistoryExt;
+use common\models\TokenExt;
 
-use app\helpers\LDAPHelper;
-use app\helpers\MailHelper;
+use common\helpers\LDAPHelper;
+use common\helpers\MailHelper;
 
 use kartik\password\StrengthValidator;
 
@@ -32,14 +32,14 @@ class RegisterForm_Register extends Model
             [['USER_NICKNAME'], 'required'],
             [['USER_NICKNAME'], 'match', 'pattern' => '/^[\w]{3,15}$/'],
             [['USER_NICKNAME'], 'string', 'min' => 3, 'max' => 20],
-            [['USER_NICKNAME'], 'unique', 'targetClass' => 'app\models\User',
+            [['USER_NICKNAME'], 'unique', 'targetClass' => 'common\models\User',
                 'message' => \Yii::t('app/user', 'This username has already been taken')],
             
             //USER_EMAIL
             [['USER_MAIL'], 'required'],
             [['USER_MAIL'], 'string', 'max' => 254],
             [['USER_MAIL'], 'email'],
-            [['USER_MAIL'], 'unique', 'targetClass' => 'app\models\User',
+            [['USER_MAIL'], 'unique', 'targetClass' => 'common\models\User',
                 'message' => \Yii::t('app/user', 'This email address has already been taken')],
             
             [['USER_PASSWORD'], 'required'],

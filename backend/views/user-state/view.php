@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 use common\helpers\RoleHelper;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserState */
+/* @var $model common\models\UserState */
 
 $this->title = $model->USERSTATE_ID;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app/user', 'User States'), 'url' => ['index']];

@@ -11,7 +11,7 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_gas.js', [
 );
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Group */
+/* @var $model common\models\Group */
 ?>
 <div class="group-gas-view">
 

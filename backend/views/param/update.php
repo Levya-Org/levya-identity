@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Param */
+/* @var $model common\models\Param */
 
 $this->title = Yii::t('app/param', 'Update {modelClass}: ', [
     'modelClass' => 'Param',
