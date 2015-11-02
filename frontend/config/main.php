@@ -8,6 +8,7 @@ $params = array_merge(
 
 return [
     'id' => 'levya-identity-web-frontend',
+    'name' => 'Levya Org. Indentity',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',

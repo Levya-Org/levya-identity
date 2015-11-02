@@ -74,6 +74,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     'label'=>'<i class="glyphicon glyphicon-briefcase"></i> Projects',
                     'headerOptions' => ['class'=>'disabled']
                 ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-credit-card"></i> Memberships',
+                    'headerOptions' => ['class'=>'disabled']
+                ],
+                [
+                    'label'=>'<i class="glyphicon glyphicon-heart-empty"></i> Donations',
+                    'headerOptions' => ['class'=>'disabled']
+                ],
             ],
             'encodeLabels' => false
         ]) 
