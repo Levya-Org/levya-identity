@@ -15,7 +15,7 @@ use \yii\helpers\ArrayHelper;
  * @property integer $SERVICE_ISENABLE
  * @property integer $SERVICE_STATE
  *
- * @property POSITIONACCESSSERVICE[] $pOSITIONACCESSSERVICEs
+ * @property GROUP[] $r_Groups
  */
 class Service extends \yii\db\ActiveRecord
 {
@@ -59,6 +59,15 @@ class Service extends \yii\db\ActiveRecord
     }
     
     /**
+     * Return all Group(s) linked to this Service
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_Groups(){
+        return $this->hasMany(Group::className(), ['GROUP_ID' => 'GROUP_GROUP_ID'])
+                ->viaTable(GroupAccessService::tableName(), ['SERVICE_SERVICE_ID' => 'SERVICE_ID']);
+    }
+    
+    /**
      * Return an array of all services
      * @return array[SERVICE_ID,SERVICE_NAME]
      */
@@ -73,13 +82,5 @@ class Service extends \yii\db\ActiveRecord
      */
     public static function getAllServices(){
         return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_ID');
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getPOSITIONACCESSSERVICES()
-    {
-        return $this->hasMany(POSITIONACCESSSERVICE::className(), ['SERVICE_SERVICE_ID' => 'SERVICE_ID']);
     }
 }

@@ -15,6 +15,7 @@ use Yii;
  *
  * @property BELONG[] $r_Belongs
  * @property SERVICE[] $r_Services
+ * @property USER[] $r_Users
  */
 class Group extends \yii\db\ActiveRecord
 {
@@ -70,5 +71,17 @@ class Group extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Service::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID'])
                 ->viaTable(GroupAccessService::tableName(), ['GROUP_GROUP_ID' => 'GROUP_ID']);
+    }
+    
+    /**
+     * Return all Users linked to this Group
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_Users(){
+        return $this->hasMany(User::className(), ['USER_ID' => 'USER_USER_ID'])
+                ->viaTable(Belong::tableName(), ['GROUP_GROUP_ID' => 'GROUP_ID'],
+                        function($query){
+                            $query->andWhere(['BELONG_TO' => null]);
+                        });
     }
 }
