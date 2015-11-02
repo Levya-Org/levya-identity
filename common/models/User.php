@@ -48,6 +48,7 @@ use common\helpers\LDAPHelper;
  * @property Country $r_Country
  * @property USERSTATE $r_UserState
  * @property WORK[] $r_Works
+ * @property GROUP[] $r_Groups
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -290,6 +291,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      */
     public function get_Works() {
         return $this->hasMany(WORK::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+    
+    /**
+     * Return all Group(s) linked to this User
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_Groups(){
+        return $this->hasMany(Group::className(), ['GROUP_ID' => 'GROUP_GROUP_ID'])
+                ->viaTable(Belong::tableName(), ['USER_USER_ID' => 'USER_ID'],
+                        function($query){
+                            $query->andWhere(['BELONG_TO' => null]);
+                        });
     }
 
 
