@@ -28,6 +28,7 @@ $params = array_merge(
 
 return [
     'id' => 'levya-identity-web-backend',
+    'name' => 'Levya Org. Indentity - Admin',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
@@ -38,9 +39,12 @@ return [
         ]
     ],
     'components' => [
-        'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => false,
+        'request' => [
+            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
+            'cookieValidationKey' => '[TOCHANGE]',
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -51,8 +55,14 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'en-US',
+                ]
+            ]
         ],
     ],
     'params' => $params,

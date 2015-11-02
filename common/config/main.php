@@ -25,5 +25,37 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => '[TOCHANGE]',
+            'username' => '[TOCHANGE]',
+            'password' => '[TOCHANGE]',
+            'charset' => 'utf8',
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'itemTable' => 'AUTH_ITEM',
+            'itemChildTable' => 'AUTH_ITEM_CHILD',
+            'assignmentTable' => 'AUTH_ASSIGNMENT',
+            'ruleTable' => 'AUTH_RULE'
+        ],
+        'user' => [
+            'identityClass' => 'common\models\User',
+            'enableAutoLogin' => false,
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'viewPath' => '@common/mail',
+            'useFileTransport' => false,
+        ],
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                    'sourceLanguage' => 'en-US',
+                ]
+            ]
+        ],
     ],
 ];

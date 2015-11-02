@@ -20,7 +20,17 @@
  */
 
 return [
-    'adminEmail' => 'admin@example.com',
-    'supportEmail' => 'support@example.com',
-    'user.passwordResetTokenExpire' => 3600,
+    'token:confirmUserWithin' => '86400',
+    'token:confirmMemberWithin' => '86400',
+    'token:confirmEmailWithin' => '86400',
+    'token:recoverWithin' => '21600',
+    'token:cnilWithIn' => '21600',
+    'registration:enableConfirmation' => true,
+    'registration:enableRegistration' => true,
+    'ldap:host' => '127.0.0.1',
+    'ldap:username' => 'cn=identity,dc=levya,dc=org',
+    'ldap:password' => '[TOCHANGE]',
+    'ldap:bindRequiresDn' => true,
+    'ldap:baseDn' => 'dc=levya,dc=org',
+    'google:apiKey' => '[TOCHANGE]'
 ];
