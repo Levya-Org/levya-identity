@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'SERVICE_LDAPNAME',
             'SERVICE_NAME',
+            'SERVICE_URL:url',
             'SERVICE_DESCRIPTION:ntext',
             'SERVICE_ISENABLE:boolean',
             'SERVICE_STATE:boolean',

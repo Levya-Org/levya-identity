@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'SERVICE_LDAPNAME')->textInput(['maxlength' => 45]) ?>
 
     <?= $form->field($model, 'SERVICE_NAME')->textInput(['maxlength' => 225]) ?>
+    
+    <?= $form->field($model, 'SERVICE_URL')->textInput(['maxlength' => 250]) ?>
 
     <?= $form->field($model, 'SERVICE_DESCRIPTION')->textarea(['rows' => 6]) ?>
 

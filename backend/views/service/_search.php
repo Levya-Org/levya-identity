@@ -23,6 +23,8 @@ use common\helpers\RoleHelper;
     <?= $form->field($model, 'SERVICE_LDAPNAME') ?>
 
     <?= $form->field($model, 'SERVICE_NAME') ?>
+    
+    <?= $form->field($model, 'SERVICE_URL') ?>
 
     <?= $form->field($model, 'SERVICE_DESCRIPTION') ?>
 

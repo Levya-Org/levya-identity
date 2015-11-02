@@ -5,12 +5,20 @@ namespace common\models;
 use Yii;
 use \yii\helpers\ArrayHelper;
 
+use common\models\GroupAccessService;
+use common\models\Group;
+use common\models\Belong;
+use common\models\Position;
+use common\models\PositionAccessService;
+use common\models\Work;
+
 /**
  * This is the model class for table "SERVICE".
  *
  * @property integer $SERVICE_ID
  * @property string $SERVICE_LDAPNAME
  * @property string $SERVICE_NAME
+ * @property string $SERVICE_URL
  * @property string $SERVICE_DESCRIPTION
  * @property integer $SERVICE_ISENABLE
  * @property integer $SERVICE_STATE
@@ -33,7 +41,8 @@ class Service extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['SERVICE_LDAPNAME', 'SERVICE_NAME', 'SERVICE_DESCRIPTION', 'SERVICE_ISENABLE', 'SERVICE_STATE'], 'required'],
+            [['SERVICE_LDAPNAME', 'SERVICE_NAME', 'SERVICE_URL', 'SERVICE_DESCRIPTION', 'SERVICE_ISENABLE', 'SERVICE_STATE'], 'required'],
+            [['SERVICE_URL'], 'url', 'defaultScheme' => 'https'],
             [['SERVICE_DESCRIPTION'], 'string'],
             [['SERVICE_ISENABLE', 'SERVICE_STATE'], 'integer'],
             [['SERVICE_LDAPNAME'], 'string', 'max' => 45],
@@ -52,6 +61,7 @@ class Service extends \yii\db\ActiveRecord
             'SERVICE_ID' => Yii::t('app/service', 'Service  ID'),
             'SERVICE_LDAPNAME' => Yii::t('app/service', 'Service  Ldapname'),
             'SERVICE_NAME' => Yii::t('app/service', 'Service  Name'),
+            'SERVICE_URL' => Yii::t('app/service', 'Service  URL'),
             'SERVICE_DESCRIPTION' => Yii::t('app/service', 'Service  Description'),
             'SERVICE_ISENABLE' => Yii::t('app/service', 'Service  Isenable'),
             'SERVICE_STATE' => Yii::t('app/service', 'Service  State'),
@@ -82,5 +92,35 @@ class Service extends \yii\db\ActiveRecord
      */
     public static function getAllServices(){
         return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_ID');
+    }
+    
+    /**
+     * Return all accessible Services for a user
+     * @param type $userId
+     * @return array[SERVICE]
+     */
+    public static function getServicesByUser($userId){
+        $gpaSQLCommand = Service::find()
+                ->select(Service::tableName().".*")
+                ->innerJoin(GroupAccessService::tableName()." gas", Service::tableName().".SERVICE_ID=gas.SERVICE_SERVICE_ID")
+                ->innerJoin(Group::tableName()." g", "g.GROUP_ID=gas.GROUP_GROUP_ID")
+                ->innerJoin(Belong::tableName()." b", "b.GROUP_GROUP_ID=g.GROUP_ID")
+                ->where(['b.USER_USER_ID' => $userId])
+                ->createCommand()->rawSql;
+        
+        $pasSQLCommand = Service::find()
+                ->select(Service::tableName().".*")
+                ->innerJoin(PositionAccessService::tableName()." pas", Service::tableName().".SERVICE_ID=pas.SERVICE_SERVICE_ID")
+                ->innerJoin(Position::tableName()." p", "p.POSITION_ID=pas.POSITION_POSITION_ID")
+                ->innerJoin(Work::tableName()." w", "w.POSITION_POSITION_ID=p.POSITION_ID")
+                ->where([
+                    'w.USER_USER_ID' => $userId,
+                    'p.POSITION_ISDELETED' => false,
+                    'w.WORK_TO' => null
+                        ])
+                ->union($gpaSQLCommand)
+                ->all();
+        
+        return $pasSQLCommand;        
     }
 }
