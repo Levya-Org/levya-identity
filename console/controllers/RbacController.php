@@ -19,7 +19,7 @@
  * Copyright (C) Levya Team Members
  */
 
-namespace yii\console\commands;
+namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
