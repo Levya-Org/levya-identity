@@ -8,10 +8,11 @@ use yii\db\Expression;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
 
+use Rhumsaa\Uuid\Uuid;
+
 use common\helpers\IPHelper;
 use common\helpers\PasswordHelper;
 use common\helpers\LDAPHelper;
-
 
 /**
  * This is the model class for table "USER".
@@ -47,6 +48,7 @@ use common\helpers\LDAPHelper;
  * @property Country $r_Country
  * @property USERSTATE $r_UserState
  * @property WORK[] $r_Works
+ * @property GROUP[] $r_Groups
  */
 class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
@@ -290,6 +292,18 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     public function get_Works() {
         return $this->hasMany(WORK::className(), ['USER_USER_ID' => 'USER_ID']);
     }
+    
+    /**
+     * Return all Group(s) linked to this User
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_Groups(){
+        return $this->hasMany(Group::className(), ['GROUP_ID' => 'GROUP_GROUP_ID'])
+                ->viaTable(Belong::tableName(), ['USER_USER_ID' => 'USER_ID'],
+                        function($query){
+                            $query->andWhere(['BELONG_TO' => null]);
+                        });
+    }
 
 
     // </editor-fold>
@@ -368,7 +382,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         try {
             $this->USER_SECRETKEY = PasswordHelper::generate(80);
             $this->USERSTATE_USERSTATE_ID = UserState::findOne(['USERSTATE_DEFAULT' => 1])->USERSTATE_ID;
-            $this->USER_LDAPUID = \Yii::$app->security->generateRandomString(80);
+            $this->USER_LDAPUID = Uuid::uuid4()->toString();
             
             if ($this->save()) {
                 \Yii::getLogger()->log('User has been created', Logger::LEVEL_INFO);
