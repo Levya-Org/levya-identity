@@ -40,6 +40,9 @@ return [
                 ],
             ],
         ],
+        'user' => [
+            'class' => false,
+        ],
     ],
     'params' => $params,
 ];
