@@ -174,12 +174,13 @@ class Token extends \yii\db\ActiveRecord
         $date = null;
         $timestamp = null;
         
+        //TODO remove old code with never version : DateTimeImmutable
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             $timestamp = strtotime($this->TOKEN_CREATEDATE);
         } else {
             $date = strptime($this->TOKEN_CREATEDATE, '%Y-%m-%d %T');
             $timestamp = mktime($date['tm_hour'], $date['tm_min'], $date['tm_sec'],
-                $date['tm_mon'], $date['tm_mday'], $date['tm_year']+1900);
+                $date['tm_mon']+1, $date['tm_mday'], $date['tm_year']+1900);
         }
 
         return ($timestamp + $expirationTime) < time();

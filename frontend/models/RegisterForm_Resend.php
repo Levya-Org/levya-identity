@@ -25,6 +25,7 @@ use yii\base\Model;
 use yii\log\Logger;
 use common\models\User;
 use common\models\Token;
+use common\models\TokenExt;
 use common\models\ActionHistoryExt;
 use common\helpers\MailHelper;
 
@@ -97,7 +98,7 @@ class RegisterForm_Resend extends Model
         \Yii::getLogger()->log('User Resend Confirmation', Logger::LEVEL_TRACE);
         if ($this->validate()) {
             ActionHistoryExt::ahUserResend($this->user->USER_ID);
-            $token = Token::createToken($this->user->USER_ID, TokenExt::TYPE_CONFIRMATION);
+            $token = Token::createToken($this->user->USER_ID, TokenExt::TYPE_USER_CONFIRMATION);
             MailHelper::registrationResendMail($this->getUser(), $token);           
             \Yii::$app->session->setFlash('user.confirmation_sent');
             return true;
