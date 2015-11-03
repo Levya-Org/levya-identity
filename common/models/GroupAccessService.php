@@ -50,8 +50,8 @@ class GroupAccessService extends \yii\db\ActiveRecord
         return [
             [['GROUP_GROUP_ID', 'SERVICE_SERVICE_ID'], 'required'],
             [['GROUP_GROUP_ID', 'SERVICE_SERVICE_ID'], 'integer'],
-            ['SERVICE_SERVICE_ID', 'exist', 'targetClass' => 'common\models\SERVICE', 'targetAttribute' => 'SERVICE_ID'],
-            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\GROUP', 'targetAttribute' => 'GROUP_ID'],
+            ['SERVICE_SERVICE_ID', 'exist', 'targetClass' => 'common\models\Service', 'targetAttribute' => 'SERVICE_ID'],
+            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\Group', 'targetAttribute' => 'GROUP_ID'],
             [['SERVICE_SERVICE_ID', 'GROUP_GROUP_ID'], 'unique', 'targetAttribute' => ['SERVICE_SERVICE_ID', 'GROUP_GROUP_ID']]
         ];
     }
@@ -72,7 +72,7 @@ class GroupAccessService extends \yii\db\ActiveRecord
      */
     public function getr_Group()
     {
-        return $this->hasOne(GROUP::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
+        return $this->hasOne(Group::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
     }
 
     /**
@@ -80,6 +80,6 @@ class GroupAccessService extends \yii\db\ActiveRecord
      */
     public function getr_Service()
     {
-        return $this->hasOne(SERVICE::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID']);
+        return $this->hasOne(Service::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID']);
     }
 }

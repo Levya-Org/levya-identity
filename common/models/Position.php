@@ -67,7 +67,7 @@ class Position extends \yii\db\ActiveRecord
             [['POSITION_DESCRIPTION'], 'string'],
             [['POSITION_ISOBLIGATORY', 'POSITION_ISDELETED', 'POSITION_NEEDDONATION', 'POSITION_NEEDSUBSCRIPTION', 'POSITION_ISDEFAULT'], 'boolean'],
             [['PROJECT_PROJECT_ID', 'POSITION_LEVEL'], 'integer'],
-            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\PROJECT', 'targetAttribute' => 'PROJECT_ID'],
+            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\Project', 'targetAttribute' => 'PROJECT_ID'],
             [['POSITION_NAME'], 'string', 'max' => 45],
             
             [['POSITION_NAME', 'POSITION_LEVEL'], 'validePosition']
@@ -137,7 +137,7 @@ class Position extends \yii\db\ActiveRecord
      */
     public function getr_Project()
     {
-        return $this->hasOne(PROJECT::className(), ['PROJECT_ID' => 'PROJECT_PROJECT_ID']);
+        return $this->hasOne(Project::className(), ['PROJECT_ID' => 'PROJECT_PROJECT_ID']);
     }
 
     /**
@@ -145,7 +145,7 @@ class Position extends \yii\db\ActiveRecord
      */
     public function getr_Works()
     {
-        return $this->hasMany(WORK::className(), ['POSITION_POSITION_ID' => 'POSITION_ID']);
+        return $this->hasMany(Work::className(), ['POSITION_POSITION_ID' => 'POSITION_ID']);
     }
     
     /**

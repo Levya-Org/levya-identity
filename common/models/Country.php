@@ -73,7 +73,7 @@ class Country extends \yii\db\ActiveRecord
      */
     public function getr_Users()
     {
-        return $this->hasMany(USER::className(), ['COUNTRY_COUNTRY_ID' => 'COUNTRY_ID']);
+        return $this->hasMany(User::className(), ['COUNTRY_COUNTRY_ID' => 'COUNTRY_ID']);
     }
     
     /**

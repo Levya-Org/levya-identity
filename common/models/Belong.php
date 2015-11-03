@@ -58,8 +58,8 @@ class Belong extends \yii\db\ActiveRecord
             [['USER_USER_ID', 'GROUP_GROUP_ID'], 'required'],
             [['BELONG_FROM', 'BELONG_TO'], 'safe'],
             [['USER_USER_ID', 'GROUP_GROUP_ID'], 'integer'],
-            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
-            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\GROUP', 'targetAttribute' => 'GROUP_ID']
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\User', 'targetAttribute' => 'USER_ID'],
+            ['GROUP_GROUP_ID', 'exist', 'targetClass' => 'common\models\Group', 'targetAttribute' => 'GROUP_ID']
         ];
     }
 
@@ -96,7 +96,7 @@ class Belong extends \yii\db\ActiveRecord
      */
     public function getr_Group()
     {
-        return $this->hasOne(GROUP::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
+        return $this->hasOne(Group::className(), ['GROUP_ID' => 'GROUP_GROUP_ID']);
     }
 
     /**
@@ -104,7 +104,7 @@ class Belong extends \yii\db\ActiveRecord
      */
     public function getr_User()
     {
-        return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
+        return $this->hasOne(User::className(), ['USER_ID' => 'USER_USER_ID']);
     }
     
     /**

@@ -137,7 +137,7 @@ class Project extends \yii\db\ActiveRecord
      */
     public function getr_Donations()
     {
-        return $this->hasMany(DONATION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
+        return $this->hasMany(Donation::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
     }
 
     /**
@@ -145,7 +145,7 @@ class Project extends \yii\db\ActiveRecord
      */
     public function getr_Positions()
     {
-        return $this->hasMany(POSITION::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID'])->where(['POSITION_ISDELETED' => false])->orderBy('POSITION_LEVEL');
+        return $this->hasMany(Position::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID'])->where(['POSITION_ISDELETED' => false])->orderBy('POSITION_LEVEL');
     }
 
     /**
@@ -153,7 +153,7 @@ class Project extends \yii\db\ActiveRecord
      */
     public function getr_Works()
     {
-        return $this->hasMany(WORK::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
+        return $this->hasMany(Work::className(), ['PROJECT_PROJECT_ID' => 'PROJECT_ID']);
     }
     
     /**

@@ -58,7 +58,7 @@ class ActionHistory extends \yii\db\ActiveRecord
         return [
             [['ACTION_HISTORY_IP', 'USER_USER_ID'], 'required'],
             [['ACTION_HISTORY_ACTION', 'USER_USER_ID'], 'integer'],
-            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\User', 'targetAttribute' => 'USER_ID'],
             [['ACTION_HISTORY_IP'], 'string', 'max' => 16]
         ];
     }
@@ -113,7 +113,7 @@ class ActionHistory extends \yii\db\ActiveRecord
      */
     public function getr_User()
     {
-        return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
+        return $this->hasOne(User::className(), ['USER_ID' => 'USER_USER_ID']);
     }
     
     /**

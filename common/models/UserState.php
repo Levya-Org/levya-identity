@@ -84,6 +84,6 @@ class UserState extends \yii\db\ActiveRecord
      */
     public function getUSERs()
     {
-        return $this->hasMany(USER::className(), ['USERSTATE_USERSTATE_ID' => 'USERSTATE_ID']);
+        return $this->hasMany(User::className(), ['USERSTATE_USERSTATE_ID' => 'USERSTATE_ID']);
     }
 }

@@ -52,8 +52,8 @@ class PositionAccessService extends \yii\db\ActiveRecord
         return [
             [['SERVICE_SERVICE_ID', 'POSITION_POSITION_ID'], 'required'],
             [['SERVICE_SERVICE_ID', 'POSITION_POSITION_ID'], 'integer'],
-            ['SERVICE_SERVICE_ID', 'exist', 'targetClass' => 'common\models\SERVICE', 'targetAttribute' => 'SERVICE_ID'],
-            ['POSITION_POSITION_ID', 'exist', 'targetClass' => 'common\models\POSITION', 'targetAttribute' => 'POSITION_ID'],
+            ['SERVICE_SERVICE_ID', 'exist', 'targetClass' => 'common\models\Service', 'targetAttribute' => 'SERVICE_ID'],
+            ['POSITION_POSITION_ID', 'exist', 'targetClass' => 'common\models\Position', 'targetAttribute' => 'POSITION_ID'],
             [['SERVICE_SERVICE_ID', 'POSITION_POSITION_ID'], 'unique', 'targetAttribute' => ['SERVICE_SERVICE_ID', 'POSITION_POSITION_ID']]
         ];
     }
@@ -74,7 +74,7 @@ class PositionAccessService extends \yii\db\ActiveRecord
      */
     public function getSERVICESERVICE()
     {
-        return $this->hasOne(SERVICE::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID']);
+        return $this->hasOne(Service::className(), ['SERVICE_ID' => 'SERVICE_SERVICE_ID']);
     }
 
     /**
@@ -82,7 +82,7 @@ class PositionAccessService extends \yii\db\ActiveRecord
      */
     public function getPOSITIONPOSITION()
     {
-        return $this->hasOne(POSITION::className(), ['POSITION_ID' => 'POSITION_POSITION_ID']);
+        return $this->hasOne(Position::className(), ['POSITION_ID' => 'POSITION_POSITION_ID']);
     }
     
     /**

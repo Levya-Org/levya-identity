@@ -61,9 +61,9 @@ class Work extends \yii\db\ActiveRecord
         return [
             [['WORK_FROM', 'WORK_TO'], 'safe'],
             [['USER_USER_ID', 'PROJECT_PROJECT_ID', 'POSITION_POSITION_ID'], 'integer'],
-            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
-            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\PROJECT', 'targetAttribute' => 'PROJECT_ID'],
-            ['POSITION_POSITION_ID', 'exist', 'targetClass' => 'common\models\POSITION', 'targetAttribute' => 'POSITION_ID'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\User', 'targetAttribute' => 'USER_ID'],
+            ['PROJECT_PROJECT_ID', 'exist', 'targetClass' => 'common\models\Project', 'targetAttribute' => 'PROJECT_ID'],
+            ['POSITION_POSITION_ID', 'exist', 'targetClass' => 'common\models\Position', 'targetAttribute' => 'POSITION_ID'],
             [['WORK_ISACCEPTED', 'WORK_ISLOCKED'], 'boolean'],
             [['USER_USER_ID', 'PROJECT_PROJECT_ID', 'POSITION_POSITION_ID'], 'required']
         ];
@@ -105,7 +105,7 @@ class Work extends \yii\db\ActiveRecord
      */
     public function getr_User()
     {
-        return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
+        return $this->hasOne(User::className(), ['USER_ID' => 'USER_USER_ID']);
     }
 
     /**
@@ -113,7 +113,7 @@ class Work extends \yii\db\ActiveRecord
      */
     public function getr_Position()
     {
-        return $this->hasOne(POSITION::className(), ['POSITION_ID' => 'POSITION_POSITION_ID']);
+        return $this->hasOne(Position::className(), ['POSITION_ID' => 'POSITION_POSITION_ID']);
     }
 
     /**
@@ -121,7 +121,7 @@ class Work extends \yii\db\ActiveRecord
      */
     public function getr_Project()
     {
-        return $this->hasOne(PROJECT::className(), ['PROJECT_ID' => 'PROJECT_PROJECT_ID']);
+        return $this->hasOne(Project::className(), ['PROJECT_ID' => 'PROJECT_PROJECT_ID']);
     }
     
     /**

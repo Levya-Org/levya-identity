@@ -56,7 +56,7 @@ class Token extends \yii\db\ActiveRecord
             [['TOKEN_TYPE', 'USER_USER_ID'], 'required'],
             [['TOKEN_CREATEDATE'], 'safe'],
             [['TOKEN_TYPE', 'USER_USER_ID'], 'integer'],
-            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\USER', 'targetAttribute' => 'USER_ID'],
+            ['USER_USER_ID', 'exist', 'targetClass' => 'common\models\User', 'targetAttribute' => 'USER_ID'],
             [['TOKEN_CODE'], 'string', 'max' => 45],
             [['TOKEN_CODE'], 'unique']
         ];
@@ -95,7 +95,7 @@ class Token extends \yii\db\ActiveRecord
      */
     public function getr_User()
     {
-        return $this->hasOne(USER::className(), ['USER_ID' => 'USER_USER_ID']);
+        return $this->hasOne(User::className(), ['USER_ID' => 'USER_USER_ID']);
     }
     
     

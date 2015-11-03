@@ -118,7 +118,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
             //
             [['USER_LASTNAME', 'USER_FORNAME', 'USER_NICKNAME', 'USER_SECRETKEY'], 'string', 'max' => 80],
             [['USERSTATE_USERSTATE_ID', 'COUNTRY_COUNTRY_ID'], 'integer'],
-            ['USERSTATE_USERSTATE_ID', 'exist', 'targetClass' => 'common\models\USERSTATE', 'targetAttribute' => 'USERSTATE_ID'],
+            ['USERSTATE_USERSTATE_ID', 'exist', 'targetClass' => 'common\models\UserState', 'targetAttribute' => 'USERSTATE_ID'],
             [['USER_ADDRESS'], 'string'],
             [['USER_PASSWORD'], 'string', 'max' => 255],
             [['USER_PHONE'], 'string', 'max' => 20],
@@ -309,7 +309,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @return \yii\db\ActiveQuery
      */
     public function get_Works() {
-        return $this->hasMany(WORK::className(), ['USER_USER_ID' => 'USER_ID']);
+        return $this->hasMany(Work::className(), ['USER_USER_ID' => 'USER_ID']);
     }
     
     /**

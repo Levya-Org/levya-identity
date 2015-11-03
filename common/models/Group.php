@@ -80,7 +80,7 @@ class Group extends \yii\db\ActiveRecord
      */
     public function getr_Belongs()
     {
-        return $this->hasMany(BELONG::className(), ['GROUP_GROUP_ID' => 'GROUP_ID']);
+        return $this->hasMany(Belong::className(), ['GROUP_GROUP_ID' => 'GROUP_ID']);
     }
 
     /**
