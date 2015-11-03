@@ -48,6 +48,7 @@ class LDAPHelper {
     private static function getOptions(){
         return [
             'host' => Param::getParamValue('ldap:host'),
+            'port' => Param::getParamValue('ldap:port'),
             'username' => Param::getParamValue('ldap:username'),
             'password' => Param::getParamValue('ldap:password'),
             'bindRequiresDn' => Param::getParamValue('ldap:bindRequiresDn'),
