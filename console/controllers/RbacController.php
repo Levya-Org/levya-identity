@@ -23,10 +23,14 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
+use yii\console\Exception;
+use yii\helpers\Console;
+use yii\helpers\VarDumper;
 use yii\log\Logger;
 
+use common\models\User;
 /**
- * Store RBAC tree.
+ * Manage RBAC of application.
  *
  * @author Hervé
  */
@@ -37,7 +41,6 @@ class RbacController extends Controller
      */
     public function actionInit()
     {
-        Yii::getLogger()->log('RbacController:actionInit', Logger::LEVEL_TRACE);
         $auth = \Yii::$app->authManager;
         
         //PERMISSIONS
@@ -306,5 +309,124 @@ class RbacController extends Controller
         $auth->addChild($role_projectLeader, $PAS_update_ownProject);
         $auth->addChild($role_projectLeader, $PAS_delete_ownProject);
         $auth->addChild($role_projectLeader, $PAS_read_ownProject);
+    }
+    
+    /**
+     * Removes all authorization data, roles, permissions, rules, assignments.
+     */
+    public function actionClear(){
+        try {
+            $auth = \Yii::$app->authManager;
+            if(Console::confirm("Are you sure ?")){
+                Yii::getLogger()->log('[actionClear]::Begin of deleting', Logger::LEVEL_INFO);
+                $auth->removeAll();
+                Yii::getLogger()->log('[actionClear]::End of deleting', Logger::LEVEL_INFO);
+                $this->stdout("All RBAC data have been deleted.", Console::BG_GREEN);
+            }            
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;
+    }
+    
+    /**
+     * Assign role to user(s)
+     * @param array $userId User DB ID
+     * @param type $role RoleName : 
+     */
+    public function actionAssign(array $userId, $roleName){
+        if(!isset($roleName) || trim($roleName)===''){
+            throw new Exception("No role given.");
+        }
+        
+        if(!isset($userId) && count($userId) <= 0){
+            throw new Exception("No user(s) given.");
+        }
+        
+        try {
+            foreach ($userId as $id) {
+                if(User::findOne($id) == NULL){
+                    throw new Exception("User not found ID : ".$id);
+                }
+            }
+            
+            $auth = \Yii::$app->authManager;
+            $role = $auth->getRole($roleName);
+            
+            if($role == null){
+                throw new Exception("Role not found : ".$roleName);
+            }
+            
+            foreach ($userId as $id) {
+                $auth->assign($role, $id);
+            }
+            
+            $this->stdout(count($userId)." user(s) have been assigned as : ".$role->name, Console::BG_GREEN);
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;
+    }
+    
+    /**
+     * Revoke role from user(s)
+     * @param array $userId User DB ID
+     * @param type $role RoleName : 
+     */
+    public function actionRevoke(array $userId, $roleName){
+        if(!isset($roleName) || trim($roleName)===''){
+            throw new Exception("No role given.");
+        }
+        
+        if(!isset($userId) && count($userId) <= 0){
+            throw new Exception("No user(s) given.");
+        }
+        
+        try {
+            foreach ($userId as $id) {
+                if(User::findOne($id) == NULL){
+                    throw new Exception("User not found ID : ".$id);
+                }
+            }
+            
+            $auth = \Yii::$app->authManager;
+            $role = $auth->getRole($roleName);
+            
+            if($role == null){
+                throw new Exception("Role not found : ".$roleName);
+            }
+            
+            foreach ($userId as $id) {
+                $auth->revoke($role, $id);
+            }
+            
+            $this->stdout(count($userId)." user(s) have been revoked from role : ".$role->name, Console::BG_GREEN);
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;
+    }
+    
+    /**
+     * Display all Roles.
+     */
+    public function actionGetRoles(){
+        try {
+            $auth = \Yii::$app->authManager;
+            foreach ($auth->getRoles() as $role) {
+                $this->stdout($role->name.PHP_EOL);
+            }
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }
+        return Controller::EXIT_CODE_NORMAL;
     }
 }
