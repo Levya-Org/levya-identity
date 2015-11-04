@@ -34,9 +34,14 @@ use common\models\Param;
  *
  * @author Hervé
  */
-class LDAPHelper {    
+class LDAPHelper {
+    /** @var Zend\Ldap\Ldap */
     private static $_ldap = null;
     
+    /**
+     * Get the (Zend) LDAP instance
+     * @return Zend\Ldap\Ldap
+     */
     private static function getInstance(){
         if(self::$_ldap === null){
             self::$_ldap = new Ldap(self::getOptions());
@@ -45,6 +50,10 @@ class LDAPHelper {
         return self::$_ldap;
     }
     
+    /**
+     * Return connection param. for LDAP.
+     * @return array
+     */
     private static function getOptions(){
         return [
             'host' => Param::getParamValue('ldap:host'),
@@ -377,14 +386,22 @@ class LDAPHelper {
         else
             return false;
     }
-
+    
     /**
-     * Protected constructor to prevent creating a new instance of the
-     * *Singleton* via the `new` operator from outside of this class.
+     * Test if connection info. are right.
+     * @return boolean
      */
-//    protected function __construct()
-//    {
-//    }
+    public function checkConnection(){
+        try {
+            $ldap = $this->getInstance();
+            return true;
+        } catch (\Zend\Ldap\Exception\LdapException $exc) {
+            return false;
+        } catch (\Exception $exc) {
+            Yii::getLogger()->log("Error at connection : ".VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            return false;
+        }
+    }
 
     /**
      * Private clone method to prevent cloning of the instance of the
