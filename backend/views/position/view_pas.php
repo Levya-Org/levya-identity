@@ -46,7 +46,7 @@ $this->registerJsFile(Yii::$app->request->baseUrl.'/js/view_pas.js', [
         'dataProvider' => new \yii\data\ActiveDataProvider(['query' => $model->getr_Services()]),
         'columns' => [
             
-            ['class' => 'yii\grid\CheckBoxColumn'],
+            ['class' => 'yii\grid\CheckboxColumn'],
             
             [
                 'attribute'=> 'SERVICE_ID',

@@ -43,7 +43,7 @@ $positionName = $model->POSITION_NAME;
             'allModels' => $model->r_Users,
         ]),
         'columns' => [
-            ['class' => 'yii\grid\CheckBoxColumn'],
+            ['class' => 'yii\grid\CheckboxColumn'],
             
             [
                 'attribute'=> 'USER_ID',
