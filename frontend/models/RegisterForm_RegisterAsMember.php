@@ -67,7 +67,6 @@ class RegisterForm_RegisterAsMember extends User
     {
         \Yii::getLogger()->log('RegisterForm_RegisterAsMember::registerAsMember', Logger::LEVEL_TRACE);
         $transaction = $this->getDb()->beginTransaction();
-        $this->setScenario('user_AsMember_register');
         if ($this->validate()) {
             try {
                 if($this->update() !== false){
@@ -86,7 +85,7 @@ class RegisterForm_RegisterAsMember extends User
                     Yii::$app->session->setFlash('user.confirmation_sent');
                     $transaction->commit();
                     return true;
-                }              
+                }
             } catch (Exception $ex) {
                 $transaction->rollBack();
                 Yii::getLogger()->log('An error occurred while upgrading your user account'.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);

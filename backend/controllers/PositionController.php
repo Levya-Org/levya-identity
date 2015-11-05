@@ -97,6 +97,7 @@ class PositionController extends Controller
     public function actionCreate($PROJECT_PROJECT_ID=null)
     {
         $model = new Position();
+        $model->setScenario('position_create');
         
         if(isset($PROJECT_PROJECT_ID))
             $model->PROJECT_PROJECT_ID = $PROJECT_PROJECT_ID;

@@ -24,7 +24,7 @@
 use yii\helpers\Html;
 use yii\helpers\BaseUrl;
 
-//TODO : activation link
+$activeLink = Yii::$app->urlManager->createAbsoluteUrl(['registration/confirm', 'mail' => $user->USER_MAIL ,'token' => $token->TOKEN_CODE]);
 //TODO : Indentity profile
 //TODO : Membership date 
 ?>
@@ -37,10 +37,11 @@ Username: <?= $user->USER_NICKNAME ?>
 Forname: <?= $user->USER_FORNAME ?>
 Lastname: <?= $user->USER_LASTNAME ?>
 Begin of membership: <?= "todo" ?>
-Indentity URL: <?= BaseUrl::home() ?>
+Indentity URL: <?= BaseUrl::home(true) ?>
 ----------------------------
 
 Please confirm your account primary email : 
+<?= $activeLink ?>
 
 What you must do, if you don't have before :
 > Read the Statute

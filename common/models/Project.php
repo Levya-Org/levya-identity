@@ -207,6 +207,7 @@ class Project extends \yii\db\ActiveRecord
                             'POSITION_ISOBLIGATORY' => true,
                             'POSITION_NEEDDONATION' => false,
                             'POSITION_NEEDSUBSCRIPTION' => false,
+                            'POSITION_ISDEFAULT' => false,
                             'PROJECT_PROJECT_ID' => $this->primaryKey
                         ]);
                         $position->create();
@@ -227,6 +228,7 @@ class Project extends \yii\db\ActiveRecord
                             'POSITION_ISOBLIGATORY' => false,
                             'POSITION_NEEDDONATION' => false,
                             'POSITION_NEEDSUBSCRIPTION' => false,
+                            'POSITION_ISDEFAULT' => false,
                             'PROJECT_PROJECT_ID' => $this->primaryKey
                         ]);
                         $position->create();
@@ -240,6 +242,7 @@ class Project extends \yii\db\ActiveRecord
                             'POSITION_ISOBLIGATORY' => false,
                             'POSITION_NEEDDONATION' => false,
                             'POSITION_NEEDSUBSCRIPTION' => false,
+                            'POSITION_ISDEFAULT' => false,
                             'PROJECT_PROJECT_ID' => $this->primaryKey
                         ]);
                         $position->create();

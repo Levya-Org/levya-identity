@@ -32,7 +32,7 @@ Please keep this email for your records. Your account information is as follows:
 
 ----------------------------
 Username: <?= $user->USER_NICKNAME ?>
-Indentity URL: <?= BaseUrl::home() ?>
+Indentity URL: <?= BaseUrl::home(true) ?>
 ----------------------------
 
 Please visit the following link in order to activate your account:
