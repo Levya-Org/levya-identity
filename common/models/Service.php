@@ -106,11 +106,28 @@ class Service extends \yii\db\ActiveRecord
     }
     
     /**
+     * Return an array of all services with LDAP Name
+     * @return array[SERVICE_ID,SERVICE_LDAPNAME]
+     */
+    public static function getLdapServicesList()
+    {
+        return ArrayHelper::map(Service::find()->all(), 'SERVICE_ID', 'SERVICE_LDAPNAME');
+    }
+    
+    /**
      * Return an array of all enabled services
      * @return array[SERVICE_ID,SERVICE_NAME]
      */
     public static function getAllServices(){
-        return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_ID');
+        return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_NAME');
+    }
+    
+    /**
+     * Return an array of all enabled services with LDAP Name
+     * @return array[SERVICE_ID,SERVICE_NAME]
+     */
+    public static function getAllLdapServices(){
+        return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_LDAPNAME');
     }
     
     /**
@@ -124,7 +141,10 @@ class Service extends \yii\db\ActiveRecord
                 ->innerJoin(GroupAccessService::tableName()." gas", Service::tableName().".SERVICE_ID=gas.SERVICE_SERVICE_ID")
                 ->innerJoin(Group::tableName()." g", "g.GROUP_ID=gas.GROUP_GROUP_ID")
                 ->innerJoin(Belong::tableName()." b", "b.GROUP_GROUP_ID=g.GROUP_ID")
-                ->where(['b.USER_USER_ID' => $userId])
+                ->where([
+                    'b.USER_USER_ID' => $userId,
+                    'b.BELONG_TO' => null
+                        ])
                 ->createCommand()->rawSql;
         
         $pasSQLCommand = Service::find()
@@ -135,11 +155,21 @@ class Service extends \yii\db\ActiveRecord
                 ->where([
                     'w.USER_USER_ID' => $userId,
                     'p.POSITION_ISDELETED' => false,
+                    'w.WORK_ISACCEPTED' => true,
                     'w.WORK_TO' => null
                         ])
                 ->union($gpaSQLCommand)
                 ->all();
         
         return $pasSQLCommand;        
+    }
+    
+    /**
+     * Return all accessible service LDAP name for a user
+     * @param type $ussrId
+     * @return array(string)
+     */
+    public static function getLdapServiceByUser($ussrId){
+        return ArrayHelper::getColumn(Service::getServicesByUser($ussrId), 'SERVICE_LDAPNAME');
     }
 }

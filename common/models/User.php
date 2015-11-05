@@ -227,8 +227,17 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                             ActionHistoryExt::ahUserRegistration($this->USER_ID);
                             break;
                         case 'user_AsMember_register':
+                        {
                             ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
+                            $ldap = new LDAPHelper();
+                            $userDn = $ldap->getDNfromUser($this->USER_LDAPUID);
+                            $ldap->updateUser($userDn, [
+                                'cn' => strtoupper($this->USER_LASTNAME)." ".ucfirst(USER_FORNAME),
+                                'sn' => $this->USER_LASTNAME,
+                                'gn' => $this->USER_FORNAME                                
+                            ]);
                             break;
+                        }
                         default:
                             break;
                     }
@@ -606,48 +615,6 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
      * @return array
      */
     public function getLDAPAccess(){
-        $services = array();
-        
-        //Group <> Belong
-        $belong = Belong::findOne([
-            'USER_USER_ID' => $this->USER_ID,
-            'BELONG_TO' => null
-        ]);
-        $services = $belong->r_Group->r_Services;
-        
-        $belongServices = array();
-        
-        foreach ($services as $service) {
-            $belongServices[] = $service->SERVICE_LDAPNAME;
-        }
-        
-        //Project <> Position
-        $works = Work::findAll([
-            'USER_USER_ID' => $this->USER_ID,
-            'WORK_ISACCEPTED' => true,
-            'WORK_TO' => null
-        ]);
-        
-        $positions = array();
-        
-        foreach ($works as $work) {
-            if($work->r_Position->isActive()){
-                $positions[] = $work->r_Position;
-            }
-        }
-        
-        $workServices = array();
-        
-        foreach ($positions as $position) {
-            foreach ($position->r_Services as $service) {
-                $workServices[] = $service->SERVICE_LDAPNAME;
-            }
-        }
-        //Remove duplicate
-        $workServices = array_unique($workServices);
-        
-        $services = array_unique(array_merge($belongServices, $workServices));
-        
-        return $services;
+        return Service::getLdapServiceByUser($this->USER_ID);
     }
 }
