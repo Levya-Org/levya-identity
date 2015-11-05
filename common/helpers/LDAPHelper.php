@@ -253,9 +253,9 @@ class LDAPHelper {
        
         foreach ($groups as $value) {
             $entry = $ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
-            if(!is_null($entry)){
+            if(!is_null($entry) && !\Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::setAttribute($entry, 'member', $userDn, TRUE);
-                $ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);
+                $ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);               
             }
         }
     }
@@ -271,7 +271,7 @@ class LDAPHelper {
        
         foreach ($groups as $value) {
             $entry = $ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
-            if(!is_null($entry)){
+            if(!is_null($entry) && \Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::removeFromAttribute($entry, 'member', $userDn);
                 $ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);
             }
@@ -291,7 +291,7 @@ class LDAPHelper {
        
         foreach ($access as $value) {
             $entry = $ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
-            if(!is_null($entry)){
+            if(!is_null($entry) && !\Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::setAttribute($entry, 'member', $userDn, TRUE);
                 $ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
             }
@@ -311,7 +311,7 @@ class LDAPHelper {
        
         foreach ($access as $value) {
             $entry = $ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
-            if(!is_null($entry)){
+            if(!is_null($entry) && \Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::removeFromAttribute($entry, 'member', $userDn);
                 $ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
             }
