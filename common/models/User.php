@@ -232,7 +232,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
                             $ldap = new LDAPHelper();
                             $userDn = $ldap->getDNfromUser($this->USER_LDAPUID);
                             $ldap->updateUser($userDn, [
-                                'cn' => strtoupper($this->USER_LASTNAME)." ".ucfirst(USER_FORNAME),
+                                'cn' => strtoupper($this->USER_LASTNAME)." ".ucfirst($this->USER_FORNAME),
                                 'sn' => $this->USER_LASTNAME,
                                 'gn' => $this->USER_FORNAME                                
                             ]);
