@@ -73,6 +73,10 @@ class RegisterForm_RegisterAsMember extends User
                     //Add to Levya Project Member
                     $memberPosition = Project::findOne(['PROJECT_PRIORITY' => 0])->getDefaultPosition(); 
                     $memberPosition->addUser($this->USER_ID);
+                    //Add to Levya Member Group
+                    $groupPosition = \common\models\Group::findOne(['GROUP_LDAPNAME' => 'member']);
+                    $actualBelong = $this->r_Belong;
+                    $actualBelong->endBelongToNewGroup($groupPosition->GROUP_ID);
                     //AH
                     ActionHistoryExt::ahUserMemberRegistration($this->USER_ID);
                     //Token
