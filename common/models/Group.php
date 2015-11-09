@@ -22,6 +22,7 @@
 namespace common\models;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "GROUP".
@@ -102,5 +103,38 @@ class Group extends \yii\db\ActiveRecord
                         function($query){
                             $query->andWhere(['BELONG_TO' => null]);
                         });
+    }
+    
+    /**
+     * Return an array map of all groups
+     * @return array[GROUP_ID,GROUP_NAME]
+     */
+    public static function getGroupList()
+    {
+        return ArrayHelper::map(Group::find()->all(), 'GROUP_ID', 'GROUP_NAME');
+    }
+    
+    /**
+     * Return an array map of all enabled groups
+     * @return array
+     */
+    public static function getEnabledGroupList(){
+        return ArrayHelper::map(Group::findAll(['GROUP_ISENABLE' => 1]), 'GROUP_ID', 'GROUP_NAME');
+    }
+    
+    /**
+     * Return an array of all LDAP groups
+     * @return array
+     */
+    public static function getLdapGroups(){
+        return ArrayHelper::getColumn(Group::find()->all(), 'GROUP_LDAPNAME');
+    }
+    
+    /**
+     * Return an array of all LDAP enabled groups
+     * @return array
+     */
+    public static function getEnabledLdapGroups(){
+        return ArrayHelper::getColumn(Group::findAll(['GROUP_ISENABLE' => 1]), 'GROUP_LDAPNAME');
     }
 }

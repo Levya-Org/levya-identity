@@ -97,7 +97,7 @@ class Service extends \yii\db\ActiveRecord
     }
     
     /**
-     * Return an array of all services
+     * Return an array map of all services
      * @return array[SERVICE_ID,SERVICE_NAME]
      */
     public static function getServicesList()
@@ -107,27 +107,27 @@ class Service extends \yii\db\ActiveRecord
     
     /**
      * Return an array of all services with LDAP Name
-     * @return array[SERVICE_ID,SERVICE_LDAPNAME]
+     * @return array(string[SERVICE_LDAPNAME])
      */
-    public static function getLdapServicesList()
+    public static function getLdapServices()
     {
-        return ArrayHelper::map(Service::find()->all(), 'SERVICE_ID', 'SERVICE_LDAPNAME');
+       return ArrayHelper::getColumn(Service::find()->all(), 'SERVICE_LDAPNAME');
     }
     
     /**
-     * Return an array of all enabled services
+     * Return an array map of all enabled services
      * @return array[SERVICE_ID,SERVICE_NAME]
      */
-    public static function getAllServices(){
+    public static function getEnabledlServicesList(){
         return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_NAME');
     }
     
     /**
      * Return an array of all enabled services with LDAP Name
-     * @return array[SERVICE_ID,SERVICE_NAME]
+     * @return array(string[SERVICE_LDAPNAME])
      */
-    public static function getAllLdapServices(){
-        return ArrayHelper::map(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_ID', 'SERVICE_LDAPNAME');
+    public static function getEnabledlLdapServices(){
+        return ArrayHelper::getColumn(Service::findAll(['SERVICE_ISENABLE' => 1]), 'SERVICE_LDAPNAME');
     }
     
     /**
@@ -167,7 +167,7 @@ class Service extends \yii\db\ActiveRecord
     /**
      * Return all accessible service LDAP name for a user
      * @param type $ussrId
-     * @return array(string)
+     * @return array(string[SERVICE_LDAPNAME])
      */
     public static function getLdapServiceByUser($ussrId){
         return ArrayHelper::getColumn(Service::getServicesByUser($ussrId), 'SERVICE_LDAPNAME');
