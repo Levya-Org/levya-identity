@@ -220,4 +220,60 @@ class LdapController extends Controller {
         }        
         return Controller::EXIT_CODE_NORMAL;  
     }
+    
+    /**
+     * Update user LDAP data from DB 
+     * @param type $userId
+     * @return type
+     * @throws Exception
+     */
+    public function actionSyncUserData($userId){
+        Yii::getLogger()->log('LdapController:actionSyncUserData', Logger::LEVEL_TRACE);
+        if(!isset($userId)){
+            throw new Exception("No user given.");
+        }
+        
+        $user = User::find()
+                ->select([
+                    'USER_ID',
+                    'USER_LDAPUID', 
+                    'USER_LASTNAME',
+                    'USER_FORNAME',
+                    'USER_LASTNAME',
+                    'USER_NICKNAME',
+                    'USER_MAIL'
+                        ])
+                ->where(['USER_ID' => $userId])
+                ->limit(1)
+                ->one();
+        
+        if($user == NULL){
+            throw new Exception("User not found ID : ".$userId);
+        }
+        
+        try {
+            $ldap = new LDAPHelper();          
+            $userData = array();
+            //!isset($question) || trim($question)===''
+            if(isset($user->USER_LASTNAME) || !trim($user->USER_LASTNAME)==='')
+                $userData['sn'] = $user->USER_LASTNAME;
+            if(isset($user->USER_FORNAME) || !trim($user->USER_FORNAME)==='') 
+                $userData['gn'] = $user->USER_FORNAME;
+            if((isset($user->USER_FORNAME) || !trim($user->USER_FORNAME)==='')
+                    && (isset($user->USER_LASTNAME) || !trim($user->USER_LASTNAME)===''))
+                $userData['cn'] = strtoupper($user->USER_LASTNAME)." ".ucfirst($user->USER_FORNAME);
+            
+            if(isset($user->USER_MAIL)) $userData['mail'] = $user->USER_MAIL;
+            if(isset($user->USER_NICKNAME)) $userData['displayName'] = $user->USER_NICKNAME;
+            
+            $ldap->updateUser($user->USER_LDAPUID, $userData);
+            
+            $this->stdout("User data sync done.", Console::BG_GREEN);            
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;
+    }
 }
