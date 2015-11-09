@@ -30,6 +30,9 @@ use yii\log\Logger;
 
 use common\helpers\LDAPHelper;
 use common\models\Param;
+use common\models\User;
+use common\models\Service;
+use common\models\Group;
 
 /**
  * Manage basic LDAP action.
@@ -91,5 +94,130 @@ class LdapController extends Controller {
             $this->stderr("Given password isn't same as in config.", Console::BG_RED);
             return Controller::EXIT_CODE_ERROR;
         }
+    }
+    
+    /**
+     * Sync user service LDAP from DB
+     * @param type $userId User DB ID
+     * @throws Exception
+     */
+    public function actionSyncUserService($userId){
+        Yii::getLogger()->log('LdapController:actionSyncUserService', Logger::LEVEL_TRACE);
+        if(!isset($userId)){
+            throw new Exception("No user given.");
+        }
+        
+        $user = User::find()
+                ->select(['USER_ID','USER_LDAPUID'])
+                ->where(['USER_ID' => $userId])
+                ->limit(1)
+                ->one();
+        
+        if($user == NULL){
+            throw new Exception("User not found ID : ".$userId);
+        }
+        
+        try {
+            $userServices = $user->getLDAPAccess();
+            $allServices = Service::getLdapServices();
+            $userdLdapUid = $user->USER_LDAPUID;
+            $nbAdd = 0;
+            $nbRem = 0;
+            
+            $serviceDeniedToUser = array_diff($allServices, $userServices);
+            $serviceToAdd = array();
+            $serviceToRemove = array();
+            
+            $ldap = new LDAPHelper();
+            $userDn = $ldap->getDNfromUser($userdLdapUid);
+            foreach ($allServices as $service) {
+                $haveAccess = $ldap->checkAccessFromUser($userdLdapUid, $service);
+                if($haveAccess && in_array($service, $serviceDeniedToUser)){
+                    $serviceToRemove[] = $service;
+                    $nbRem++;
+                }
+                else if(!$haveAccess && in_array($service, $userServices)) {
+                    $serviceToAdd[] = $service;
+                    $nbAdd++;
+                }
+            }
+            
+            if($nbAdd > 0){
+                $ldap->addUserToAccess($userDn, $serviceToAdd);
+            }
+            if($nbRem > 0){
+                $ldap->removeUserToAccess($userDn, $serviceToRemove);
+            }
+            
+            $this->stdout("Service Sync done : ".$nbAdd." add and ".$nbRem." rem.", Console::BG_GREEN);            
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;       
+    }
+    
+    /**
+     * Sync user group LDAP from DB
+     * @param type $userId
+     * @return type
+     * @throws Exception
+     */
+    public function actionSyncUserGroup($userId){
+        Yii::getLogger()->log('LdapController:actionSyncUserGroup', Logger::LEVEL_TRACE);
+        if(!isset($userId)){
+            throw new Exception("No user given.");
+        }
+        
+        $user = User::find()
+                ->select(['USER_ID','USER_LDAPUID'])
+                ->where(['USER_ID' => $userId])
+                ->limit(1)
+                ->one();
+        
+        if($user == NULL){
+            throw new Exception("User not found ID : ".$userId);
+        }
+        
+        try {
+            $userGroups = $user->getLDAPGroup();
+            $allGroups = Group::getLdapGroups();
+            $userdLdapUid = $user->USER_LDAPUID;
+            $nbAdd = 0;
+            $nbRem = 0;
+            
+            $groupDeniedToUser = array_diff($allGroups, $userGroups);
+            $groupToAdd = array();
+            $groupToRemove = array();
+            
+            $ldap = new LDAPHelper();
+            $userDn = $ldap->getDNfromUser($userdLdapUid);
+            foreach ($allGroups as $group) {
+                $haveAccess = $ldap->checkGroupFromUser($userdLdapUid, $group);
+                if($haveAccess && in_array($group, $groupDeniedToUser)){ 
+                    $groupToRemove[] = $group;
+                    $nbRem++;
+                }
+                else if(!$haveAccess && in_array($group, $userGroups)) {
+                    $groupToAdd[] = $group;
+                    $nbAdd++;
+                }
+            }
+            
+            if($nbAdd > 0){
+                $ldap->addUserToGroup($userDn, $groupToAdd);
+            }
+            if($nbRem > 0){
+                $ldap->removeUserToGroup($userDn, $groupToRemove);
+            }
+            
+            $this->stdout("Group Sync done : ".$nbAdd." add and ".$nbRem." rem.", Console::BG_GREEN);            
+        } catch (Exception $exc) {
+            \Yii::getLogger()->log(VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
+            $this->stderr($exc->getMessage(), Console::BG_RED);
+            return Controller::EXIT_CODE_ERROR;
+        }        
+        return Controller::EXIT_CODE_NORMAL;  
     }
 }
