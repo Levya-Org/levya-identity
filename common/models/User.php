@@ -60,6 +60,7 @@ use common\helpers\LDAPHelper;
  * @property integer $USER_ISDELETED 
  *
  * @property ACTIONHISTORY[] $r_ActionHistories
+ * @property BELONG[] $r_Belong
  * @property BELONG[] $r_Belongs
  * @property DONATION[] $r_Donations
  * @property SOCIALACCOUNT[] $r_SocialAccounts
@@ -267,11 +268,25 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
+     * Return all Belong entries
      * @return \yii\db\ActiveQuery
      */
     public function getr_Belongs()
     {
         return $this->hasMany(Belong::className(), ['USER_USER_ID' => 'USER_ID']);
+    }
+    
+    /**
+     * Return active Belong entry
+     * @return \yii\db\ActiveQuery
+     */
+    public function getr_Belong()
+    {
+        return $this->hasOne(Belong::className(), ['USER_USER_ID' => 'USER_ID'])
+                ->where([
+                    'BELONG_TO' => NULL,
+                ])
+                ->limit(1);
     }
 
     /**

@@ -142,4 +142,62 @@ class Belong extends \yii\db\ActiveRecord
         }
         return false;
     }
+    
+    /**
+     * End a Belong entry
+     * @return boolean
+     * @throws \common\models\Exception
+     * @throws \ErrorException
+     */
+    public function end(){
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            $this->BELONG_TO = new Expression('NOW()');
+            if ($this->save()) {                              
+                $transaction->commit();
+                return true;
+            }
+            else {
+                \Yii::getLogger()->log('Belong hasn\'t been ended'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Belong error at ending, see Model error.');
+            }
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while ending Belong row '.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
+        }
+        return false;
+    }
+    
+    /**
+     * End a Belong entry and start a new with given Group
+     * @param type $newGroupId
+     * @throws \common\models\Exception
+     * @throws \ErrorException
+     */
+    public function endBelongToNewGroup($newGroupId){
+        Yii::getLogger()->log('belong::endToNew', Logger::LEVEL_TRACE);
+        $transaction = $this->getDb()->beginTransaction();
+        try {
+            if($this->end()){
+                $model = new Belong([
+                    'USER_USER_ID' => $this->USER_USER_ID,
+                    'GROUP_GROUP_ID' => $newGroupId,
+                ]);
+                if($model->save()){
+                   $transaction->commit(); 
+                } else {
+                    throw new \ErrorException('New Belong hasn\'t been validated '.VarDumper::dumpAsString($model->errors));
+                }               
+            }
+            else {
+                \Yii::getLogger()->log('Belong hasn\'t been ended'.VarDumper::dumpAsString($this->errors), Logger::LEVEL_WARNING);
+                throw  new \ErrorException('Belong error at ending, see Model error.');
+            }
+        } catch (Exception $ex) {
+            $transaction->rollBack();
+            \Yii::getLogger()->log('An error occurred while ending Belong row '.VarDumper::dumpAsString($ex), Logger::LEVEL_ERROR);
+            throw $ex;
+        }
+    }
 }
