@@ -27,7 +27,7 @@ use yii\db\Expression;
 use yii\log\Logger;
 use yii\helpers\VarDumper;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 use common\helpers\IPHelper;
 use common\helpers\PasswordHelper;
