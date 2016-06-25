@@ -42,13 +42,7 @@ use common\models\Group;
 class LdapController extends Controller {
     
     private function getOptions(){
-        return [
-            'host' => Param::getParamValue('ldap:host'),
-            'port' => Param::getParamValue('ldap:port'),
-            'username' => Param::getParamValue('ldap:username'),
-            'bindRequiresDn' => Param::getParamValue('ldap:bindRequiresDn'),
-            'baseDn' => Param::getParamValue('ldap:baseDn')
-        ];
+        return  Yii::$app->ldap->config;
     }
     
     /**
@@ -77,7 +71,7 @@ class LdapController extends Controller {
      * @throws Exception
      */
     public function actionTestPassword($password = null){
-        $ldapPwd = Param::getParamValue('ldap:password');
+        $ldapPwd = Yii::$app->ldap->config['password'];
         if(is_bool($ldapPwd) && !$ldapPwd){
             throw new Exception("No LDAP is password set.");
         }

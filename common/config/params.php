@@ -27,11 +27,5 @@ return [
     'token:cnilWithIn' => '21600',
     'registration:enableConfirmation' => true,
     'registration:enableRegistration' => true,
-    'ldap:host' => '127.0.0.1',
-    'ldap:port' => '389',
-    'ldap:username' => 'cn=identity,dc=levya,dc=org',
-    'ldap:password' => '[TOCHANGE]',
-    'ldap:bindRequiresDn' => true,
-    'ldap:baseDn' => 'dc=levya,dc=org',
     'google:apiKey' => '[TOCHANGE]'
 ];
