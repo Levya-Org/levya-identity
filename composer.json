@@ -26,7 +26,8 @@
         "michelf/php-smartypants": "dev-lib",
         "kartik-v/yii2-markdown": "@dev",
         "kartik-v/yii2-tabs-x": "@dev",
-        "ramsey/uuid": "^3.0"
+        "ramsey/uuid": "^3.0",
+        "nonzod/yii2-zend-ldap": ">=0.0.7"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

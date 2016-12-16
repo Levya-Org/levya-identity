@@ -32,6 +32,18 @@ return [
             'password' => '[TOCHANGE]',
             'charset' => 'utf8',
         ],
+        'ldap' => [
+            'class' => 'nonzod\Ldap',
+            'config' => [
+                'host' => '127.0.0.1',
+                'port' => 389,
+                'username' => 'cn=identity,dc=levya,dc=org',
+                'password' => '[TOCHANGE]',
+                'bindRequiresDn' => true,
+                'baseDn' => 'dc=levya,dc=org',
+                'accountDomainName' => 'example.com'
+            ],
+        ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'itemTable' => 'AUTH_ITEM',

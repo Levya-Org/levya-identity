@@ -45,39 +45,10 @@ use common\models\Param;
  * @author Hervé
  */
 class LDAPHelper {
-    /** @var Zend\Ldap\Ldap */
-    private static $_ldap = null;
-    
-    /**
-     * Get the (Zend) LDAP instance
-     * @return Zend\Ldap\Ldap
-     */
-    private static function getInstance(){
-        if(self::$_ldap === null){
-            self::$_ldap = new Ldap(self::getOptions());
-            self::$_ldap->bind();            
-        }
-        return self::$_ldap;
-    }
-    
-    /**
-     * Return connection param. for LDAP.
-     * @return array
-     */
-    private static function getOptions(){
-        return [
-            'host' => Param::getParamValue('ldap:host'),
-            'port' => Param::getParamValue('ldap:port'),
-            'username' => Param::getParamValue('ldap:username'),
-            'password' => Param::getParamValue('ldap:password'),
-            'bindRequiresDn' => Param::getParamValue('ldap:bindRequiresDn'),
-            'baseDn' => Param::getParamValue('ldap:baseDn')
-        ];
-    }
-    
+
     /**
      * Test if User exist in LDAP
-     * $researchType 
+     * $researchType
      * => sn
      * => displayName
      * => mail
@@ -88,34 +59,33 @@ class LDAPHelper {
      */
     public function testUserBy($researchType, $param){
         Yii::getLogger()->log('LDAPHelper:testUserBy', Logger::LEVEL_TRACE);
-        
-        $ldap = $this->getInstance();
+
         $result = null;
-        
+
         if(!isset($param)){
             Yii::getLogger()->log('LDAPHelper : no param '.VarDumper::dumpAsString($this->errors), Logger::LEVEL_ERROR);
             return false;
         }
-        
+
         switch ($researchType){
             case 'sn':
             case 'surname':
             {
-                $result = $ldap->search(
+                $result = Yii::$app->ldap->search(
                     '(&(objectclass=inetOrgPerson)(sn='.$param.'))', "ou=user,dc=levya,dc=org", \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE
                 );
                 break;
             }
             case 'displayName':
             {
-                $result = $ldap->search(
+                $result = Yii::$app->ldap->search(
                     '(&(objectclass=inetOrgPerson)(displayName='.$param.'))', "ou=user,dc=levya,dc=org", \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE
                 );
                 break;
             }
             case 'mail':
             {
-                $result = $ldap->search(
+                $result = Yii::$app->ldap->search(
                     '(&(objectclass=inetOrgPerson)(mail='.$param.'))', "ou=user,dc=levya,dc=org", \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE
                 );
                 break;
@@ -123,14 +93,14 @@ class LDAPHelper {
             case 'cn':
             case 'commonName':
             {
-                $result = $ldap->search(
+                $result = Yii::$app->ldap->search(
                     '(&(objectclass=inetOrgPerson)(cn='.$param.'))', "ou=user,dc=levya,dc=org", \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE
                 );
                 break;
             }
             case 'uid':
             {
-                $result = $ldap->search(
+                $result = Yii::$app->ldap->search(
                     '(&(objectclass=inetOrgPerson)(uid='.$param.'))', "ou=user,dc=levya,dc=org", \Zend\Ldap\Ldap::SEARCH_SCOPE_ONE
                 );
                 break;
@@ -139,7 +109,7 @@ class LDAPHelper {
                 Yii::getLogger()->log('LDAPHelper : no researchType', Logger::LEVEL_ERROR);
                 return false;
         }
-        
+
         if(!is_null($result)){
             $count = count($result);
             if($count >= 1)
@@ -149,10 +119,10 @@ class LDAPHelper {
         }
         else {
             Yii::getLogger()->log('LDAPHelper : result is null', Logger::LEVEL_ERROR);
-        }     
+        }
         return false;
     }
-       
+
     /**
      * Add user
      * @param type $userNickName
@@ -163,13 +133,12 @@ class LDAPHelper {
      */
     public function addUser($userNickName, $userMail, $userPassword, $userLdapUid){
         Yii::getLogger()->log('LDAPHelper:addUser', Logger::LEVEL_TRACE);
-        
+
         if($this->testUserBy('mail', $userMail) || $this->testUserBy('displayName', $userNickName) || $this->testUserBy('sn', $userNickName)){
             Yii::getLogger()->log('LDAPHelper:addUser : user with same data exist', Logger::LEVEL_ERROR);
             return;
         }
-        
-        $ldap = $this->getInstance(); 
+
         $array = [
             'cn' => $userNickName,
             'uid' => $userLdapUid,
@@ -179,27 +148,25 @@ class LDAPHelper {
             'displayName' => $userNickName,
             'objectClass' => 'inetOrgPerson',
         ];
-        
-        $ldap->add('uid='.$userLdapUid.',ou=user,dc=levya,dc=org', $array);
+
+        Yii::$app->ldap->add('uid='.$userLdapUid.',ou=user,dc=levya,dc=org', $array);
     }
-    
+
     /**
      * Remove a user from LDAP (with memberOf dep.)
      * @param type $ldapUid
      */
     public function removeUser($ldapUid){
         Yii::getLogger()->log('LDAPHelper:removeUser', Logger::LEVEL_TRACE);
-        
-        $ldap = $this->getInstance();
-        
+
         $userDn = $this->getDNfromUser($ldapUid);
-        
-        if(isset($userDn))       
-            $ldap->delete($userDn);
+
+        if(isset($userDn))
+            Yii::$app->ldap->delete($userDn);
         else
             Yii::getLogger()->log('LDAPHelper : Try to remove a inexistent user : LDAPUID : '.$ldapUid, Logger::LEVEL_WARNING);
     }
-    
+
     /**
      * Update a user
      * @param type $ldapUID
@@ -207,11 +174,10 @@ class LDAPHelper {
      */
     public function updateUser($ldapUID,array $params){
         Yii::getLogger()->log('LDAPHelper:updateUser', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-        
+
         if($this->testUserBy('uid', $ldapUID)){
-            $user = $ldap->getEntry('uid='.$ldapUID.',ou=user,dc=levya,dc=org');
-            
+            $user = Yii::$app->ldap->getEntry('uid='.$ldapUID.',ou=user,dc=levya,dc=org');
+
             foreach ($params as $key => $value) {
                 switch ($key){
                     case 'cn':
@@ -254,10 +220,10 @@ class LDAPHelper {
                     }
                 }
             }
-            $ldap->update('uid='.$ldapUID.',ou=user,dc=levya,dc=org', $user);
+            Yii::$app->ldap->update('uid='.$ldapUID.',ou=user,dc=levya,dc=org', $user);
         }
     }
-    
+
     /**
      * Return user DN if exist otherwise null
      * @param type $ldapUid
@@ -265,16 +231,15 @@ class LDAPHelper {
      */
     public function getDNfromUser($ldapUid){
         Yii::getLogger()->log('LDAPHelper:getDNfromUser', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-        
-        $user = $ldap->getEntry('uid='.$ldapUid.',ou=user,dc=levya,dc=org');
-        
+
+        $user = Yii::$app->ldap->getEntry('uid='.$ldapUid.',ou=user,dc=levya,dc=org');
+
         if(!is_null($user) && array_key_exists('dn', $user))
             return $user['dn'];
         else
             return null;
     }
-    
+
     /**
      * Add User to Group
      * @param type $userDn
@@ -282,17 +247,16 @@ class LDAPHelper {
      */
     public function addUserToGroup($userDn,array $groups){
         Yii::getLogger()->log('LDAPHelper:addUserToGroup', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-       
+
         foreach ($groups as $value) {
-            $entry = $ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
+            $entry = Yii::$app->ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
             if(!is_null($entry) && !\Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::setAttribute($entry, 'member', $userDn, TRUE);
-                $ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);               
+                Yii::$app->ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);
             }
         }
     }
-    
+
     /**
      * Remove User from Group
      * @param type $userDn
@@ -300,13 +264,12 @@ class LDAPHelper {
      */
     public function removeUserToGroup($userDn,array $groups){
         Yii::getLogger()->log('LDAPHelper:removeUserToGroup', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-       
+
         foreach ($groups as $value) {
-            $entry = $ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
+            $entry = Yii::$app->ldap->getEntry('cn='.$value.',ou=group,dc=levya,dc=org'); //SEE Perf if return all member.
             if(!is_null($entry) && \Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::removeFromAttribute($entry, 'member', $userDn);
-                $ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);
+                Yii::$app->ldap->update('cn='.$value.',ou=group,dc=levya,dc=org', $entry);
             }
         }
     }
@@ -320,17 +283,16 @@ class LDAPHelper {
      */
     public function addUserToAccess($userDn,array $access){
         Yii::getLogger()->log('LDAPHelper:addUserToAccess', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-       
+
         foreach ($access as $value) {
-            $entry = $ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
+            $entry = Yii::$app->ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
             if(!is_null($entry) && !\Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::setAttribute($entry, 'member', $userDn, TRUE);
-                $ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
+                Yii::$app->ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
             }
         }
     }
-    
+
     /**
      * Remove user member attr. in a groupOfName
      * $userDn is the full user dn
@@ -340,17 +302,16 @@ class LDAPHelper {
      */
     public function removeUserToAccess($userDn,array $access){
         Yii::getLogger()->log('LDAPHelper:removeUserToAccess', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-       
+
         foreach ($access as $value) {
-            $entry = $ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
+            $entry = Yii::$app->ldap->getEntry('cn='.$value.',ou=access,dc=levya,dc=org'); //SEE Perf if return all member.
             if(!is_null($entry) && \Zend\Ldap\Attribute::attributeHasValue($entry, 'member', $userDn)){
                 \Zend\Ldap\Attribute::removeFromAttribute($entry, 'member', $userDn);
-                $ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
+                Yii::$app->ldap->update('cn='.$value.',ou=access,dc=levya,dc=org', $entry);
             }
         }
     }
-    
+
     /**
      * Check if User has access to (Levya) access with his LDAPUID
      * @param type $userLdapUid
@@ -359,21 +320,20 @@ class LDAPHelper {
      */
     public function checkAccessFromUser($userLdapUid,$accessName){
         Yii::getLogger()->log('LDAPHelper:checkAccessFromUser', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-                  
-        $result = $ldap->search(
+
+        $result = Yii::$app->ldap->search(
             '(&(objectClass=inetOrgPerson)(uid='.$userLdapUid.')(memberOf=cn='.$accessName.',ou=access,dc=levya,dc=org))', 'ou=user,dc=levya,dc=org', \Zend\Ldap\Ldap::SEARCH_SCOPE_SUB, array('memberOf')
         );
-            
+
         $nbResult = $result->count();
 
         if( $nbResult > 0 && (count($result->toArray()[0]['memberof']) >= 1)){
             return true;
-        }            
+        }
         else
             return false;
-    }  
-    
+    }
+
     /**
      * Check if User is in Group with his LDAPUID
      * @param type $userLdapUid
@@ -382,9 +342,8 @@ class LDAPHelper {
      */
     public function checkGroupFromUser($userLdapUid, $groupName){
         Yii::getLogger()->log('LDAPHelper:checkGroupFromUser', Logger::LEVEL_TRACE);
-        $ldap = $this->getInstance();
-                   
-        $result = $ldap->search(
+
+        $result = Yii::$app->ldap->search(
             '(&(objectClass=inetOrgPerson)(uid='.$userLdapUid.')(memberOf=cn='.$groupName.',ou=group,dc=levya,dc=org))', 'ou=user,dc=levya,dc=org', \Zend\Ldap\Ldap::SEARCH_SCOPE_SUB, array('memberOf')
         );
 
@@ -392,11 +351,11 @@ class LDAPHelper {
 
         if( $nbResult > 0 && (count($result->toArray()[0]['memberof']) >= 1)){
             return true;
-        } 
+        }
         else
             return false;
     }
-    
+
     /**
      * Test if connection info. are right.
      * @return boolean
@@ -404,7 +363,6 @@ class LDAPHelper {
     public function checkConnection(){
         Yii::getLogger()->log('LDAPHelper:checkConnection', Logger::LEVEL_TRACE);
         try {
-            $ldap = $this->getInstance();
             return true;
         } catch (\Zend\Ldap\Exception\LdapException $exc) {
             return false;
@@ -412,25 +370,5 @@ class LDAPHelper {
             Yii::getLogger()->log("Error at connection : ".VarDumper::dumpAsString($exc), Logger::LEVEL_ERROR);
             return false;
         }
-    }
-
-    /**
-     * Private clone method to prevent cloning of the instance of the
-     * *Singleton* instance.
-     *
-     * @return void
-     */
-    private function __clone()
-    {
-    }
-
-    /**
-     * Private unserialize method to prevent unserializing of the *Singleton*
-     * instance.
-     *
-     * @return void
-     */
-    private function __wakeup()
-    {
     }
 }
